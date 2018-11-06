@@ -3,12 +3,12 @@ format_version: '6'
 default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
 project_type: other
 trigger_map:
-- push_branch: develop
-  workflow: develop
 - push_branch: master
   workflow: master
 - push_branch: feature/*
-  workflow: feature
+  workflow: android-Feature
+- push_branch: develop
+  workflow: develop
 workflows:
   primary:
     steps:
@@ -23,7 +23,7 @@ workflows:
         inputs:
         - commands: channel master
         title: Switch channel
-    - flutter@0.0.6:
+    - flutter:
         title: Flutter upgrade
         inputs:
         - commands: upgrade
@@ -74,9 +74,6 @@ workflows:
     - opts:
         is_expand: false
       BITRISE_EXPORT_METHOD: Development
-  develop:
-    steps:
-    - activate-ssh-key@4.0.3: {}
   master:
     steps:
     - activate-ssh-key@4.0.3: {}
@@ -93,7 +90,7 @@ workflows:
         inputs:
         - commands: channel master
         title: Switch channel
-    - flutter@0.0.6:
+    - flutter:
         title: Flutter upgrade
         inputs:
         - commands: upgrade
@@ -112,12 +109,200 @@ workflows:
     - xcode-archive:
         inputs:
         - export_method: development
-    - aws-device-farm-file-deploy@0.0.4:
+    - aws-device-farm-file-deploy:
         inputs:
         - upload_type: ANDROID_APP
-        - upload_file_path: BITRISE_APK_PATH
+        - upload_file_path: "$BITRISE_APK_PATH"
         - device_farm_project: "$AWS_ARN_DEVICE_FARM_PROJECT"
         title: Android Device Farm File Deploy
+    - aws-device-farm-file-deploy@0.0.4:
+        inputs:
+        - upload_file_path: "$BITRISE_IPA_PATH"
+        - upload_type: IOS_APP
+        - device_farm_project: "$AWS_ARN_DEVICE_FARM_PROJECT"
+    - cache-push: {}
+    envs:
+    - opts:
+        is_expand: false
+      DEPLOYGATE_OWNER_NAME: nm9112
+    - opts:
+        is_expand: false
+      BITRISE_APK_PATH: build/app/outputs/apk/release/app-release.apk
+    - opts:
+        is_expand: false
+      BITRISE_PROJECT_PATH: ios/Runner.xcworkspace
+    - opts:
+        is_expand: false
+      BITRISE_SCHEME: Runner
+    - opts:
+        is_expand: false
+      BITRISE_EXPORT_METHOD: Development
+    - opts:
+        is_expand: false
+      AWS_REGION: us-west-2
+  iOs-Feature:
+    steps:
+    - activate-ssh-key:
+        run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
+    - git-clone: {}
+    - cache-pull: {}
+    - certificate-and-profile-installer:
+        inputs:
+        - install_defaults: 'no'
+    - flutter:
+        title: Build for iOS
+        inputs:
+        - commands: build ios --release
+    - flutter:
+        inputs:
+        - commands: test
+        title: Run tests
+    - xcode-archive:
+        inputs:
+        - export_method: development
+    - aws-device-farm-file-deploy@0.0.4:
+        inputs:
+        - upload_file_path: "$BITRISE_IPA_PATH"
+        - upload_type: IOS_APP
+        - device_farm_project: "$AWS_ARN_DEVICE_FARM_PROJECT"
+    - cache-push: {}
+    envs:
+    - opts:
+        is_expand: false
+      DEPLOYGATE_OWNER_NAME: nm9112
+    - opts:
+        is_expand: false
+      BITRISE_APK_PATH: build/app/outputs/apk/release/app-release.apk
+    - opts:
+        is_expand: false
+      BITRISE_PROJECT_PATH: ios/Runner.xcworkspace
+    - opts:
+        is_expand: false
+      BITRISE_SCHEME: Runner
+    - opts:
+        is_expand: false
+      BITRISE_EXPORT_METHOD: Development
+    - opts:
+        is_expand: false
+      AWS_REGION: us-west-2
+  android-Feature:
+    steps:
+    - activate-ssh-key:
+        run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
+    - git-clone: {}
+    - cache-pull: {}
+    - flutter:
+        inputs:
+        - commands: channel master
+        title: Switch channel
+    - flutter:
+        title: Flutter upgrade
+        inputs:
+        - commands: upgrade
+    - flutter:
+        inputs:
+        - commands: build apk --release
+        title: Build for Android
+    - flutter:
+        inputs:
+        - commands: test
+        title: Run tests
+    - aws-device-farm-file-deploy:
+        inputs:
+        - upload_type: ANDROID_APP
+        - upload_file_path: "$BITRISE_APK_PATH"
+        - device_farm_project: "$AWS_ARN_DEVICE_FARM_PROJECT"
+        title: Android Device Farm File Deploy
+    - cache-push: {}
+    envs:
+    - opts:
+        is_expand: false
+      DEPLOYGATE_OWNER_NAME: nm9112
+    - opts:
+        is_expand: false
+      BITRISE_APK_PATH: build/app/outputs/apk/release/app-release.apk
+    - opts:
+        is_expand: false
+      BITRISE_PROJECT_PATH: ios/Runner.xcworkspace
+    - opts:
+        is_expand: false
+      BITRISE_SCHEME: Runner
+    - opts:
+        is_expand: false
+      BITRISE_EXPORT_METHOD: Development
+    - opts:
+        is_expand: false
+      AWS_REGION: us-west-2
+  android_Develop:
+    steps:
+    - activate-ssh-key:
+        run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
+    - git-clone: {}
+    - cache-pull: {}
+    - flutter:
+        inputs:
+        - version: "$FLUTTER_VERSION"
+        - commands: build apk --release
+        title: Build for Android
+    - flutter:
+        inputs:
+        - version: "$FLUTTER_VERSION"
+        - commands: test
+        title: Run tests
+    - hockeyapp-deploy-android:
+        inputs:
+        - api_token: "$HOCKEY_APP_API_KEY"
+    - cache-push: {}
+    envs:
+    - opts:
+        is_expand: false
+      DEPLOYGATE_OWNER_NAME: nm9112
+    - opts:
+        is_expand: false
+      BITRISE_APK_PATH: build/app/outputs/apk/release/app-release.apk
+    - opts:
+        is_expand: false
+      BITRISE_PROJECT_PATH: ios/Runner.xcworkspace
+    - opts:
+        is_expand: false
+      BITRISE_SCHEME: Runner
+    - opts:
+        is_expand: false
+      BITRISE_EXPORT_METHOD: Development
+    - opts:
+        is_expand: false
+      AWS_REGION: us-west-2
+  develop:
+    steps:
+    - activate-ssh-key:
+        run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
+    - git-clone: {}
+    - cache-pull: {}
+    - certificate-and-profile-installer@1.10.1: {}
+    - flutter:
+        inputs:
+        - version: "$FLUTTER_VERSION"
+        - commands: build apk --release
+        title: Build for Android
+    - flutter:
+        title: Build for iOS
+        inputs:
+        - commands: build ios --release
+        - version: "$FLUTTER_VERSION"
+    - flutter:
+        inputs:
+        - version: "$FLUTTER_VERSION"
+        - commands: test
+        title: Run tests
+    - xcode-archive@2.4.16:
+        inputs:
+        - export_method: development
+    - hockeyapp-deploy-android:
+        inputs:
+        - api_token: "$HOCKEY_APP_API_KEY"
+    - hockeyapp-deploy@2.4.3:
+        inputs:
+        - api_token: "$HOCKEY_APP_API_KEY"
     - cache-push: {}
     envs:
     - opts:
@@ -155,3 +340,6 @@ app:
   - opts:
       is_expand: false
     AWS_ARN_DEVICE_FARM_PROJECT: arn:aws:devicefarm:us-west-2:201218702318:project:93f32307-6ebd-4daa-b53f-9d427d677e25
+  - opts:
+      is_expand: false
+    FLUTTER_VERSION: master
