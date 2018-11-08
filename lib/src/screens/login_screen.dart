@@ -27,7 +27,7 @@ class LoginScreen extends StatelessWidget {
           onChanged: bloc.changeEmail,
           keyboardType:  TextInputType.emailAddress,
           decoration: InputDecoration(
-            hintText: 'you:example.com',
+            hintText: 'you@example.com',
             labelText: 'Email Address',
             errorText: snapshot.error,
           ),
@@ -42,6 +42,7 @@ class LoginScreen extends StatelessWidget {
       builder: (context, snapshot) {
         return TextField(
           onChanged: bloc.changePassword,
+          obscureText: true,
           decoration: InputDecoration(
             hintText: 'password',
             labelText: 'Password',
