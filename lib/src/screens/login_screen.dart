@@ -7,7 +7,7 @@ class LoginScreen extends StatelessWidget {
     final bloc = Provider.of(context);
 
     return Container(
-      margin: EdgeInsets.all(20.0),
+      margin: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0),
       child: Column(
         children: <Widget>[
           emailField(bloc),
