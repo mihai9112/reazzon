@@ -3,14 +3,19 @@ import '../blocs/bloc.dart';
 import '../blocs/provider.dart';
 
 class LoginScreen extends StatelessWidget {
+  final _pageController = new PageController(initialPage: 0, viewportFraction: 1.0);
+
   Widget build(context){
     final bloc = Provider.of(context);
 
     return Container(
       height: MediaQuery.of(context).size.height,
       child: PageView(
+        controller: _pageController,
+        physics: AlwaysScrollableScrollPhysics(),
         children: <Widget>[
-          homePage(context, bloc)
+          homePage(context, bloc),
+          loginPage(context, bloc)
         ],
       ),
     );
@@ -20,9 +25,9 @@ class LoginScreen extends StatelessWidget {
     return Container(
       height: MediaQuery.of(context).size.height,
       decoration: BoxDecoration(
-        color: Colors.redAccent,
+        color: Colors.blueAccent,
         image: DecorationImage(
-          colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.1), BlendMode.dstATop),
+          colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.1), BlendMode.dstATop),
           image: AssetImage('lib/assets/images/mountains.jpg'),
           fit: BoxFit.cover,
         ),
@@ -58,24 +63,24 @@ class LoginScreen extends StatelessWidget {
             width: MediaQuery.of(context).size.width,
             margin: const EdgeInsets.only(left: 30.0, right: 30.0, top: 150.0),
             alignment: Alignment.center,
-            child: new Row(
+            child: Row(
               children: <Widget>[
-                new Expanded(
-                  child: new OutlineButton(
-                    shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(30.0)),
+                Expanded(
+                  child: OutlineButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0)),
                     color: Colors.redAccent,
                     highlightedBorderColor: Colors.white,
                     onPressed: () => {},
-                    child: new Container(
+                    child: Container(
                       padding: const EdgeInsets.symmetric(
                         vertical: 20.0,
                         horizontal: 20.0,
                       ),
-                      child: new Row(
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          new Expanded(
+                          Expanded(
                             child: Text(
                               "SIGN UP",
                               textAlign: TextAlign.center,
@@ -96,28 +101,28 @@ class LoginScreen extends StatelessWidget {
             width: MediaQuery.of(context).size.width,
             margin: const EdgeInsets.only(left: 30.0, right: 30.0, top: 30.0),
             alignment: Alignment.center,
-            child: new Row(
+            child: Row(
               children: <Widget>[
-                new Expanded(
-                  child: new FlatButton(
-                    shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(30.0)),
+                Expanded(
+                  child: FlatButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0)),
                     color: Colors.white,
-                    onPressed: () => {},
-                    child: new Container(
+                    onPressed: () => goToLogin(),
+                    child: Container(
                       padding: const EdgeInsets.symmetric(
                         vertical: 20.0,
                         horizontal: 20.0,
                       ),
-                      child: new Row(
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          new Expanded(
+                          Expanded(
                             child: Text(
                               "LOGIN",
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                  color: Colors.redAccent,
+                                  color: Colors.blueAccent,
                                   fontWeight: FontWeight.bold),
                             ),
                           ),
@@ -134,37 +139,132 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Widget emailField(Bloc bloc) {
-    return StreamBuilder(
-      stream: bloc.email,
-      builder: (context, snapshot) {
-        return TextField(
-          onChanged: bloc.changeEmail,
-          keyboardType:  TextInputType.emailAddress,
-          decoration: InputDecoration(
-            hintText: 'you@example.com',
-            labelText: 'Email Address',
-            errorText: snapshot.error,
+  Widget loginPage(BuildContext context, Bloc bloc)
+  {
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        image: DecorationImage(
+          colorFilter: ColorFilter.mode(
+            Colors.black.withOpacity(0.05), BlendMode.dstATop),
+            image: AssetImage('lib/assets/images/mountains.jpg'),
+            fit: BoxFit.cover,
+        ),
+      ),
+      child: Column(
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.all(85.0),
+            child: Center(
+              child: Icon(
+                Icons.developer_board,
+                color: Colors.blueAccent,
+                size: 50.0,
+              ),
+            ),
           ),
-        );
-      },
-    );
-  }
-
-  Widget passwordField(Bloc bloc) {
-    return StreamBuilder(
-      stream: bloc.password,
-      builder: (context, snapshot) {
-        return TextField(
-          onChanged: bloc.changePassword,
-          obscureText: true,
-          decoration: InputDecoration(
-            hintText: 'password',
-            labelText: 'Password',
-            errorText: snapshot.error,
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 40.0),
+                  child: Text(
+                    "EMAIL",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blueAccent,
+                      fontSize: 15.0,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        );
-      },
+          Container(
+            width: MediaQuery.of(context).size.width,
+            margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 5.0),
+            alignment: Alignment.center,
+            padding: const EdgeInsets.only(left: 0, right: 10.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Expanded(
+                  child: StreamBuilder(
+                    stream: bloc.email,
+                    builder: (contextStream, snapshot) {
+                      return TextField(
+                        onChanged: bloc.changeEmail,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: InputDecoration(
+                          hintText: 'you@example.com',
+                          errorText: snapshot.error,
+                        ),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15.0,
+                          color: Colors.grey
+                        ),
+                      );
+                    },
+                  ),
+                )
+              ],
+            ),
+          ),
+          Container(height: 20.0),
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 40.0),
+                  child: Text(
+                    "PASSWORD",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blueAccent,
+                      fontSize: 15.0,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width,
+            margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
+            alignment: Alignment.center,
+            padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Expanded(
+                  child: StreamBuilder(
+                    stream: bloc.password,
+                    builder: (contextStream, snapshot) {
+                      return TextField(
+                        onChanged: bloc.changePassword,
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          hintText: 'password',
+                          errorText: snapshot.error,
+                        ),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15.0,
+                          color: Colors.grey
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -180,6 +280,14 @@ class LoginScreen extends StatelessWidget {
             : null,
         );
       },
+    );
+  }
+
+  goToLogin() {
+    _pageController.animateToPage(
+      1,
+      duration: Duration(milliseconds: 800),
+      curve: Curves.easeOut,
     );
   }
 }
