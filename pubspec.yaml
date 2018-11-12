@@ -70,3 +70,8 @@ flutter:
 
   assets:
     - lib/assets/images/mountains.jpg
+  
+  fonts:
+      - family: reazzon
+        fonts:
+        - asset: lib/assets/fonts/reazzon.ttf
