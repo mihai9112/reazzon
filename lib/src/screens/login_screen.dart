@@ -5,7 +5,6 @@ import 'package:flutter/widgets.dart';
 
 class LoginScreen extends StatelessWidget {
   static const _kFontFam = 'reazzon';
-  final _pageController = new PageController(initialPage: 0, viewportFraction: 1.0);
   static const IconData facebookIcon = const IconData(0xe801, fontFamily: _kFontFam);
   static const IconData googleIcon = const IconData(0xf1a0, fontFamily: _kFontFam);
 
@@ -13,23 +12,25 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloc = Provider.of(context);
     
-    return Scaffold(
+    return Scaffold
+    (
+      appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Colors.blueAccent
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0,
+      ),
       body: 
       Container(
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
           color: Colors.white,
-          image: DecorationImage(
-            colorFilter: ColorFilter.mode(
-              Colors.black.withOpacity(0.05), BlendMode.dstATop),
-              image: AssetImage('lib/assets/images/mountains.jpg'),
-              fit: BoxFit.cover,
-          ),
         ),
         child: Column(
           children: <Widget>[
             Container(
-              padding: EdgeInsets.all(85.0),
+              padding: EdgeInsets.all(55.0),
               child: Center(
                 child: Icon(
                   Icons.developer_board,
@@ -356,14 +357,6 @@ class LoginScreen extends StatelessWidget {
             : null,
         );
       },
-    );
-  }
-
-  goToLogin() {
-    _pageController.animateToPage(
-      1,
-      duration: Duration(milliseconds: 800),
-      curve: Curves.easeOut,
     );
   }
 }
