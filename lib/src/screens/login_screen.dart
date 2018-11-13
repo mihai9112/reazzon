@@ -174,20 +174,14 @@ class LoginScreen extends StatelessWidget {
                       onPressed: () => {},
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                          vertical: 20.0,
-                          horizontal: 20.0,
+                          vertical: 5.0,
+                          horizontal: 5.0,
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Expanded(
-                              child: Text(
-                                "LOGIN",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
-                              ),
+                              child: submitButton(bloc),
                             ),
                           ],
                         ),
@@ -349,8 +343,15 @@ class LoginScreen extends StatelessWidget {
     return StreamBuilder(
       stream: bloc.submitValid,
       builder: (context, snapshot) {
-        return RaisedButton(
-          child: Text('Login'), 
+        return FlatButton(
+          child: Text(
+            "LOGIN",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ), 
           color: Colors.blue,
           onPressed: snapshot.hasData ? 
             bloc.submit()
