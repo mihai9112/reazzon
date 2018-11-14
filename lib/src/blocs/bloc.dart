@@ -19,6 +19,9 @@ class Bloc with Validators {
   submit() {
     final validEmail = _email.value;
     final validPassword = _password.value;
+
+    print(validEmail);
+    print(validPassword);
   }
 
   void dispose() {

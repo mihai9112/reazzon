@@ -65,26 +65,7 @@ class LoginScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  Expanded(
-                    child: StreamBuilder(
-                      stream: bloc.email,
-                      builder: (contextStream, snapshot) {
-                        return TextField(
-                          onChanged: bloc.changeEmail,
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: InputDecoration(
-                            hintText: 'you@example.com',
-                            errorText: snapshot.error,
-                          ),
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15.0,
-                            color: Colors.grey
-                          ),
-                        );
-                      },
-                    ),
-                  )
+                  Expanded(child: emailField(bloc))
                 ],
               ),
             ),
@@ -115,26 +96,7 @@ class LoginScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  Expanded(
-                    child: StreamBuilder(
-                      stream: bloc.password,
-                      builder: (contextStream, snapshot) {
-                        return TextField(
-                          onChanged: bloc.changePassword,
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            hintText: 'password',
-                            errorText: snapshot.error,
-                          ),
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15.0,
-                            color: Colors.grey
-                          ),
-                        );
-                      },
-                    ),
-                  ),
+                  Expanded(child: passwordField(bloc)),
                 ],
               ),
             ),
@@ -166,27 +128,7 @@ class LoginScreen extends StatelessWidget {
               child: Row(
                 children: <Widget>[
                   Expanded(
-                    child: FlatButton(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                      color: Colors.blueAccent,
-                      onPressed: () => {},
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 5.0,
-                          horizontal: 5.0,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Expanded(
-                              child: submitButton(bloc),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    child: submitButton(bloc),
                   ),
                 ],
               ),
@@ -343,7 +285,12 @@ class LoginScreen extends StatelessWidget {
     return StreamBuilder(
       stream: bloc.submitValid,
       builder: (context, snapshot) {
-        return FlatButton(
+        return RaisedButton(
+          color: Colors.blueAccent,
+          elevation: 4.0,
+          onPressed: snapshot.hasData ? 
+            () => bloc.submit()
+            : null,
           child: Text(
             "LOGIN",
             textAlign: TextAlign.center,
@@ -351,11 +298,38 @@ class LoginScreen extends StatelessWidget {
               color: Colors.white,
               fontWeight: FontWeight.bold,
             ),
-          ), 
-          color: Colors.blue,
-          onPressed: snapshot.hasData ? 
-            bloc.submit()
-            : null,
+          ),
+        );
+      },
+    );
+  }
+
+  Widget emailField(Bloc bloc) {
+    return StreamBuilder(
+      stream: bloc.email,
+      builder: (context, snapshot) {
+        return TextField(
+          onChanged: bloc.changeEmail,
+          keyboardType:  TextInputType.emailAddress,
+          decoration: InputDecoration(
+            hintText: 'you@example.com',
+            errorText: snapshot.error,
+          ),
+        );
+      },
+    );
+  }
+
+  Widget passwordField(Bloc bloc) {
+    return StreamBuilder(
+      stream: bloc.password,
+      builder: (context, snapshot) {
+        return TextField(
+          onChanged: bloc.changePassword,
+          decoration: InputDecoration(
+            hintText: 'password',
+            errorText: snapshot.error,
+          ),
         );
       },
     );
