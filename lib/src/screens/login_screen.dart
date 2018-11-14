@@ -286,19 +286,35 @@ class LoginScreen extends StatelessWidget {
       stream: bloc.submitValid,
       builder: (context, snapshot) {
         return RaisedButton(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.0),
+          ),
           color: Colors.blueAccent,
           elevation: 4.0,
           onPressed: snapshot.hasData ? 
             () => bloc.submit()
             : null,
-          child: Text(
-            "LOGIN",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+              vertical: 20.0,
+              horizontal: 20.0
             ),
-          ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Expanded(
+                  child: Text(
+                    "LOGIN",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ) 
         );
       },
     );
