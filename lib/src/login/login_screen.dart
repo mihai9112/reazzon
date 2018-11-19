@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../blocs/bloc.dart';
-import '../blocs/provider.dart';
+import 'package:reazzon/src/login/loginBloc.dart';
+import 'package:reazzon/src/login/loginProvider.dart';
 import 'package:flutter/widgets.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -10,7 +10,7 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of(context);
+    final loginBloc = LoginProvider.of(context);
     
     return Scaffold
     (
@@ -66,7 +66,7 @@ class LoginScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    Expanded(child: emailField(bloc))
+                    Expanded(child: emailField(loginBloc))
                   ],
                 ),
               ),
@@ -97,7 +97,7 @@ class LoginScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    Expanded(child: passwordField(bloc)),
+                    Expanded(child: passwordField(loginBloc)),
                   ],
                 ),
               ),
@@ -129,7 +129,7 @@ class LoginScreen extends StatelessWidget {
                 child: Row(
                   children: <Widget>[
                     Expanded(
-                      child: submitButton(bloc),
+                      child: submitButton(loginBloc),
                     ),
                   ],
                 ),
@@ -283,7 +283,7 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Widget submitButton(Bloc bloc) {
+  Widget submitButton(LoginBloc bloc) {
     return StreamBuilder(
       stream: bloc.submitValid,
       builder: (context, snapshot) {
@@ -322,7 +322,7 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Widget emailField(Bloc bloc) {
+  Widget emailField(LoginBloc bloc) {
     return StreamBuilder(
       stream: bloc.email,
       builder: (context, snapshot) {
@@ -338,7 +338,7 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Widget passwordField(Bloc bloc) {
+  Widget passwordField(LoginBloc bloc) {
     return StreamBuilder(
       stream: bloc.password,
       builder: (context, snapshot) {

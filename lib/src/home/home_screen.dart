@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../screens/login_screen.dart';
+import '../login/login_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   

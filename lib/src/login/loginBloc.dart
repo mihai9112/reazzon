@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'validators.dart';
+import 'package:reazzon/src/domain/validators.dart';
 import 'package:rxdart/rxdart.dart';
 
-class Bloc with Validators {
+class LoginBloc with Validators {
   final _email = BehaviorSubject<String>();
   final _password = BehaviorSubject<String>();
 
