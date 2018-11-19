@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reazzon/src/signup/signup_screen.dart';
 import '../login/login_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -54,7 +55,13 @@ class HomeScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(30.0)),
                     color: Colors.redAccent,
                     highlightedBorderColor: Colors.white,
-                    onPressed: () => {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SignUpPage()) 
+                      );
+                    },
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                         vertical: 20.0,

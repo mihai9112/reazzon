@@ -343,6 +343,7 @@ class LoginScreen extends StatelessWidget {
       stream: bloc.password,
       builder: (context, snapshot) {
         return TextField(
+          obscureText: true,
           onChanged: bloc.changePassword,
           decoration: InputDecoration(
             hintText: 'password',
