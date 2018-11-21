@@ -70,6 +70,9 @@ flutter:
 
   assets:
     - lib/assets/images/mountains.jpg
+    - lib/assets/images/carousel_1.jpeg
+    - lib/assets/images/carousel_2.jpeg
+    - lib/assets/images/carousel_3.jpeg
   
   fonts:
       - family: reazzon
