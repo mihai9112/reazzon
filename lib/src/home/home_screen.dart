@@ -173,6 +173,7 @@ class HomeScreen extends StatelessWidget {
             new PageView.builder(
               physics: new AlwaysScrollableScrollPhysics(),
               controller: _controller,
+              itemCount: _pages.length,
               itemBuilder: (BuildContext context, int index) {
                 return _pages[index % _pages.length];
               },
@@ -254,7 +255,9 @@ class DotsIndicator extends AnimatedWidget {
             width: _kDotSize * zoom,
             height: _kDotSize * zoom,
             child: new InkWell(
-              onTap: () => onPageSelected(index),
+              onTap: () {
+                onPageSelected(index);
+              }
             ),
           ),
         ),
