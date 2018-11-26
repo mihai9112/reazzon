@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reazzon/src/helpers/fieldFocus.dart';
 import 'package:reazzon/src/login/loginBloc.dart';
 import 'package:reazzon/src/login/loginProvider.dart';
 import 'package:flutter/widgets.dart';
@@ -10,6 +11,9 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FocusNode _focusEmail = new FocusNode();
+    FocusNode _focusPassword = new FocusNode();
+    
     final loginBloc = LoginProvider.of(context);
     
     return Scaffold
@@ -42,15 +46,18 @@ class LoginScreen extends StatelessWidget {
               ),
               Row(
                 children: <Widget>[
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 40.0),
-                      child: Text(
-                        "EMAIL",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blueAccent,
-                          fontSize: 15.0,
+                  EnsureVisibleWhenFocused(
+                    focusNode: _focusEmail,
+                    child: Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 40.0),
+                        child: Text(
+                          "EMAIL",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blueAccent,
+                            fontSize: 15.0,
+                          ),
                         ),
                       ),
                     ),
@@ -73,15 +80,18 @@ class LoginScreen extends StatelessWidget {
               Container(height: 20.0),
               Row(
                 children: <Widget>[
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 40.0),
-                      child: Text(
-                        "PASSWORD",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blueAccent,
-                          fontSize: 15.0,
+                  EnsureVisibleWhenFocused(
+                    focusNode: _focusPassword,
+                    child: Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 40.0),
+                        child: Text(
+                          "PASSWORD",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blueAccent,
+                            fontSize: 15.0,
+                          ),
                         ),
                       ),
                     ),

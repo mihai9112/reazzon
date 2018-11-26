@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reazzon/src/helpers/fieldFocus.dart';
 import 'package:reazzon/src/login/login_screen.dart';
 import 'package:reazzon/src/signup/signUpBloc.dart';
 import 'package:reazzon/src/signup/signUpProvider.dart';
@@ -7,6 +8,10 @@ class SignUpPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FocusNode _focusEmail = new FocusNode();
+    FocusNode _focusPassword = new FocusNode();
+    FocusNode _focusConfirmPassword = new FocusNode();
+
     final signUpBloc = SignUpProvider.of(context);
 
     return Scaffold(
@@ -37,19 +42,22 @@ class SignUpPage extends StatelessWidget {
               ),
               Row(
                 children: <Widget>[
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 40.0),
-                      child: Text(
-                        "EMAIL",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blueAccent,
-                          fontSize: 15.0,
+                  EnsureVisibleWhenFocused(
+                    focusNode: _focusEmail,
+                    child: Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 40.0),
+                        child: Text(
+                          "EMAIL",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blueAccent,
+                            fontSize: 15.0,
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                  )
                 ],
               ),
               Container(
@@ -68,19 +76,22 @@ class SignUpPage extends StatelessWidget {
               Container(height: 20.0),
               Row(
                 children: <Widget>[
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 40.0),
-                      child: Text(
-                        "PASSWORD",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blueAccent,
-                          fontSize: 15.0,
+                  EnsureVisibleWhenFocused(
+                    focusNode: _focusPassword, 
+                    child: Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 40.0),
+                        child: Text(
+                          "PASSWORD",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blueAccent,
+                            fontSize: 15.0,
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                  )
                 ],
               ),
               Container(
@@ -99,19 +110,22 @@ class SignUpPage extends StatelessWidget {
               Container(height: 20.0),
               Row(
                 children: <Widget>[
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 40.0),
-                      child: Text(
-                        "CONFIRM PASSWORD",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blueAccent,
-                          fontSize: 15.0,
+                  EnsureVisibleWhenFocused(
+                    focusNode: _focusConfirmPassword,
+                    child: Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 40.0),
+                        child: Text(
+                          "CONFIRM PASSWORD",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blueAccent,
+                            fontSize: 15.0,
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                  )
                 ],
               ),
               Container(
