@@ -1,11 +1,18 @@
 import 'dart:async';
 import 'package:reazzon/src/domain/validators.dart';
+import 'package:reazzon/src/services/IAuthentication.dart';
 import 'package:rxdart/rxdart.dart';
 
 class SignUpBloc with Validators {
   final _email = BehaviorSubject<String>();
   final _password = BehaviorSubject<String>();
   final _confirmPassword = BehaviorSubject<String>();
+
+  IAuthentication _authService;
+
+  SignUpBloc(IAuthentication authService) {
+    _authService = authService;
+  }
 
   // Add data to stream
   Stream<String> get email => _email.stream.transform(validateEmail);
@@ -24,14 +31,14 @@ class SignUpBloc with Validators {
   Function(String) get changePassword => _password.sink.add;
   Function(String) get changeConfirmPassword => _confirmPassword.sink.add;
 
-  submit() {
+  submit() async {
     final validEmail = _email.value;
     final validPassword = _password.value;
-    final confirmPassword = _confirmPassword.value;
 
     print(validEmail);
     print(validPassword);
-    print(confirmPassword);
+
+    await _authService.signUp(validEmail, validPassword);
   }
 
   void dispose() {
