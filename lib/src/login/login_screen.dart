@@ -23,7 +23,7 @@ class LoginScreen extends StatelessWidget {
           color: Colors.blueAccent
         ),
         backgroundColor: Colors.white,
-        elevation: 0,
+        elevation: 0.0,
       ),
       body:
       SingleChildScrollView(
@@ -68,7 +68,7 @@ class LoginScreen extends StatelessWidget {
                 width: MediaQuery.of(context).size.width,
                 margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 5.0),
                 alignment: Alignment.center,
-                padding: const EdgeInsets.only(left: 0, right: 10.0),
+                padding: const EdgeInsets.only(left: 0.0, right: 10.0),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
