@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:reazzon/src/blocs/bloc_provider.dart';
+import 'package:reazzon/src/blocs/login_bloc.dart';
 import 'package:reazzon/src/helpers/fieldFocus.dart';
-import 'package:reazzon/src/login/loginBloc.dart';
-import 'package:reazzon/src/login/loginProvider.dart';
 import 'package:flutter/widgets.dart';
 
 class LoginScreen extends StatelessWidget {
+  
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider<LoginBloc>(
+      bloc: LoginBloc(),
+      child: LoginWidget(),
+    );
+  }
+}
+
+class LoginWidget extends StatelessWidget {
   static const _kFontFam = 'reazzon';
   static const IconData facebookIcon = const IconData(0xe801, fontFamily: _kFontFam);
   static const IconData googleIcon = const IconData(0xf1a0, fontFamily: _kFontFam);
@@ -14,7 +25,7 @@ class LoginScreen extends StatelessWidget {
     FocusNode _focusEmail = new FocusNode();
     FocusNode _focusPassword = new FocusNode();
     
-    final loginBloc = LoginProvider.of(context);
+    LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
     
     return Scaffold
     (

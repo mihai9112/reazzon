@@ -1,8 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:reazzon/src/signup/signup_screen.dart';
-import '../login/login_screen.dart';
+import 'package:reazzon/src/widgets/login_widget.dart';
+import 'package:reazzon/src/widgets/signup_widget.dart';
 
 class HomeScreen extends StatelessWidget {
   final _controller = new PageController();

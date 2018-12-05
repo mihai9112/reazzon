@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:reazzon/src/login/loginBloc.dart';
-import 'package:reazzon/src/services/Authentication.dart';
-import 'package:reazzon/src/services/IAuthentication.dart';
-import 'package:reazzon/src/signup/signUpBloc.dart';
+import 'package:reazzon/src/blocs/application_bloc.dart';
+import 'package:reazzon/src/blocs/bloc_provider.dart';
 import 'src/app.dart';
 
-void main() {
+Future<void> main() async {
 
-  final IAuthentication authService = new Authentication();
-  final login = new LoginBloc(authService);
-  final signUp = new SignUpBloc(authService);
-
-  runApp(App(login, signUp));
+  return runApp(
+    BlocProvider<ApplicationBloc>(
+      bloc: ApplicationBloc(),
+      child: App()
+    )
+  );
 }

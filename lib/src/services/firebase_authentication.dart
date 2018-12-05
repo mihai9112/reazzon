@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:reazzon/src/services/IAuthentication.dart';
 
-class Authentication implements IAuthentication {
+class FirebaseAuthentication implements IAuthentication {
 
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   
@@ -30,5 +30,6 @@ class Authentication implements IAuthentication {
     FirebaseUser user = await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
     return user.uid;
   }
-
 }
+
+FirebaseAuthentication firebaseAuthentication = new FirebaseAuthentication();
