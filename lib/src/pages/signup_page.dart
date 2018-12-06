@@ -223,13 +223,15 @@ class _SignUpPageState extends State<SignUpPage>{
           onPressed: snapshot.hasData ? () {
               bloc.submit().then((currentUser) {
                 appBloc.inCurrentUser.add(currentUser);
-              });
 
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SecondSignUpPage()) 
-              );
+                WidgetsBinding.instance.addPostFrameCallback((_){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SecondSignUpPage()) 
+                  );
+                });
+              });
             }
             : null,
           child: Container(
