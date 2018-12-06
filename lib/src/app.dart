@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:reazzon/src/widgets/home_widget.dart';
+import 'package:reazzon/src/pages/home_page.dart';
 
 class App extends StatelessWidget{
 

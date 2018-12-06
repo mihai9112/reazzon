@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
+
 abstract class IAuthentication {
-  Future<String> signIn(String email, String password);
-  Future<String> signUp(String email, String password);
-  Future<String> getCurrentUser();
+  Future<bool> signIn(String email, String password);
+  Future<FirebaseUser> signUp(String email, String password);
+  Future<FirebaseUser> getCurrentUser();
   Future<void> signOut();
 }

@@ -1,21 +1,20 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:reazzon/src/services/IAuthentication.dart';
 
-class FirebaseAuthentication implements IAuthentication {
+class FirebaseAuthentication  implements IAuthentication{
 
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  
+
   @override
-  Future<String> getCurrentUser() {
+  Future<FirebaseUser> getCurrentUser() {
     // TODO: implement getCurrentUser
     return null;
   }
 
   @override
-  Future<String> signIn(String email, String password) async {
-
-    FirebaseUser user = await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
-    return user.uid;
+  Future<bool> signIn(String email, String password) {
+    // TODO: implement signIn
+    return null;
   }
 
   @override
@@ -25,11 +24,10 @@ class FirebaseAuthentication implements IAuthentication {
   }
 
   @override
-  Future<String> signUp(String email, String password) async {
-    
-    FirebaseUser user = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
-    return user.uid;
+  Future<FirebaseUser> signUp(String email, String password) {
+    return _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
   }
+  
 }
 
 FirebaseAuthentication firebaseAuthentication = new FirebaseAuthentication();

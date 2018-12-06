@@ -10,12 +10,12 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<LoginBloc>(
       bloc: LoginBloc(),
-      child: LoginWidget(),
+      child: _LoginWidget(),
     );
   }
 }
 
-class LoginWidget extends StatelessWidget {
+class _LoginWidget extends StatelessWidget {
   static const _kFontFam = 'reazzon';
   static const IconData facebookIcon = const IconData(0xe801, fontFamily: _kFontFam);
   static const IconData googleIcon = const IconData(0xf1a0, fontFamily: _kFontFam);
@@ -27,8 +27,7 @@ class LoginWidget extends StatelessWidget {
     
     LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
     
-    return Scaffold
-    (
+    return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
           color: Colors.blueAccent
