@@ -14,6 +14,7 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage>{
   SignUpBloc _signUpBloc;
   
+  
   @override
   void initState()
   {
