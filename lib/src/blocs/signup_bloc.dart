@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:reazzon/src/blocs/bloc_provider.dart';
 import 'package:reazzon/src/domain/validators.dart';
+import 'package:reazzon/src/models/user.dart';
 import 'package:reazzon/src/services/firebase_authentication.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -11,6 +12,7 @@ class SignUpBloc with Validators implements BlocBase {
   final _confirmPasswordController = BehaviorSubject<String>();
   final _firstNameController = BehaviorSubject<String>();
   final _lastNameController = BehaviorSubject<String>();
+  final _userNameController = BehaviorSubject<String>();
 
   // Add data to stream
   Stream<String> get outEmail => _emailController.stream.transform(validateEmail);
@@ -23,9 +25,14 @@ class SignUpBloc with Validators implements BlocBase {
     });
   Stream<String> get outFirstName => _firstNameController.stream;
   Stream<String> get outLastName => _lastNameController.stream;
+  Stream<String> get outUserName => _userNameController.stream;
 
   Stream<bool> get submitValid => Observable.combineLatest3(
     outEmail, outPassword, outConfirmPassword, (e, p, cp) => true );
+
+  Stream<bool> get updateDetailsValid => Observable.combineLatest3(
+    outFirstName, outLastName, outUserName, (f, l, u) => true
+  );
   
   // Change data
   Function(String) get inEmail => _emailController.sink.add;
@@ -34,13 +41,20 @@ class SignUpBloc with Validators implements BlocBase {
 
   Function(String) get inFirstName => _firstNameController.sink.add;
   Function(String) get inLastName => _lastNameController.sink.add;
-
+  Function(String) get inUserName => _userNameController.sink.add;
 
   Future<FirebaseUser> submit() async {
     return await firebaseAuthentication.signUp(
       _emailController.value, 
       _passwordController.value
     );
+  }
+
+  Future<void> submitDetails(User user) async {
+    await user.updateDetails(
+      _firstNameController.value, 
+      _lastNameController.value, 
+      _userNameController.value); 
   }
 
   @override
@@ -50,5 +64,6 @@ class SignUpBloc with Validators implements BlocBase {
     _confirmPasswordController.close();
     _firstNameController.close();
     _lastNameController.close();
+    _userNameController.close();
   }
 }

@@ -103,6 +103,42 @@ class SecondSignUpPage  extends StatelessWidget {
                   ],
                 ),
               ),
+              Container(height: 20.0),
+              Row(
+                children: <Widget>[
+                  EnsureVisibleWhenFocused(
+                    focusNode: _lastName,
+                    child: Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 40.0),
+                        child: Text(
+                          "USERNAME",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blueAccent,
+                            fontSize: 15.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 5.0),
+                alignment: Alignment.center,
+                padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Expanded(
+                      child: lastNameField(signUpBloc)
+                    )
+                  ],
+                ),
+              ),
               Container(
                 width: MediaQuery.of(context).size.width,
                 margin: const EdgeInsets.only(left: 30.0, right: 30.0, top: 20.0),
@@ -150,9 +186,23 @@ class SecondSignUpPage  extends StatelessWidget {
     );
   }
 
+  Widget userNameField(SignUpBloc bloc) {
+    return StreamBuilder(
+      stream: bloc.outLastName,
+      builder: (context, snapshot) {
+        return TextField(
+          onChanged: bloc.inLastName,
+          decoration: InputDecoration(
+            errorText: snapshot.error,
+          ),
+        );
+      },
+    );
+  }
+
   Widget continueButton(SignUpBloc bloc, ApplicationBloc appBloc) {
     return StreamBuilder(
-      stream: bloc.submitValid,
+      stream: bloc.updateDetailsValid,
       builder: (context, snapshot) {
         return RaisedButton(
           shape: RoundedRectangleBorder(
@@ -161,7 +211,14 @@ class SecondSignUpPage  extends StatelessWidget {
           color: Colors.blueAccent,
           elevation: 4.0,
           onPressed: snapshot.hasData ? () {
-              
+              bloc.submitDetails(appBloc.reazzonUser).then((_){
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        //Send to third page
+                      ) 
+                  );
+              });
             }
             : null,
           child: Container(
