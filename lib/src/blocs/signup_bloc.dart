@@ -6,42 +6,54 @@ import 'package:reazzon/src/services/firebase_authentication.dart';
 import 'package:rxdart/rxdart.dart';
 
 class SignUpBloc with Validators implements BlocBase {
-  final _email = BehaviorSubject<String>();
-  final _password = BehaviorSubject<String>();
-  final _confirmPassword = BehaviorSubject<String>();
+  final _emailController = BehaviorSubject<String>();
+  final _passwordController = BehaviorSubject<String>();
+  final _confirmPasswordController = BehaviorSubject<String>();
+  final _firstNameController = BehaviorSubject<String>();
 
   // Add data to stream
-  Stream<String> get email => _email.stream.transform(validateEmail);
-  Stream<String> get password => _password.stream.transform(validatePassword);
-  Stream<String> get confirmPassword => _confirmPassword.stream.transform(validatePassword)
+  Stream<String> get outEmail => _emailController.stream.transform(validateEmail);
+  Stream<String> get outPassword => _passwordController.stream.transform(validatePassword);
+  Stream<String> get outConfirmPassword => _confirmPasswordController.stream.transform(validatePassword)
     .doOnData((String c){
-      if (0 != _password.value.compareTo(c)){
-        _confirmPassword.addError("Passwords do not match");
+      if (0 != _passwordController.value.compareTo(c)){
+        _confirmPasswordController.addError("Passwords do not match");
       }
     });
+  Stream<String> get outFirstName => _firstNameController.stream;
 
   Stream<bool> get submitValid => Observable.combineLatest3(
-    email, password, confirmPassword, (e, p, cp) => true );
+    outEmail, outPassword, outConfirmPassword, (e, p, cp) => true );
   
   // Change data
-  Function(String) get changeEmail => _email.sink.add;
-  Function(String) get changePassword => _password.sink.add;
-  Function(String) get changeConfirmPassword => _confirmPassword.sink.add;
+  Function(String) get inEmail => _emailController.sink.add;
+  Function(String) get inPassword => _passwordController.sink.add;
+  Function(String) get inConfirmPassword => _confirmPasswordController.sink.add;
+
+  Function(String) get inFirstName => _firstNameController.sink.add;
+
 
   Future<FirebaseUser> submit() async {
-    final validEmail = _email.value;
-    final validPassword = _password.value;
-
-    print(validEmail);
-    print(validPassword);
+    final validEmail = _emailController.value;
+    final validPassword = _passwordController.value;
 
     return await firebaseAuthentication.signUp(validEmail, validPassword);
   }
 
+  Future<bool> addMoreDetails() async {
+    final validFirstName = _firstNameController.value;
+
+    var result = await firebaseAuthentication.getCurrentUser();
+    var userUpdateInfo = UserUpdateInfo();
+    userUpdateInfo.displayName = validFirstName;
+    await result.updateProfile(userUpdateInfo);
+  }
+
   @override
   void dispose() {
-    _email.close();
-    _password.close();
-    _confirmPassword.close();
+    _emailController.close();
+    _passwordController.close();
+    _confirmPasswordController.close();
+    _firstNameController.close();
   }
 }

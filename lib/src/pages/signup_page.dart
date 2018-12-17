@@ -228,7 +228,11 @@ class _SignUpPageState extends State<SignUpPage>{
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => SecondSignUpPage()) 
+                      builder: (context) => 
+                        SecondSignUpPage(
+                          signUpBloc: bloc,
+                        )
+                      ) 
                   );
                 });
               });
@@ -262,10 +266,10 @@ class _SignUpPageState extends State<SignUpPage>{
 
   Widget emailField(SignUpBloc bloc) {
     return StreamBuilder(
-      stream: bloc.email,
+      stream: bloc.outEmail,
       builder: (context, snapshot) {
         return TextField(
-          onChanged: bloc.changeEmail,
+          onChanged: bloc.inEmail,
           keyboardType:  TextInputType.emailAddress,
           decoration: InputDecoration(
             hintText: 'you@example.com',
@@ -278,11 +282,11 @@ class _SignUpPageState extends State<SignUpPage>{
 
   Widget passwordField(SignUpBloc bloc) {
     return StreamBuilder(
-      stream: bloc.password,
+      stream: bloc.outPassword,
       builder: (context, snapshot) {
         return TextField(
           obscureText: true,
-          onChanged: bloc.changePassword,
+          onChanged: bloc.inPassword,
           decoration: InputDecoration(
             hintText: 'password',
             errorText: snapshot.error,
@@ -294,11 +298,11 @@ class _SignUpPageState extends State<SignUpPage>{
 
   Widget confirmPasswordField(SignUpBloc bloc) {
     return StreamBuilder(
-      stream: bloc.confirmPassword,
+      stream: bloc.outConfirmPassword,
       builder: (context, snapshot) {
         return TextField(
           obscureText: true,
-          onChanged: bloc.changeConfirmPassword,
+          onChanged: bloc.inConfirmPassword,
           decoration: InputDecoration(
             hintText: 'password',
             errorText: snapshot.error,
