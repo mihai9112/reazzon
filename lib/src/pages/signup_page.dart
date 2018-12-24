@@ -14,12 +14,11 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage>{
   SignUpBloc _signUpBloc;
   
-  
   @override
   void initState()
   {
     super.initState();
-    _signUpBloc = SignUpBloc();
+    _signUpBloc = new SignUpBloc();
   }
 
   @override
@@ -224,18 +223,13 @@ class _SignUpPageState extends State<SignUpPage>{
           onPressed: snapshot.hasData ? () {
               bloc.submit().then((currentUser) {
                 appBloc.inCurrentUser.add(currentUser);
-
-                WidgetsBinding.instance.addPostFrameCallback((_){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => 
-                        SecondSignUpPage(
-                          signUpBloc: bloc,
-                        )
-                      ) 
-                  );
-                });
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => 
+                    SecondSignUpPage()
+                  ) 
+                );
               });
             }
             : null,

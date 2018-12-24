@@ -31,8 +31,7 @@ class SignUpBloc with Validators implements BlocBase {
     outEmail, outPassword, outConfirmPassword, (e, p, cp) => true );
 
   Stream<bool> get updateDetailsValid => Observable.combineLatest3(
-    outFirstName, outLastName, outUserName, (f, l, u) => true
-  );
+    outFirstName, outLastName, outUserName, (f, l, u) => true );
   
   // Change data
   Function(String) get inEmail => _emailController.sink.add;
@@ -54,7 +53,8 @@ class SignUpBloc with Validators implements BlocBase {
     await user.updateDetails(
       _firstNameController.value, 
       _lastNameController.value, 
-      _userNameController.value); 
+      _userNameController.value
+    ); 
   }
 
   @override

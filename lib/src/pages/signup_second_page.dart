@@ -3,18 +3,35 @@ import 'package:reazzon/src/blocs/application_bloc.dart';
 import 'package:reazzon/src/blocs/bloc_provider.dart';
 import 'package:reazzon/src/blocs/signup_bloc.dart';
 import 'package:reazzon/src/helpers/fieldFocus.dart';
+import 'package:reazzon/src/pages/signup_third_page.dart';
 
-class SecondSignUpPage  extends StatelessWidget {
-  SecondSignUpPage({
-    @required this.signUpBloc,
-  });
+class SecondSignUpPage extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _SecondSignUpPageState();
+}
 
-  final SignUpBloc signUpBloc;
+class _SecondSignUpPageState extends State<SecondSignUpPage> {
+  SignUpBloc _signUpBloc;
+
+  @override
+  void initState()
+  {
+    super.initState();
+    _signUpBloc = new SignUpBloc();
+  }
+
+  @override
+  void dispose()
+  {
+    _signUpBloc?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    FocusNode _firstName = new FocusNode();
-    FocusNode _lastName = new FocusNode();
+    FocusNode _focusFirstName = new FocusNode();
+    FocusNode _focusLastName = new FocusNode();
+    FocusNode _focusUserName = new FocusNode();
 
     final ApplicationBloc _appBloc = BlocProvider.of<ApplicationBloc>(context);
   
@@ -28,14 +45,13 @@ class SecondSignUpPage  extends StatelessWidget {
           child: Column(
             children: <Widget>[
               Container(height: 20.0),
-              Text(_appBloc.reazzonUser.userId),
               Container(
                 padding: EdgeInsets.all(55.0),
               ),
               Row(
                 children: <Widget>[
                   EnsureVisibleWhenFocused(
-                    focusNode: _firstName,
+                    focusNode: _focusFirstName,
                     child: Expanded(
                       child: Padding(
                         padding: const EdgeInsets.only(left: 40.0),
@@ -62,7 +78,7 @@ class SecondSignUpPage  extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     Expanded(
-                      child: lastNameField(signUpBloc)
+                      child: firstNameField(_signUpBloc)
                     )
                   ],
                 ),
@@ -71,7 +87,7 @@ class SecondSignUpPage  extends StatelessWidget {
               Row(
                 children: <Widget>[
                   EnsureVisibleWhenFocused(
-                    focusNode: _lastName,
+                    focusNode: _focusLastName,
                     child: Expanded(
                       child: Padding(
                         padding: const EdgeInsets.only(left: 40.0),
@@ -98,7 +114,7 @@ class SecondSignUpPage  extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     Expanded(
-                      child: lastNameField(signUpBloc)
+                      child: lastNameField(_signUpBloc)
                     )
                   ],
                 ),
@@ -107,7 +123,7 @@ class SecondSignUpPage  extends StatelessWidget {
               Row(
                 children: <Widget>[
                   EnsureVisibleWhenFocused(
-                    focusNode: _lastName,
+                    focusNode: _focusUserName,
                     child: Expanded(
                       child: Padding(
                         padding: const EdgeInsets.only(left: 40.0),
@@ -134,7 +150,7 @@ class SecondSignUpPage  extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     Expanded(
-                      child: lastNameField(signUpBloc)
+                      child: userNameField(_signUpBloc)
                     )
                   ],
                 ),
@@ -146,7 +162,7 @@ class SecondSignUpPage  extends StatelessWidget {
                 child: Row(
                   children: <Widget>[
                     Expanded(
-                      child: continueButton(signUpBloc, _appBloc),
+                      child: continueButton(_signUpBloc, _appBloc),
                     ),
                   ],
                 ),
@@ -157,93 +173,94 @@ class SecondSignUpPage  extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget lastNameField(SignUpBloc bloc) {
-    return StreamBuilder(
-      stream: bloc.outFirstName,
-      builder: (context, snapshot) {
-        return TextField(
-          onChanged: bloc.inFirstName,
-          decoration: InputDecoration(
-            errorText: snapshot.error,
-          ),
-        );
-      },
-    );
-  }
+Widget firstNameField(SignUpBloc bloc) {
+  return StreamBuilder(
+    stream: bloc.outFirstName,
+    builder: (context, snapshot) {
+      return TextField(
+        onChanged: bloc.inFirstName,
+        decoration: InputDecoration(
+          errorText: snapshot.error,
+        ),
+      );
+    },
+  );
+}
 
-  Widget firstNameField(SignUpBloc bloc) {
-    return StreamBuilder(
-      stream: bloc.outLastName,
-      builder: (context, snapshot) {
-        return TextField(
-          onChanged: bloc.inLastName,
-          decoration: InputDecoration(
-            errorText: snapshot.error,
-          ),
-        );
-      },
-    );
-  }
+Widget lastNameField(SignUpBloc bloc) {
+  return StreamBuilder(
+    stream: bloc.outLastName,
+    builder: (context, snapshot) {
+      return TextField(
+        onChanged: bloc.inLastName,
+        decoration: InputDecoration(
+          errorText: snapshot.error,
+        ),
+      );
+    },
+  );
+}
 
-  Widget userNameField(SignUpBloc bloc) {
-    return StreamBuilder(
-      stream: bloc.outLastName,
-      builder: (context, snapshot) {
-        return TextField(
-          onChanged: bloc.inLastName,
-          decoration: InputDecoration(
-            errorText: snapshot.error,
-          ),
-        );
-      },
-    );
-  }
+Widget userNameField(SignUpBloc bloc) {
+  return StreamBuilder(
+    stream: bloc.outUserName,
+    builder: (context, snapshot) {
+      return TextField(
+        onChanged: bloc.inUserName,
+        decoration: InputDecoration(
+          errorText: snapshot.error,
+        ),
+      );
+    },
+  );
+}
 
-  Widget continueButton(SignUpBloc bloc, ApplicationBloc appBloc) {
-    return StreamBuilder(
-      stream: bloc.updateDetailsValid,
-      builder: (context, snapshot) {
-        return RaisedButton(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30.0),
+Widget continueButton(SignUpBloc bloc, ApplicationBloc appBloc) {
+  return StreamBuilder(
+    stream: bloc.updateDetailsValid,
+    builder: (context, snapshot) {
+      return RaisedButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+        color: Colors.blueAccent,
+        elevation: 4.0,
+        onPressed: snapshot.hasData ? () {
+            bloc.submitDetails(appBloc.reazzonUser).then((_){
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => 
+                      ThirdSignUpPage()
+                  ) 
+                );
+            });
+          }
+          : null,
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            vertical: 20.0,
+            horizontal: 20.0
           ),
-          color: Colors.blueAccent,
-          elevation: 4.0,
-          onPressed: snapshot.hasData ? () {
-              bloc.submitDetails(appBloc.reazzonUser).then((_){
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        //Send to third page
-                      ) 
-                  );
-              });
-            }
-            : null,
-          child: Container(
-            padding: const EdgeInsets.symmetric(
-              vertical: 20.0,
-              horizontal: 20.0
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Expanded(
-                  child: Text(
-                    "CONTINUE",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Expanded(
+                child: Text(
+                  "CONTINUE",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
-                )
-              ],
-            ),
-          ), 
-        );
-      },
-    );
-  }
+                ),
+              )
+            ],
+          ),
+        ), 
+      );
+    },
+  );
 }
