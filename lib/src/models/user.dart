@@ -4,9 +4,15 @@ class User {
   FirebaseUser _firebaseUser;
   String _userId;
   String _emailAddress;
+  String _firstName;
+  String _lastName;
+  String _userName;
 
   String get userId => _userId;
   String get emailAddress => _emailAddress;
+  String get firstName => _firstName;
+  String get lastName => _lastName;
+  String get userName => _userName;
   
   User(FirebaseUser authenticatedUser) {
     _userId = authenticatedUser.uid;
@@ -19,6 +25,10 @@ class User {
     userInfo.displayName = firstName + '||' + lastName + '||' + userName;
     
     await _firebaseUser.updateProfile(userInfo);
+
+    _firstName = firstName;
+    _lastName = lastName;
+    _userName = userName;
   }
 
 }

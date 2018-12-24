@@ -7,12 +7,28 @@ import 'package:reazzon/src/services/firebase_authentication.dart';
 import 'package:rxdart/rxdart.dart';
 
 class SignUpBloc with Validators implements BlocBase {
+
+  SignUpBloc()
+  {
+    var _availableReazzons = new List<String>();
+    _availableReazzons.addAll([
+        '#Divorce', '#Perfectionist', '#Breakups', '#Loneliness', '#Grief', 
+        '#WorkStress', '#FinancialStress', '#KidsCustody', '#Bullying', '#Insomnia'
+        '#ManagingEmotions', '#MoodSwings', '#Anxiety', '#Breakups', '#Cheating',
+        '#SelfEsteem', '#BodyImage', '#ExerciseMotivation', '#PreasureToSucceed'
+      ]);
+    _reazzonsController.add(_availableReazzons);
+  }
+
   final _emailController = BehaviorSubject<String>();
   final _passwordController = BehaviorSubject<String>();
   final _confirmPasswordController = BehaviorSubject<String>();
   final _firstNameController = BehaviorSubject<String>();
   final _lastNameController = BehaviorSubject<String>();
   final _userNameController = BehaviorSubject<String>();
+
+  PublishSubject<List<String>> _reazzonsController = PublishSubject<List<String>>();
+  PublishSubject<List<String>> _selectedReazzonsController = PublishSubject<List<String>>();
 
   // Add data to stream
   Stream<String> get outEmail => _emailController.stream.transform(validateEmail);
@@ -29,9 +45,10 @@ class SignUpBloc with Validators implements BlocBase {
 
   Stream<bool> get submitValid => Observable.combineLatest3(
     outEmail, outPassword, outConfirmPassword, (e, p, cp) => true );
-
   Stream<bool> get updateDetailsValid => Observable.combineLatest3(
     outFirstName, outLastName, outUserName, (f, l, u) => true );
+
+  Stream<List<String>> get outReazzons => _reazzonsController.stream;
   
   // Change data
   Function(String) get inEmail => _emailController.sink.add;
@@ -41,6 +58,7 @@ class SignUpBloc with Validators implements BlocBase {
   Function(String) get inFirstName => _firstNameController.sink.add;
   Function(String) get inLastName => _lastNameController.sink.add;
   Function(String) get inUserName => _userNameController.sink.add;
+
 
   Future<FirebaseUser> submit() async {
     return await firebaseAuthentication.signUp(
@@ -65,5 +83,7 @@ class SignUpBloc with Validators implements BlocBase {
     _firstNameController.close();
     _lastNameController.close();
     _userNameController.close();
+    _reazzonsController.close();
+    _selectedReazzonsController.close();
   }
 }
