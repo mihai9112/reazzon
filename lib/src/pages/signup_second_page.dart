@@ -229,13 +229,11 @@ Widget continueButton(SignUpBloc bloc, ApplicationBloc appBloc) {
         elevation: 4.0,
         onPressed: snapshot.hasData ? () {
             bloc.submitDetails(appBloc.reazzonUser).then((_){
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => 
-                      ThirdSignUpPage()
-                  ) 
-                );
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (BuildContext context) => ThirdSignUpPage()
+                )
+              );
             });
           }
           : null,

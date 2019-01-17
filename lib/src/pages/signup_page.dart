@@ -223,12 +223,10 @@ class _SignUpPageState extends State<SignUpPage>{
           onPressed: snapshot.hasData ? () {
               bloc.submit().then((currentUser) {
                 appBloc.inCurrentUser.add(currentUser);
-                Navigator.push(
-                  context,
+                Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => 
-                    SecondSignUpPage()
-                  ) 
+                    builder: (BuildContext context) => SecondSignUpPage()
+                  )
                 );
               });
             }

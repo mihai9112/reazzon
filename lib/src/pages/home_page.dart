@@ -61,10 +61,10 @@ class HomeScreen extends StatelessWidget {
                       color: Colors.redAccent,
                       highlightedBorderColor: Colors.white,
                       onPressed: () {
-                        Navigator.push(
-                          context,
+                        Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => SignUpPage()) 
+                            builder: (BuildContext context) => SignUpPage()
+                          )
                         );
                       },
                       child: Container(

@@ -6,19 +6,15 @@ import 'package:rxdart/rxdart.dart';
 
 class ApplicationBloc implements BlocBase {
   User reazzonUser;
-  final List<String> availableReazzons = new List<String>();
 
+  BehaviorSubject<List<String>> _availableReazzonsController = BehaviorSubject<List<String>>();
   BehaviorSubject<FirebaseUser> _currentUserController = BehaviorSubject<FirebaseUser>();
   Sink<FirebaseUser> get inCurrentUser => _currentUserController.sink;
   Stream<FirebaseUser> get outCurrentUser => _currentUserController.stream;
+  Stream<List<String>> get outAvailableReazzons => _availableReazzonsController;
 
   ApplicationBloc(){
-    availableReazzons.addAll([
-        '#Divorce', '#Perfectionist', '#Breakups', '#Loneliness', '#Grief', 
-        '#WorkStress', '#FinancialStress', '#KidsCustody', '#Bullying', '#Insomnia'
-        '#ManagingEmotions', '#MoodSwings', '#Anxiety', '#Breakups', '#Cheating',
-        '#SelfEsteem', '#BodyImage', '#ExerciseMotivation', '#PreasureToSucceed'
-      ]);
+    _loadReazzons();
     _currentUserController.listen(_setCurrentUser);
   }
 
@@ -27,11 +23,20 @@ class ApplicationBloc implements BlocBase {
     if(authenticatedUser == null)
       throw new ArgumentError.notNull(authenticatedUser.runtimeType.toString());
 
+    
     reazzonUser = new User(authenticatedUser);
+  }
+
+  void _loadReazzons()
+  {
+    _availableReazzonsController.sink.add(List<String>.generate(20, (int index){
+      return index.toString();
+    }));
   }
 
   @override
   void dispose() {
     _currentUserController.close();
+    _availableReazzonsController?.close();
   }
 }

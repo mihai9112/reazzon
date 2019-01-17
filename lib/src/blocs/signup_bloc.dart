@@ -15,6 +15,7 @@ class SignUpBloc with Validators implements BlocBase {
   final _lastNameController = BehaviorSubject<String>();
   final _userNameController = BehaviorSubject<String>();
 
+
   PublishSubject<List<String>> _selectedReazzonsController = PublishSubject<List<String>>();
 
   // Add data to stream
