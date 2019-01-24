@@ -14,6 +14,7 @@ class User {
   String get firstName => _firstName;
   String get lastName => _lastName;
   String get userName => _userName;
+  FirebaseUser get firebaseUser => _firebaseUser;
   
   User(FirebaseUser authenticatedUser) {
     _userId = authenticatedUser.uid;

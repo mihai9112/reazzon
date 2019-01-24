@@ -3,6 +3,7 @@ import 'package:reazzon/src/blocs/application_bloc.dart';
 import 'package:reazzon/src/blocs/bloc_provider.dart';
 import 'package:reazzon/src/blocs/signup_bloc.dart';
 import 'package:reazzon/src/helpers/fieldFocus.dart';
+import 'package:reazzon/src/models/user.dart';
 import 'package:reazzon/src/pages/signup_third_page.dart';
 
 class SecondSignUpPage extends StatefulWidget {
@@ -228,12 +229,14 @@ Widget continueButton(SignUpBloc bloc, ApplicationBloc appBloc) {
         color: Colors.blueAccent,
         elevation: 4.0,
         onPressed: snapshot.hasData ? () {
-            bloc.submitDetails(appBloc.reazzonUser).then((_){
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (BuildContext context) => ThirdSignUpPage()
-                )
-              );
+            appBloc.outCurrentUser.listen((User user){
+              bloc.submitDetails(user).then((_){
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => ThirdSignUpPage()
+                  )
+                );
+              });
             });
           }
           : null,

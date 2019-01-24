@@ -5,8 +5,6 @@ import 'package:reazzon/src/models/user.dart';
 import 'package:rxdart/rxdart.dart';
 
 class ApplicationBloc implements BlocBase {
-  User reazzonUser;
-
   BehaviorSubject<List<String>> _availableReazzonsController = BehaviorSubject<List<String>>();
   BehaviorSubject<User> _currentUserController = BehaviorSubject<User>();
 
