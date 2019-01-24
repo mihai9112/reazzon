@@ -59,7 +59,7 @@ class ThirdSignUpPage extends StatelessWidget {
                                         {
                                           if(snapshot.data != null)
                                           {
-                                            RichText(
+                                            return RichText(
                                               textAlign: TextAlign.center,
                                               text: TextSpan(
                                                 style: TextStyle(color: Colors.black),
