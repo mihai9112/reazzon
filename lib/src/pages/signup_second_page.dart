@@ -176,12 +176,12 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
   }
 }
 
-Widget firstNameField(SignUpBloc bloc) {
+Widget firstNameField(SignUpBloc signUpBloc) {
   return StreamBuilder(
-    stream: bloc.outFirstName,
+    stream: signUpBloc.outFirstName,
     builder: (context, snapshot) {
       return TextField(
-        onChanged: bloc.inFirstName,
+        onChanged: signUpBloc.inFirstName,
         decoration: InputDecoration(
           errorText: snapshot.error,
         ),
@@ -190,12 +190,12 @@ Widget firstNameField(SignUpBloc bloc) {
   );
 }
 
-Widget lastNameField(SignUpBloc bloc) {
+Widget lastNameField(SignUpBloc signUpBloc) {
   return StreamBuilder(
-    stream: bloc.outLastName,
+    stream: signUpBloc.outLastName,
     builder: (context, snapshot) {
       return TextField(
-        onChanged: bloc.inLastName,
+        onChanged: signUpBloc.inLastName,
         decoration: InputDecoration(
           errorText: snapshot.error,
         ),
@@ -204,12 +204,12 @@ Widget lastNameField(SignUpBloc bloc) {
   );
 }
 
-Widget userNameField(SignUpBloc bloc) {
+Widget userNameField(SignUpBloc signUpBloc) {
   return StreamBuilder(
-    stream: bloc.outUserName,
+    stream: signUpBloc.outUserName,
     builder: (context, snapshot) {
       return TextField(
-        onChanged: bloc.inUserName,
+        onChanged: signUpBloc.inUserName,
         decoration: InputDecoration(
           errorText: snapshot.error,
         ),
@@ -218,9 +218,9 @@ Widget userNameField(SignUpBloc bloc) {
   );
 }
 
-Widget continueButton(SignUpBloc bloc, ApplicationBloc appBloc) {
+Widget continueButton(SignUpBloc signUpBloc, ApplicationBloc appBloc) {
   return StreamBuilder(
-    stream: bloc.updateDetailsValid,
+    stream: signUpBloc.updateDetailsValid,
     builder: (context, snapshot) {
       return RaisedButton(
         shape: RoundedRectangleBorder(
@@ -230,7 +230,7 @@ Widget continueButton(SignUpBloc bloc, ApplicationBloc appBloc) {
         elevation: 4.0,
         onPressed: snapshot.hasData ? () {
             appBloc.outCurrentUser.listen((User user){
-              bloc.submitDetails(user).then((_){
+              signUpBloc.submitDetails(user).then((_){
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (BuildContext context) => ThirdSignUpPage()
