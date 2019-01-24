@@ -8,24 +8,25 @@ class ApplicationBloc implements BlocBase {
   User reazzonUser;
 
   BehaviorSubject<List<String>> _availableReazzonsController = BehaviorSubject<List<String>>();
-  BehaviorSubject<FirebaseUser> _currentUserController = BehaviorSubject<FirebaseUser>();
-  Sink<FirebaseUser> get inCurrentUser => _currentUserController.sink;
-  Stream<FirebaseUser> get outCurrentUser => _currentUserController.stream;
+  BehaviorSubject<User> _currentUserController = BehaviorSubject<User>();
+
+  Sink<User> get _inCurrentUser => _currentUserController.sink;
+  Stream<User> get outCurrentUser => _currentUserController.stream;
+  
 
   Sink<List<String>> get _inAvailableReazzons => _availableReazzonsController.sink;
   Stream<List<String>> get outAvailableReazzons => _availableReazzonsController.stream;
 
   ApplicationBloc(){
     _loadReazzons();
-    _currentUserController.listen(_setCurrentUser);
   }
 
-  void _setCurrentUser(FirebaseUser authenticatedUser)
+  void setCurrentUser(FirebaseUser authenticatedUser)
   {
     if(authenticatedUser == null)
       throw new ArgumentError.notNull(authenticatedUser.runtimeType.toString());
 
-    reazzonUser = new User(authenticatedUser);
+    _inCurrentUser.add(new User(authenticatedUser));
   }
 
   void _loadReazzons()
@@ -33,7 +34,7 @@ class ApplicationBloc implements BlocBase {
     var availableReazzons = new List<String>();
     availableReazzons.addAll([
         '#Divorce', '#Perfectionist', '#Breakups', '#Loneliness', '#Grief', 
-        '#WorkStress', '#FinancialStress', '#KidsCustody', '#Bullying', '#Insomnia'
+        '#WorkStress', '#FinancialStress', '#KidsCustody', '#Bullying', '#Insomnia',
         '#ManagingEmotions', '#MoodSwings', '#Anxiety', '#Breakups', '#Cheating',
         '#SelfEsteem', '#BodyImage', '#ExerciseMotivation', '#PreasureToSucceed'
     ]);

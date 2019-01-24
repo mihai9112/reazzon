@@ -107,30 +107,12 @@ class ThirdSignUpPage extends StatelessWidget {
           }
         )
       );
+      children.add(
+        TextSpan(
+          text: " "
+        )
+      );
     }
     return children;
-  }
-
-  Widget _streamReazzons(ApplicationBloc appBloc)
-  {
-    return StreamBuilder(
-      stream: appBloc.outAvailableReazzons,
-      builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot){
-        if(!snapshot.hasData)
-        {
-          Text('poop');
-        }
-        else
-        {
-          RichText(
-            textAlign: TextAlign.center,
-            text: TextSpan(
-              style: TextStyle(color: Colors.black),
-              children: _buildReazzons(snapshot.data)
-            ),
-          );
-        }
-      },
-    );
   }
 }
