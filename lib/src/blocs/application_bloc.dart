@@ -11,7 +11,9 @@ class ApplicationBloc implements BlocBase {
   BehaviorSubject<FirebaseUser> _currentUserController = BehaviorSubject<FirebaseUser>();
   Sink<FirebaseUser> get inCurrentUser => _currentUserController.sink;
   Stream<FirebaseUser> get outCurrentUser => _currentUserController.stream;
-  Stream<List<String>> get outAvailableReazzons => _availableReazzonsController;
+
+  Sink<List<String>> get _inAvailableReazzons => _availableReazzonsController.sink;
+  Stream<List<String>> get outAvailableReazzons => _availableReazzonsController.stream;
 
   ApplicationBloc(){
     _loadReazzons();
@@ -23,15 +25,19 @@ class ApplicationBloc implements BlocBase {
     if(authenticatedUser == null)
       throw new ArgumentError.notNull(authenticatedUser.runtimeType.toString());
 
-    
     reazzonUser = new User(authenticatedUser);
   }
 
   void _loadReazzons()
   {
-    _availableReazzonsController.sink.add(List<String>.generate(20, (int index){
-      return index.toString();
-    }));
+    var availableReazzons = new List<String>();
+    availableReazzons.addAll([
+        '#Divorce', '#Perfectionist', '#Breakups', '#Loneliness', '#Grief', 
+        '#WorkStress', '#FinancialStress', '#KidsCustody', '#Bullying', '#Insomnia'
+        '#ManagingEmotions', '#MoodSwings', '#Anxiety', '#Breakups', '#Cheating',
+        '#SelfEsteem', '#BodyImage', '#ExerciseMotivation', '#PreasureToSucceed'
+    ]);
+    _inAvailableReazzons.add(availableReazzons);
   }
 
   @override

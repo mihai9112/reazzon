@@ -57,13 +57,17 @@ class ThirdSignUpPage extends StatelessWidget {
                                         stream: _appBloc.outAvailableReazzons,
                                         builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot)
                                         {
-                                          RichText(
-                                            textAlign: TextAlign.center,
-                                            text: TextSpan(
-                                              style: TextStyle(color: Colors.black),
-                                              children: _buildReazzons(snapshot.data)
-                                            ),
-                                          );
+                                          if(snapshot.data != null)
+                                          {
+                                            RichText(
+                                              textAlign: TextAlign.center,
+                                              text: TextSpan(
+                                                style: TextStyle(color: Colors.black),
+                                                children: _buildReazzons(snapshot.data)
+                                              ),
+                                            );
+                                          }
+                                          return Container();
                                         },
                                       )
                                     )
