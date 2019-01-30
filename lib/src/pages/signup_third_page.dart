@@ -2,12 +2,35 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:reazzon/src/blocs/application_bloc.dart';
 import 'package:reazzon/src/blocs/bloc_provider.dart';
+import 'package:reazzon/src/blocs/signup_bloc.dart';
+import 'package:reazzon/src/models/reazzon.dart';
 
-class ThirdSignUpPage extends StatelessWidget {
+class ThirdSignUpPage extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _ThirdSignUpPageState();
+}
+
+class _ThirdSignUpPageState extends State<ThirdSignUpPage> {
+  SignUpBloc _signUpBloc;
+
+   @override
+  void initState()
+  {
+    super.initState();
+    _signUpBloc = new SignUpBloc();
+  }
+
+  @override
+  void dispose()
+  {
+    _signUpBloc?.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
 
-    final ApplicationBloc _appBloc = BlocProvider.of<ApplicationBloc>(context);
+    final _appBloc = BlocProvider.of<ApplicationBloc>(context);
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -55,7 +78,7 @@ class ThirdSignUpPage extends StatelessWidget {
                                     Flexible(
                                       child: StreamBuilder(
                                         stream: _appBloc.outAvailableReazzons,
-                                        builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot)
+                                        builder: (BuildContext context, AsyncSnapshot<List<Reazzon>> snapshot)
                                         {
                                           if(snapshot.data != null)
                                           {
@@ -63,7 +86,7 @@ class ThirdSignUpPage extends StatelessWidget {
                                               textAlign: TextAlign.center,
                                               text: TextSpan(
                                                 style: TextStyle(color: Colors.black),
-                                                children: _buildReazzons(snapshot.data)
+                                                children: _buildReazzons(snapshot.data, _signUpBloc)
                                               ),
                                             );
                                           }
@@ -88,31 +111,32 @@ class ThirdSignUpPage extends StatelessWidget {
       )
     );
   }
+}
 
-  List<TextSpan> _buildReazzons(List<String> availableReazzons)
+List<TextSpan> _buildReazzons(List<Reazzon> availableReazzons, SignUpBloc signUpBloc)
+{
+  List<TextSpan> children = [];
+  for(var reazzon in availableReazzons)
   {
-    List<TextSpan> children = [];
-    for(var reazzon in availableReazzons)
-    {
-      children.add(
-        TextSpan(
-          text: reazzon,
-          style: new TextStyle(
-            color: Colors.blue,
-            decoration: TextDecoration.underline,
-          ),
-          recognizer: TapGestureRecognizer()
-          ..onTap = () {
-            print(reazzon);
-          }
-        )
-      );
-      children.add(
-        TextSpan(
-          text: " "
-        )
-      );
-    }
-    return children;
+    children.add(
+      TextSpan(
+        text: reazzon.value,
+        style: new TextStyle(
+          color: Colors.blue,
+          fontWeight: reazzon.isSelected ? FontWeight.bold : FontWeight.normal,
+          decoration: TextDecoration.underline,
+        ),
+        recognizer: TapGestureRecognizer()
+        ..onTap = () {
+          print(reazzon.value);
+        }
+      )
+    );
+    children.add(
+      TextSpan(
+        text: " "
+      )
+    );
   }
+  return children;
 }

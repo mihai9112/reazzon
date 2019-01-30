@@ -230,7 +230,7 @@ Widget continueButton(SignUpBloc signUpBloc, ApplicationBloc appBloc) {
         elevation: 4.0,
         onPressed: snapshot.hasData ? () {
             appBloc.outCurrentUser.listen((User user){
-              signUpBloc.submitDetails(user).then((_){
+              signUpBloc.updateDetails(user).then((_){
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (BuildContext context) => ThirdSignUpPage()

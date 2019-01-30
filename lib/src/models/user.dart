@@ -8,6 +8,7 @@ class User {
   String _firstName;
   String _lastName;
   String _userName;
+  List<String> _selectedReazzons;
 
   String get userId => _userId;
   String get emailAddress => _emailAddress;
@@ -15,6 +16,7 @@ class User {
   String get lastName => _lastName;
   String get userName => _userName;
   FirebaseUser get firebaseUser => _firebaseUser;
+  List<String> get selectedReazzons => _selectedReazzons;
   
   User(FirebaseUser authenticatedUser) {
     _userId = authenticatedUser.uid;
@@ -33,4 +35,8 @@ class User {
     _userName = userName;
   }
 
+  void addSelectedReazzons(List<String> selectedReazzons)
+  {
+    _selectedReazzons = selectedReazzons;
+  }
 }
