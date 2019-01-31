@@ -33,18 +33,17 @@ class _ThirdSignUpPageState extends State<ThirdSignUpPage> {
     final _appBloc = BlocProvider.of<ApplicationBloc>(context);
 
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
-          height: MediaQuery.of(context).size.height,
-          decoration: BoxDecoration(
-            color: Colors.white
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Container(height: 20.0),
-              Container(padding: const EdgeInsets.all(55.0)),
-              Container(
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        decoration: BoxDecoration(
+          color: Colors.white
+        ),
+        child: Column(
+          children: <Widget>[
+            Container(height: 20.0),
+            Container(padding: const EdgeInsets.all(55.0)),
+            Flexible(
+              child: Container(
                 margin: const EdgeInsets.all(20.0),
                 padding: const EdgeInsets.all(10.0),
                 decoration: BoxDecoration(
@@ -53,90 +52,42 @@ class _ThirdSignUpPageState extends State<ThirdSignUpPage> {
                     color:  Colors.black
                   )
                 ),
-                child: Row(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     Flexible(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Container(
-                            child: Text("Your Reazzons"),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.all(15.0),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                              border: Border.all(
-                                color: Colors.black
-                              )
+                      child: StreamBuilder<List<Reazzon>>(
+                        stream: _appBloc.outAvailableReazzons,
+                        builder: (BuildContext context, AsyncSnapshot<List<Reazzon>> snapshot){
+                          return GridView.builder(
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              childAspectRatio: 2.0
                             ),
-                            child: Column(
-                              children: <Widget>[
-                                Row(
-                                  children: <Widget>[
-                                    Flexible(
-                                      child: StreamBuilder(
-                                        stream: _appBloc.outAvailableReazzons,
-                                        builder: (BuildContext context, AsyncSnapshot<List<Reazzon>> snapshot)
-                                        {
-                                          if(snapshot.data != null)
-                                          {
-                                            return RichText(
-                                              textAlign: TextAlign.center,
-                                              text: TextSpan(
-                                                style: TextStyle(color: Colors.black),
-                                                children: _buildReazzons(snapshot.data, _signUpBloc)
-                                              ),
-                                            );
-                                          }
-                                          return Container();
-                                        },
-                                      )
-                                    )
-                                  ],
+                            itemBuilder: (BuildContext context, int index){
+                              var reazzon = snapshot.data[index];
+                              return GestureDetector(
+                                child: Card(
+                                  elevation: 5.0,
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    child: new Text(reazzon.value),
+                                  ),
                                 ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
+                              );
+                            },
+                            itemCount: (snapshot.data == null ? 0 : snapshot.data.length),
+                          );
+                        },
+                      )
                     )
                   ],
-                ),
+                ), 
               )
-            ],
-          ),
+            )
+          ],
         ),
       )
     );
   }
-}
-
-List<TextSpan> _buildReazzons(List<Reazzon> availableReazzons, SignUpBloc signUpBloc)
-{
-  List<TextSpan> children = [];
-  for(var reazzon in availableReazzons)
-  {
-    children.add(
-      TextSpan(
-        text: reazzon.value,
-        style: new TextStyle(
-          color: Colors.blue,
-          fontWeight: reazzon.isSelected ? FontWeight.bold : FontWeight.normal,
-          decoration: TextDecoration.underline,
-        ),
-        recognizer: TapGestureRecognizer()
-        ..onTap = () {
-          print(reazzon.value);
-        }
-      )
-    );
-    children.add(
-      TextSpan(
-        text: " "
-      )
-    );
-  }
-  return children;
 }
