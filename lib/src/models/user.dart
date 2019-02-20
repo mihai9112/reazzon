@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:reazzon/src/models/reazzon.dart';
 
 class User {
   FirebaseUser _firebaseUser;
@@ -8,7 +9,7 @@ class User {
   String _firstName;
   String _lastName;
   String _userName;
-  List<String> _selectedReazzons;
+  Set<Reazzon> _selectedReazzons;
 
   String get userId => _userId;
   String get emailAddress => _emailAddress;
@@ -16,7 +17,7 @@ class User {
   String get lastName => _lastName;
   String get userName => _userName;
   FirebaseUser get firebaseUser => _firebaseUser;
-  List<String> get selectedReazzons => _selectedReazzons;
+  Set<Reazzon> get selectedReazzons => _selectedReazzons;
   
   User(FirebaseUser authenticatedUser) {
     _userId = authenticatedUser.uid;
@@ -35,8 +36,8 @@ class User {
     _userName = userName;
   }
 
-  void addSelectedReazzons(List<String> selectedReazzons)
+  void addSelectedReazzons(Reazzon selectedReazzons)
   {
-    _selectedReazzons = selectedReazzons;
+    _selectedReazzons.add(selectedReazzons);
   }
 }

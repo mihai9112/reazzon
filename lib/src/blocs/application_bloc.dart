@@ -6,12 +6,10 @@ import 'package:reazzon/src/models/user.dart';
 import 'package:rxdart/rxdart.dart';
 
 class ApplicationBloc implements BlocBase {
-  
-  BehaviorSubject<List<Reazzon>> _availableReazzonsController = BehaviorSubject<List<Reazzon>>();
-  BehaviorSubject<User> _currentUserController = BehaviorSubject<User>();
+  User _currentUser;
+  User get currentUser => _currentUser;
 
-  Sink<User> get _inCurrentUser => _currentUserController.sink;
-  Stream<User> get outCurrentUser => _currentUserController.stream;
+  BehaviorSubject<List<Reazzon>> _availableReazzonsController = BehaviorSubject<List<Reazzon>>();
 
   Sink<List<Reazzon>> get _inAvailableReazzons => _availableReazzonsController.sink;
   Stream<List<Reazzon>> get outAvailableReazzons => _availableReazzonsController.stream;
@@ -24,8 +22,8 @@ class ApplicationBloc implements BlocBase {
   {
     if(authenticatedUser == null)
       throw new ArgumentError.notNull(authenticatedUser.runtimeType.toString());
-
-    _inCurrentUser.add(new User(authenticatedUser));
+    
+    _currentUser = new User(authenticatedUser);
   }
 
   void _loadReazzons()
@@ -46,13 +44,12 @@ class ApplicationBloc implements BlocBase {
     _inAvailableReazzons.add(availableReazzons);
   }
 
-  void selectReazzon(Reazzon selectedReazzon){
-    
+  void updateReazzons(List<Reazzon> reazzons){
+    _inAvailableReazzons.add(reazzons);
   }
 
   @override
   void dispose() {
-    _currentUserController.close();
     _availableReazzonsController?.close();
   }
 }

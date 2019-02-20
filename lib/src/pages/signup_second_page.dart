@@ -229,14 +229,12 @@ Widget continueButton(SignUpBloc signUpBloc, ApplicationBloc appBloc) {
         color: Colors.blueAccent,
         elevation: 4.0,
         onPressed: snapshot.hasData ? () {
-            appBloc.outCurrentUser.listen((User user){
-              signUpBloc.updateDetails(user).then((_){
-                Navigator.of(context).push(
+            signUpBloc.updateDetails(appBloc.currentUser).then((_){
+              Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (BuildContext context) => ThirdSignUpPage()
                   )
-                );
-              });
+              );
             });
           }
           : null,

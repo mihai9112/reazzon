@@ -8,14 +8,12 @@ import 'package:rxdart/rxdart.dart';
 
 class SignUpBloc with Validators implements BlocBase {
 
-  var _selectedReazzons = new List<String>();
   final _emailController = BehaviorSubject<String>();
   final _passwordController = BehaviorSubject<String>();
   final _confirmPasswordController = BehaviorSubject<String>();
   final _firstNameController = BehaviorSubject<String>();
   final _lastNameController = BehaviorSubject<String>();
   final _userNameController = BehaviorSubject<String>();
-  final _selectedReazzonsController = BehaviorSubject<List<String>>();
 
   Stream<String> get outEmail => _emailController.stream.transform(validateEmail);
   Stream<String> get outPassword => _passwordController.stream.transform(validatePassword);
@@ -32,7 +30,6 @@ class SignUpBloc with Validators implements BlocBase {
     outEmail, outPassword, outConfirmPassword, (e, p, cp) => true );
   Stream<bool> get updateDetailsValid => Observable.combineLatest3(
     outFirstName, outLastName, outUserName, (f, l, u) => true );
-  Stream<List<String>> get outSelectedReazzons => _selectedReazzonsController.stream;
   
   // Change data
   Function(String) get inEmail => _emailController.sink.add;
@@ -58,17 +55,6 @@ class SignUpBloc with Validators implements BlocBase {
     ); 
   }
 
-  void selectReazzons(String selectedReazzon){
-    if(_selectedReazzons.length < 3){
-      _selectedReazzons.add(selectedReazzon);
-    }
-    else{
-      _selectedReazzonsController.sink.addError(
-        "No more then 3 reazzons selected"
-      );
-    }
-  }
-
   @override
   void dispose() {
     _emailController.close();
@@ -77,6 +63,5 @@ class SignUpBloc with Validators implements BlocBase {
     _firstNameController.close();
     _lastNameController.close();
     _userNameController.close();
-    _selectedReazzonsController.close();
   }
 }

@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:reazzon/src/blocs/application_bloc.dart';
 import 'package:reazzon/src/blocs/bloc_provider.dart';
@@ -49,7 +48,7 @@ class _ThirdSignUpPageState extends State<ThirdSignUpPage> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(15.0)),
                   border: Border.all(
-                    color:  Colors.black
+                    color: Colors.black
                   )
                 ),
                 child: Column(
@@ -62,7 +61,7 @@ class _ThirdSignUpPageState extends State<ThirdSignUpPage> {
                           return GridView.builder(
                             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 3,
-                              childAspectRatio: 2.0
+                              childAspectRatio: 3.0
                             ),
                             itemBuilder: (BuildContext context, int index){
                               var reazzon = snapshot.data[index];
@@ -71,9 +70,32 @@ class _ThirdSignUpPageState extends State<ThirdSignUpPage> {
                                   elevation: 5.0,
                                   child: Container(
                                     alignment: Alignment.center,
-                                    child: new Text(reazzon.value),
+                                    child: new Text(reazzon.value,
+                                      style: new TextStyle(fontWeight: reazzon.isSelected ? FontWeight.bold : FontWeight.normal),
+                                    ),
                                   ),
                                 ),
+                                onTap: () {
+                                  var isLessThen3 = snapshot.data.where((reazzon) => reazzon.isSelected).length < 3;
+                                  var originalValue = reazzon.isSelected;
+
+                                  if(!reazzon.isSelected && isLessThen3){
+                                    reazzon.select();
+                                    _appBloc.updateReazzons(snapshot.data);
+                                  }
+                                  else{
+                                    reazzon.deselect();
+                                    _appBloc.updateReazzons(snapshot.data);
+                                  }
+
+                                  if(reazzon.isSelected && !isLessThen3) {
+                                    reazzon.deselect();
+                                    _appBloc.updateReazzons(snapshot.data);
+                                  }
+                                    
+                                  if(originalValue == reazzon.isSelected && !isLessThen3)
+                                    print("More then 3 selected");
+                                },
                               );
                             },
                             itemCount: (snapshot.data == null ? 0 : snapshot.data.length),

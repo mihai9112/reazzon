@@ -1,8 +1,22 @@
 class Reazzon {
-  bool isSelected;
-  String value;
+  bool _isSelected;
+  String _value;
 
-  Reazzon(this.value){
-    isSelected = false;
+  bool get isSelected => _isSelected;
+  String get value => _value;
+
+  Reazzon(this._value){
+    _isSelected = false;
+  }
+
+  void select(){
+    if(!_isSelected)
+      _isSelected = true;
+  }
+
+  void deselect(){
+    if(_isSelected){
+      _isSelected = false;
+    }
   }
 }
