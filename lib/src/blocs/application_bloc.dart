@@ -35,11 +35,10 @@ class ApplicationBloc implements BlocBase {
       new Reazzon("#Grief"), new Reazzon("#WorkStress"),
       new Reazzon("#FinancialStress"), new Reazzon("#KidsCustody"),
       new Reazzon("#Bullying"), new Reazzon("#Insomnia"),
-      new Reazzon("#ManagingEmotions"), new Reazzon("#MoodSwings"),
+      new Reazzon("#MoodSwings"), new Reazzon("#Preasure\nToSucceed"),
       new Reazzon("#Anxiety"), new Reazzon("#Breakups"),
       new Reazzon("#Cheating"), new Reazzon("#SelfEsteem"),
-      new Reazzon("#BodyImage"), new Reazzon("#ExerciseMotivation"),
-      new Reazzon("#PreasureToSucceed")
+      new Reazzon("#BodyImage"), new Reazzon("#Exercise\nMotivation")
     ]);
     _inAvailableReazzons.add(availableReazzons);
   }
