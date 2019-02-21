@@ -17,6 +17,7 @@ class _ThirdSignUpPageState extends State<ThirdSignUpPage> {
   {
     super.initState();
     _signUpBloc = new SignUpBloc();
+    _signUpBloc.loadReazzons();
   }
 
   @override
@@ -63,7 +64,7 @@ class _ThirdSignUpPageState extends State<ThirdSignUpPage> {
                 ),
                 height: 300.0,
                 child: StreamBuilder<List<Reazzon>>(
-                  stream: _appBloc.outAvailableReazzons,
+                  stream: _signUpBloc.outAvailableReazzons,
                   builder: (BuildContext context, AsyncSnapshot<List<Reazzon>> snapshot){
                     return GridView.builder(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -89,16 +90,16 @@ class _ThirdSignUpPageState extends State<ThirdSignUpPage> {
 
                             if(!reazzon.isSelected && isLessThen3){
                               reazzon.select();
-                              _appBloc.updateReazzons(snapshot.data);
+                              _signUpBloc.updateReazzons(snapshot.data);
                             }
                             else{
                               reazzon.deselect();
-                              _appBloc.updateReazzons(snapshot.data);
+                              _signUpBloc.updateReazzons(snapshot.data);
                             }
 
                             if(reazzon.isSelected && !isLessThen3) {
                               reazzon.deselect();
-                              _appBloc.updateReazzons(snapshot.data);
+                              _signUpBloc.updateReazzons(snapshot.data);
                             }
                               
                             if(originalValue == reazzon.isSelected && !isLessThen3)
