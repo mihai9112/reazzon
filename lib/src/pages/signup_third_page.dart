@@ -41,6 +41,16 @@ class _ThirdSignUpPageState extends State<ThirdSignUpPage> {
           children: <Widget>[
             Container(height: 20.0),
             Container(padding: const EdgeInsets.all(55.0)),
+            Text("Hello ${_appBloc.currentUser.userName}"),
+            Container(
+              child: StreamBuilder<String>(
+                stream: _signUpBloc.outReazzonMessage,
+                builder: (BuildContext context, AsyncSnapshot<String> snapshot){
+                  return snapshot.hasData ? Text(snapshot.data) : null;
+                },
+                initialData: "Select at least 1 reazzon",
+              )
+            ),
             Flexible(
               child: Container(
                 margin: const EdgeInsets.all(10.0),
@@ -92,7 +102,7 @@ class _ThirdSignUpPageState extends State<ThirdSignUpPage> {
                             }
                               
                             if(originalValue == reazzon.isSelected && !isLessThen3)
-                              print("More then 3 selected");
+                              _signUpBloc.inReazzonMessage("No more then 3 reazzon to be selected");
                           },
                         );
                       },

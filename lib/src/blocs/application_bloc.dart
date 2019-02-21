@@ -10,7 +10,7 @@ class ApplicationBloc implements BlocBase {
   User get currentUser => _currentUser;
 
   BehaviorSubject<List<Reazzon>> _availableReazzonsController = BehaviorSubject<List<Reazzon>>();
-
+  
   Sink<List<Reazzon>> get _inAvailableReazzons => _availableReazzonsController.sink;
   Stream<List<Reazzon>> get outAvailableReazzons => _availableReazzonsController.stream;
 
@@ -24,6 +24,10 @@ class ApplicationBloc implements BlocBase {
       throw new ArgumentError.notNull(authenticatedUser.runtimeType.toString());
     
     _currentUser = new User(authenticatedUser);
+  }
+
+  void updateUser(User user){
+    _currentUser = user;
   }
 
   void _loadReazzons()

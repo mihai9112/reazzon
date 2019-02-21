@@ -229,7 +229,8 @@ Widget continueButton(SignUpBloc signUpBloc, ApplicationBloc appBloc) {
         color: Colors.blueAccent,
         elevation: 4.0,
         onPressed: snapshot.hasData ? () {
-            signUpBloc.updateDetails(appBloc.currentUser).then((_){
+            signUpBloc.updateDetails(appBloc.currentUser).then((updatedUser){
+              appBloc.updateUser(updatedUser);
               Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (BuildContext context) => ThirdSignUpPage()

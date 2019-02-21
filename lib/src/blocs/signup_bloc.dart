@@ -14,6 +14,7 @@ class SignUpBloc with Validators implements BlocBase {
   final _firstNameController = BehaviorSubject<String>();
   final _lastNameController = BehaviorSubject<String>();
   final _userNameController = BehaviorSubject<String>();
+  final _reazzonMessageController = BehaviorSubject<String>();
 
   Stream<String> get outEmail => _emailController.stream.transform(validateEmail);
   Stream<String> get outPassword => _passwordController.stream.transform(validatePassword);
@@ -30,6 +31,7 @@ class SignUpBloc with Validators implements BlocBase {
     outEmail, outPassword, outConfirmPassword, (e, p, cp) => true );
   Stream<bool> get updateDetailsValid => Observable.combineLatest3(
     outFirstName, outLastName, outUserName, (f, l, u) => true );
+  Stream<String> get outReazzonMessage => _reazzonMessageController.stream;
   
   // Change data
   Function(String) get inEmail => _emailController.sink.add;
@@ -40,6 +42,8 @@ class SignUpBloc with Validators implements BlocBase {
   Function(String) get inLastName => _lastNameController.sink.add;
   Function(String) get inUserName => _userNameController.sink.add;
 
+  Function(String) get inReazzonMessage => _reazzonMessageController.sink.add;
+
   Future<FirebaseUser> submit() async {
     return await firebaseAuthentication.signUp(
       _emailController.value, 
@@ -47,12 +51,13 @@ class SignUpBloc with Validators implements BlocBase {
     );
   }
 
-  Future<void> updateDetails(User user) async {
+  Future<User> updateDetails(User user) async {
     await user.updateDetails(
       _firstNameController.value, 
       _lastNameController.value, 
       _userNameController.value
     ); 
+    return user;
   }
 
   @override
@@ -63,5 +68,6 @@ class SignUpBloc with Validators implements BlocBase {
     _firstNameController.close();
     _lastNameController.close();
     _userNameController.close();
+    _reazzonMessageController.close();
   }
 }
