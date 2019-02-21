@@ -35,7 +35,9 @@ class SignUpBloc with Validators implements BlocBase {
     outFirstName, outLastName, outUserName, (f, l, u) => true );
   Stream<String> get outReazzonMessage => _reazzonMessageController.stream;
   Stream<List<Reazzon>> get outAvailableReazzons => _availableReazzonsController.stream;
-  
+  Stream<bool> get completeRegistrationValid => Observable(_availableReazzonsController.stream)
+    .contains((reazzon) => reazzon.isSelected)
+    .asObservable();
   
   // Change data
   Function(String) get inEmail => _emailController.sink.add;
