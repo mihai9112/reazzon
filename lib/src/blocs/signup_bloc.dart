@@ -19,6 +19,8 @@ class SignUpBloc with Validators implements BlocBase {
   final _availableReazzonsController = BehaviorSubject<List<Reazzon>>();
   final _validRegistrationController = BehaviorSubject<bool>();
 
+  List<Reazzon> selectedReazzons = new List<Reazzon>();
+
   Stream<String> get outEmail => _emailController.stream.transform(validateEmail);
   Stream<String> get outPassword => _passwordController.stream.transform(validatePassword);
   Stream<String> get outConfirmPassword => _confirmPasswordController.stream.transform(validatePassword)
@@ -54,6 +56,13 @@ class SignUpBloc with Validators implements BlocBase {
     _availableReazzonsController.stream
       .map((convert) => convert.any((Reazzon reazzon) => reazzon.isSelected == true))
       .listen((onData) => _validRegistrationController.add(onData));
+    
+    _availableReazzonsController.stream
+      .map((convert) => convert.where((Reazzon reazzon) => reazzon.isSelected ==true ))
+      .listen((onData) {
+        selectedReazzons.clear();
+        selectedReazzons.addAll(onData);
+      });
   }
 
   Future<FirebaseUser> submit() async {
@@ -91,6 +100,13 @@ class SignUpBloc with Validators implements BlocBase {
 
   void updateReazzons(List<Reazzon> reazzons){
     _inAvailableReazzons.add(reazzons);
+  }
+
+  Future<User> completeRegistration(User user) async {
+    for (var item in selectedReazzons) {
+      user.addSelectedReazzons(item);
+    }
+    return user;
   }
 
   @override

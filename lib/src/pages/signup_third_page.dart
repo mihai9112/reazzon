@@ -121,7 +121,7 @@ class _ThirdSignUpPageState extends State<ThirdSignUpPage> {
               child: Row(
                 children: <Widget>[
                   Expanded(
-                    child: completeRegistrationButton(_signUpBloc),
+                    child: completeRegistrationButton(_signUpBloc, _appBloc),
                   ),
                 ],
               ),
@@ -133,7 +133,7 @@ class _ThirdSignUpPageState extends State<ThirdSignUpPage> {
   }
 }
 
-Widget completeRegistrationButton(SignUpBloc signUpBloc){
+Widget completeRegistrationButton(SignUpBloc signUpBloc, ApplicationBloc appBloc){
   return StreamBuilder(
     stream: signUpBloc.completeRegistrationValid,
     initialData: false,
@@ -145,7 +145,11 @@ Widget completeRegistrationButton(SignUpBloc signUpBloc){
         color: Colors.blueAccent,
         elevation: 4.0,
         onPressed: snapshot.data ? () {
-          print(snapshot.data);
+          signUpBloc.completeRegistration(appBloc.currentUser).then((user) {
+            appBloc.updateUser(user);
+            Navigator.of(context)
+              .pushNamed('/account');
+          });
         }
         : null,
         child: Container(

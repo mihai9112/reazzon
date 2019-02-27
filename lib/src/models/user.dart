@@ -9,7 +9,7 @@ class User {
   String _firstName;
   String _lastName;
   String _userName;
-  Set<Reazzon> _selectedReazzons;
+  Set<Reazzon> _selectedReazzons = new Set<Reazzon>();
 
   String get userId => _userId;
   String get emailAddress => _emailAddress;
