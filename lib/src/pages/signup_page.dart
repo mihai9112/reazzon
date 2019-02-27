@@ -210,9 +210,9 @@ class _SignUpPageState extends State<SignUpPage>{
     );
   }
 
-  Widget submitButton(SignUpBloc bloc, ApplicationBloc appBloc) {
+  Widget submitButton(SignUpBloc signUpBloc, ApplicationBloc appBloc) {
     return StreamBuilder(
-      stream: bloc.submitValid,
+      stream: signUpBloc.submitValid,
       builder: (context, snapshot) {
         return RaisedButton(
           shape: RoundedRectangleBorder(
@@ -221,7 +221,7 @@ class _SignUpPageState extends State<SignUpPage>{
           color: Colors.blueAccent,
           elevation: 4.0,
           onPressed: snapshot.hasData ? () {
-              bloc.submit().then((currentUser) {
+              signUpBloc.submit().then((currentUser) {
                 appBloc.setCurrentUser(currentUser);
                 Navigator.of(context).push(
                   MaterialPageRoute(

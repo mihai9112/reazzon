@@ -113,10 +113,63 @@ class _ThirdSignUpPageState extends State<ThirdSignUpPage> {
                 )
               )
             ),
-            Text("...to start meeting people just like you")
+            Text("...to start meeting people just like you"),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              margin: const EdgeInsets.only(left: 30.0, right: 30.0, top: 20.0),
+              alignment: Alignment.center,
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: completeRegistrationButton(_signUpBloc),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       )
     );
   }
+}
+
+Widget completeRegistrationButton(SignUpBloc signUpBloc){
+  return StreamBuilder(
+    stream: signUpBloc.completeRegistrationValid,
+    initialData: false,
+    builder: (context, snapshot){
+      return RaisedButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+        color: Colors.blueAccent,
+        elevation: 4.0,
+        onPressed: snapshot.data ? () {
+          print(snapshot.data);
+        }
+        : null,
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            vertical: 20.0,
+            horizontal: 20.0
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Expanded(
+                child: Text(
+                  "COMPLETE SIGNUP",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              )
+            ],
+          ),
+        )
+      );
+    },
+  );
 }
