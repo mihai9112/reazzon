@@ -3,6 +3,7 @@ import 'package:reazzon/src/blocs/application_bloc.dart';
 import 'package:reazzon/src/blocs/bloc_provider.dart';
 import 'package:reazzon/src/blocs/signup_bloc.dart';
 import 'package:reazzon/src/models/reazzon.dart';
+import 'package:reazzon/src/pages/account.dart';
 
 class ThirdSignUpPage extends StatefulWidget {
   @override
@@ -147,8 +148,11 @@ Widget completeRegistrationButton(SignUpBloc signUpBloc, ApplicationBloc appBloc
         onPressed: snapshot.data ? () {
           signUpBloc.completeRegistration(appBloc.currentUser).then((user) {
             appBloc.updateUser(user);
+            var accountRoute = MaterialPageRoute(
+              builder: (BuildContext context) => AccountPage()
+            );
             Navigator.of(context)
-              .pushNamed('/account');
+              .pushAndRemoveUntil(accountRoute, ModalRoute.withName('/account'));
           });
         }
         : null,

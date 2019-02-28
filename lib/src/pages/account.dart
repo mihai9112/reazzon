@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:reazzon/src/blocs/application_bloc.dart';
 import 'package:reazzon/src/blocs/bloc_provider.dart';
@@ -13,13 +15,34 @@ class AccountPage extends StatelessWidget {
       stringBuilder.write("; ");
     });
 
-    return Column(
-      children: <Widget>[
-        Text(_appBloc.currentUser.firstName),
-        Text(_appBloc.currentUser.lastName),
-        Text(_appBloc.currentUser.userName),
-        Text(stringBuilder.toString())
-      ],
+    return WillPopScope(
+      onWillPop: () => Future.value(false),
+      child: SafeArea(
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            elevation: 0.0,
+            title: Text("Overview", style: TextStyle(color: Colors.blueAccent)),
+            centerTitle: true,
+          ),
+          body: Container(
+            height: MediaQuery.of(context).size.height,
+            decoration: BoxDecoration(
+              color: Colors.white
+            ),
+            child: Column(
+              children: <Widget>[
+                Container(height: 20.0),
+                Container(padding: const EdgeInsets.all(55.0)),
+                Text(_appBloc.currentUser.firstName),
+                Text(_appBloc.currentUser.lastName),
+                Text(_appBloc.currentUser.userName),
+                Text(stringBuilder.toString())
+              ],
+            )
+          )
+        ),
+      ),
     );
   }
 }

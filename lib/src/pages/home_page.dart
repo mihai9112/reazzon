@@ -57,9 +57,9 @@ class HomeScreen extends StatelessWidget {
                   Expanded(
                     child: OutlineButton(
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0)),
-                      color: Colors.redAccent,
-                      highlightedBorderColor: Colors.white,
+                          borderRadius: BorderRadius.circular(30.0)
+                      ),
+                      borderSide: BorderSide(color: Colors.white, width: 2.0),
                       onPressed: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
