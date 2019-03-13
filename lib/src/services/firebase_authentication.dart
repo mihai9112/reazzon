@@ -25,10 +25,9 @@ class FirebaseAuthentication  implements IAuthentication{
   }
 
   @override
-  Future<FirebaseUser> signUp(String email, String password) {
-    return _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+  Future<FirebaseUser> signUp(String email, String password) async {
+    return await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password); 
   }
-  
 }
 
 FirebaseAuthentication firebaseAuthentication = new FirebaseAuthentication();

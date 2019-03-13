@@ -18,6 +18,7 @@ class SignUpBloc with Validators implements BlocBase {
   final _reazzonMessageController = BehaviorSubject<String>();
   final _availableReazzonsController = BehaviorSubject<List<Reazzon>>();
   final _validRegistrationController = BehaviorSubject<bool>();
+  final _messages = BehaviorSubject<String>();
 
   List<Reazzon> selectedReazzons = new List<Reazzon>();
 
@@ -52,13 +53,16 @@ class SignUpBloc with Validators implements BlocBase {
   Function(String) get inReazzonMessage => _reazzonMessageController.sink.add;
   Sink<List<Reazzon>> get _inAvailableReazzons => _availableReazzonsController.sink;
 
+  Function(String) get _inMessages => _messages.sink.add;
+  Stream<String> get outMessages => _messages.stream;
+
   SignUpBloc(){
     _availableReazzonsController.stream
       .map((convert) => convert.any((Reazzon reazzon) => reazzon.isSelected == true))
       .listen((onData) => _validRegistrationController.add(onData));
     
     _availableReazzonsController.stream
-      .map((convert) => convert.where((Reazzon reazzon) => reazzon.isSelected ==true ))
+      .map((convert) => convert.where((Reazzon reazzon) => reazzon.isSelected == true ))
       .listen((onData) {
         selectedReazzons.clear();
         selectedReazzons.addAll(onData);
@@ -69,7 +73,10 @@ class SignUpBloc with Validators implements BlocBase {
     return await firebaseAuthentication.signUp(
       _emailController.value, 
       _passwordController.value
-    );
+    ).catchError((onError){
+      _inMessages(onError.message);
+      
+    });
   }
 
   Future<User> updateDetails(User user) async {
@@ -120,5 +127,6 @@ class SignUpBloc with Validators implements BlocBase {
     _reazzonMessageController.close();
     _availableReazzonsController?.close();
     _validRegistrationController.close();
+    _messages?.close();
   }
 }

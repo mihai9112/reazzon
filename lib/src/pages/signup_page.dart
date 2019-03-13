@@ -66,6 +66,16 @@ class _SignUpPageState extends State<SignUpPage>{
                   ),
                 ),
               ),
+              Container(
+                child: StreamBuilder(
+                  stream: _signUpBloc.outMessages,
+                  builder: (context, snapshot){
+                    return snapshot.hasData ? 
+                      Text(snapshot.data) : 
+                      Container();
+                  },
+                ),
+              ),
               Row(
                 children: <Widget>[
                   EnsureVisibleWhenFocused(
