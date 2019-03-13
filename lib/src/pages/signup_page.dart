@@ -278,7 +278,7 @@ class _SignUpPageState extends State<SignUpPage>{
               alignment: FractionalOffset.center,
               children: <Widget>[
                 new CircularProgressIndicator(
-                  backgroundColor: Colors.red,
+                  backgroundColor: Colors.blueAccent  ,
                 )
               ],
             ); 

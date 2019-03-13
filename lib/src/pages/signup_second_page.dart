@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:reazzon/src/blocs/application_bloc.dart';
 import 'package:reazzon/src/blocs/bloc_provider.dart';
 import 'package:reazzon/src/blocs/signup_bloc.dart';
 import 'package:reazzon/src/helpers/fieldFocus.dart';
+import 'package:reazzon/src/models/user.dart';
 import 'package:reazzon/src/pages/signup_third_page.dart';
 
 class SecondSignUpPage extends StatefulWidget {
@@ -12,6 +15,7 @@ class SecondSignUpPage extends StatefulWidget {
 
 class _SecondSignUpPageState extends State<SecondSignUpPage> {
   SignUpBloc _signUpBloc;
+  Future<User> _user;
 
   @override
   void initState()
@@ -162,7 +166,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
                 child: Row(
                   children: <Widget>[
                     Expanded(
-                      child: continueButton(_signUpBloc, _appBloc),
+                      child: buildButton(_signUpBloc, _appBloc),
                     ),
                   ],
                 ),
@@ -173,93 +177,124 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
       ),
     );
   }
-}
 
-Widget firstNameField(SignUpBloc signUpBloc) {
-  return StreamBuilder(
-    stream: signUpBloc.outFirstName,
-    builder: (context, snapshot) {
-      return TextField(
-        onChanged: signUpBloc.inFirstName,
-        decoration: InputDecoration(
-          errorText: snapshot.error,
-        ),
-      );
-    },
-  );
-}
-
-Widget lastNameField(SignUpBloc signUpBloc) {
-  return StreamBuilder(
-    stream: signUpBloc.outLastName,
-    builder: (context, snapshot) {
-      return TextField(
-        onChanged: signUpBloc.inLastName,
-        decoration: InputDecoration(
-          errorText: snapshot.error,
-        ),
-      );
-    },
-  );
-}
-
-Widget userNameField(SignUpBloc signUpBloc) {
-  return StreamBuilder(
-    stream: signUpBloc.outUserName,
-    builder: (context, snapshot) {
-      return TextField(
-        onChanged: signUpBloc.inUserName,
-        decoration: InputDecoration(
-          errorText: snapshot.error,
-        ),
-      );
-    },
-  );
-}
-
-Widget continueButton(SignUpBloc signUpBloc, ApplicationBloc appBloc) {
-  return StreamBuilder(
-    stream: signUpBloc.updateDetailsValid,
-    builder: (context, snapshot) {
-      return RaisedButton(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0),
-        ),
-        color: Colors.blueAccent,
-        elevation: 4.0,
-        onPressed: snapshot.hasData ? () {
-            signUpBloc.updateDetails(appBloc.currentUser).then((updatedUser){
-              appBloc.updateUser(updatedUser);
-              Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => ThirdSignUpPage()
-                  )
-              );
-            });
-          }
-          : null,
-        child: Container(
-          padding: const EdgeInsets.symmetric(
-            vertical: 20.0,
-            horizontal: 20.0
+  Widget firstNameField(SignUpBloc signUpBloc) {
+    return StreamBuilder(
+      stream: signUpBloc.outFirstName,
+      builder: (context, snapshot) {
+        return TextField(
+          onChanged: signUpBloc.inFirstName,
+          decoration: InputDecoration(
+            errorText: snapshot.error,
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Expanded(
-                child: Text(
-                  "CONTINUE",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+        );
+      },
+    );
+  }
+
+  Widget lastNameField(SignUpBloc signUpBloc) {
+    return StreamBuilder(
+      stream: signUpBloc.outLastName,
+      builder: (context, snapshot) {
+        return TextField(
+          onChanged: signUpBloc.inLastName,
+          decoration: InputDecoration(
+            errorText: snapshot.error,
+          ),
+        );
+      },
+    );
+  }
+
+  Widget userNameField(SignUpBloc signUpBloc) {
+    return StreamBuilder(
+      stream: signUpBloc.outUserName,
+      builder: (context, snapshot) {
+        return TextField(
+          onChanged: signUpBloc.inUserName,
+          decoration: InputDecoration(
+            errorText: snapshot.error,
+          ),
+        );
+      },
+    );
+  }
+
+  Widget continueButton(SignUpBloc signUpBloc, ApplicationBloc appBloc) {
+    return StreamBuilder(
+      stream: signUpBloc.updateDetailsValid,
+      builder: (context, snapshot) {
+        return RaisedButton(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.0),
+          ),
+          color: Colors.blueAccent,
+          elevation: 4.0,
+          onPressed: snapshot.hasData ? () {
+              setState(() {
+               _user = signUpBloc.updateDetails(appBloc.currentUser); 
+              });
+            }
+            : null,
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+              vertical: 20.0,
+              horizontal: 20.0
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Expanded(
+                  child: Text(
+                    "CONTINUE",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-              )
-            ],
-          ),
-        ), 
-      );
-    },
-  );
+                )
+              ],
+            ),
+          ), 
+        );
+      },
+    );
+  }
+
+  Widget buildButton(SignUpBloc signUpBloc, ApplicationBloc appBloc){
+    return new FutureBuilder(
+      future: _user,
+      builder: (context, AsyncSnapshot<User> snapshot){
+        if(snapshot.hasData){
+          _user.then((updatedUser){
+            appBloc.updateUser(updatedUser);
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (BuildContext context) => ThirdSignUpPage()
+                )
+            );
+          });
+          return Container();
+        }
+        else {
+          if(snapshot.connectionState !=ConnectionState.none && !snapshot.hasData){
+            return new Stack(
+              alignment: FractionalOffset.center,
+              children: <Widget>[
+                new CircularProgressIndicator(
+                  backgroundColor: Colors.blueAccent,
+                )
+              ],
+            );
+          }
+          else {
+            return continueButton(signUpBloc, appBloc);
+          }
+        }
+      },
+    );
+  }
 }
+
+
