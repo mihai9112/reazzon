@@ -159,6 +159,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
                   ],
                 ),
               ),
+              Container(height: 50.0),
               Container(
                 width: MediaQuery.of(context).size.width,
                 margin: const EdgeInsets.only(left: 30.0, right: 30.0, top: 20.0),

@@ -67,13 +67,16 @@ class _SignUpPageState extends State<SignUpPage>{
                 ),
               ),
               Container(
-                child: StreamBuilder(
-                  stream: _signUpBloc.outMessages,
-                  builder: (context, snapshot){
-                    return snapshot.hasData ? 
-                      Text(snapshot.data) : 
-                      Container();
-                  },
+                padding: EdgeInsets.only(left: 30.0, right: 30.0),
+                child: Center(
+                  child: StreamBuilder(
+                    stream: _signUpBloc.outMessages,
+                    builder: (context, snapshot){
+                      return snapshot.hasData ? 
+                        Text(snapshot.data, style: TextStyle(color: Colors.red), textAlign: TextAlign.center, softWrap: true) : 
+                        Container();
+                    },
+                  )
                 ),
               ),
               Row(
@@ -284,19 +287,20 @@ class _SignUpPageState extends State<SignUpPage>{
         else {
           if(snapshot.connectionState != ConnectionState.none && !snapshot.hasData)
           {
+            if(snapshot.connectionState == ConnectionState.done)
+              return submitButton(signUpBloc, appBloc);
+
             return new Stack(
               alignment: FractionalOffset.center,
               children: <Widget>[
                 new CircularProgressIndicator(
-                  backgroundColor: Colors.blueAccent  ,
+                  backgroundColor: Colors.blueAccent,
                 )
               ],
             ); 
           }
-          else
-          {
-            return submitButton(signUpBloc, appBloc);
-          }
+
+          return submitButton(signUpBloc, appBloc);
         }
       },
     );
