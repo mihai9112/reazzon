@@ -75,7 +75,6 @@ class SignUpBloc with Validators implements BlocBase {
       _passwordController.value
     ).catchError((onError){
       _inMessages(onError.message);
-      
     });
   }
 

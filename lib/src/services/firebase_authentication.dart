@@ -7,15 +7,11 @@ class FirebaseAuthentication  implements IAuthentication{
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   @override
-  Future<FirebaseUser> getCurrentUser() {
-    // TODO: implement getCurrentUser
-    return null;
-  }
-
-  @override
-  Future<bool> signIn(String email, String password) {
-    // TODO: implement signIn
-    return null;
+  Future<FirebaseUser> signIn(String email, String password) async {
+    return await _firebaseAuth.signInWithEmailAndPassword(
+      email: email,
+      password: password
+    );
   }
 
   @override
@@ -26,7 +22,10 @@ class FirebaseAuthentication  implements IAuthentication{
 
   @override
   Future<FirebaseUser> signUp(String email, String password) async {
-    return await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password); 
+    return await _firebaseAuth.createUserWithEmailAndPassword(
+      email: email, 
+      password: password
+    ); 
   }
 }
 

@@ -18,15 +18,13 @@ class _SignUpPageState extends State<SignUpPage>{
   Future<FirebaseUser> _user;
   
   @override
-  void initState()
-  {
+  void initState(){
     super.initState();
     _signUpBloc = new SignUpBloc();
   }
 
   @override
-  void dispose()
-  {
+  void dispose(){
     _signUpBloc?.dispose();
     super.dispose();
   }
@@ -37,7 +35,7 @@ class _SignUpPageState extends State<SignUpPage>{
     FocusNode _focusPassword = new FocusNode();
     FocusNode _focusConfirmPassword = new FocusNode();
 
-    ApplicationBloc _appBloc = BlocProvider.of<ApplicationBloc>(context);
+    var _appBloc = BlocProvider.of<ApplicationBloc>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -217,7 +215,7 @@ class _SignUpPageState extends State<SignUpPage>{
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => LoginScreen()) 
+                            builder: (context) => LoginPage()) 
                         );
                       },
                     ),

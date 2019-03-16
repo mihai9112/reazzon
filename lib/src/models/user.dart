@@ -23,6 +23,13 @@ class User {
     _userId = authenticatedUser.uid;
     _emailAddress = authenticatedUser.email;
     _firebaseUser = authenticatedUser;
+
+    if(authenticatedUser.displayName != null){
+      var split = authenticatedUser.displayName.split('||');
+      _firstName = split[0];
+      _lastName = split[1];
+      _userName = split[2];
+    }
   }
 
   Future<void> updateDetails(String firstName, String lastName, String userName) async {
@@ -30,7 +37,6 @@ class User {
     userInfo.displayName = firstName + '||' + lastName + '||' + userName;
     
     await _firebaseUser.updateProfile(userInfo);
-
     _firstName = firstName;
     _lastName = lastName;
     _userName = userName;

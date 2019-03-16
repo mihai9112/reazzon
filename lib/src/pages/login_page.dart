@@ -1,31 +1,44 @@
+import 'dart:async';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:reazzon/src/blocs/application_bloc.dart';
 import 'package:reazzon/src/blocs/bloc_provider.dart';
 import 'package:reazzon/src/blocs/login_bloc.dart';
 import 'package:reazzon/src/helpers/fieldFocus.dart';
 import 'package:flutter/widgets.dart';
+import 'package:reazzon/src/pages/account.dart';
 
-class LoginScreen extends StatelessWidget {
-  
+class LoginPage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider<LoginBloc>(
-      bloc: LoginBloc(),
-      child: _LoginWidget(),
-    );
-  }
+  State<StatefulWidget> createState() => _LoginPageState();
 }
 
-class _LoginWidget extends StatelessWidget {
+class _LoginPageState extends State<LoginPage>{
   static const _kFontFam = 'reazzon';
   static const IconData facebookIcon = const IconData(0xe801, fontFamily: _kFontFam);
   static const IconData googleIcon = const IconData(0xf1a0, fontFamily: _kFontFam);
+  LoginBloc _loginBloc;
+  Future<FirebaseUser> _authenticatedUser;
+
+  @override
+  void initState(){
+    super.initState();
+    _loginBloc = new LoginBloc();
+  }
+
+  @override
+  void dispose(){
+    _loginBloc?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     FocusNode _focusEmail = new FocusNode();
     FocusNode _focusPassword = new FocusNode();
-    
-    LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
+
+    var _appBloc = BlocProvider.of<ApplicationBloc>(context);
     
     return Scaffold(
       appBar: AppBar(
@@ -87,7 +100,7 @@ class _LoginWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    Expanded(child: emailField(loginBloc))
+                    Expanded(child: emailField(_loginBloc))
                   ],
                 ),
               ),
@@ -120,7 +133,7 @@ class _LoginWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    Expanded(child: passwordField(loginBloc)),
+                    Expanded(child: passwordField(_loginBloc)),
                   ],
                 ),
               ),
@@ -151,7 +164,7 @@ class _LoginWidget extends StatelessWidget {
                 child: Row(
                   children: <Widget>[
                     Expanded(
-                      child: submitButton(loginBloc),
+                      child: buildButton(_loginBloc, _appBloc),
                     ),
                   ],
                 ),
@@ -315,8 +328,11 @@ class _LoginWidget extends StatelessWidget {
           ),
           color: Colors.blueAccent,
           elevation: 4.0,
-          onPressed: snapshot.hasData ? 
-            () => bloc.submit()
+          onPressed: snapshot.hasData ? () {
+              setState(() {
+                _authenticatedUser = bloc.submit();
+              });
+            }
             : null,
           child: Container(
             padding: const EdgeInsets.symmetric(
@@ -377,4 +393,42 @@ class _LoginWidget extends StatelessWidget {
       },
     );
   }
+
+  Widget buildButton(LoginBloc loginBloc, ApplicationBloc appBloc) {
+    return new FutureBuilder(
+      future: _authenticatedUser,
+      builder: (context, AsyncSnapshot<FirebaseUser> snapshot){
+        if(snapshot.hasData){
+          _authenticatedUser.then((currentUser){
+            appBloc.setCurrentUser(currentUser);
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (BuildContext context) => AccountPage()
+              )
+            );
+          });
+          return Container();
+        }
+        else{
+          if(snapshot.connectionState != ConnectionState.none && !snapshot.hasData)
+          {
+            if(snapshot.connectionState ==ConnectionState.done)
+              return submitButton(loginBloc);
+            
+            return Stack(
+              alignment: FractionalOffset.center,
+              children: <Widget>[
+                CircularProgressIndicator()
+              ],
+            );
+          }
+
+          return submitButton(loginBloc);
+        }
+      },
+    );
+  }
 }
+
+
+

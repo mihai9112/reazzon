@@ -10,7 +10,7 @@ class ApplicationBloc implements BlocBase {
   {
     if(authenticatedUser == null)
       throw new ArgumentError.notNull(authenticatedUser.runtimeType.toString());
-    
+
     _currentUser = new User(authenticatedUser);
   }
 
