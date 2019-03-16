@@ -229,6 +229,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
           style: TextStyle(fontSize: 15.0),
           onChanged: signUpBloc.inFirstName,
           decoration: InputDecoration(
+            errorStyle: TextStyle(fontSize: 15.0),
             errorText: snapshot.error,
           ),
         );
@@ -244,6 +245,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
           style: TextStyle(fontSize: 15.0),
           onChanged: signUpBloc.inLastName,
           decoration: InputDecoration(
+            errorStyle: TextStyle(fontSize: 15.0),
             errorText: snapshot.error,
           ),
         );
@@ -259,6 +261,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
           style: TextStyle(fontSize: 15.0),
           onChanged: signUpBloc.inUserName,
           decoration: InputDecoration(
+            errorStyle: TextStyle(fontSize: 15.0),
             errorText: snapshot.error,
           ),
         );

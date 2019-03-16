@@ -34,15 +34,19 @@ class _LoginWidget extends StatelessWidget {
         ),
         backgroundColor: Colors.white,
         elevation: 0.0,
+        title: Text("Login", style: TextStyle(color: Colors.blueAccent))
       ),
       body:
       SingleChildScrollView(
         child: Container(
-          height: MediaQuery.of(context).size.height,
+          height: MediaQuery.of(context).size.height - 100.0,
           decoration: BoxDecoration(
             color: Colors.white,
           ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               Container(
                 padding: EdgeInsets.all(55.0),
@@ -87,7 +91,6 @@ class _LoginWidget extends StatelessWidget {
                   ],
                 ),
               ),
-              Container(height: 20.0),
               Row(
                 children: <Widget>[
                   EnsureVisibleWhenFocused(
@@ -121,7 +124,6 @@ class _LoginWidget extends StatelessWidget {
                   ],
                 ),
               ),
-              Container(height: 20.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
@@ -352,6 +354,7 @@ class _LoginWidget extends StatelessWidget {
           decoration: InputDecoration(
             hintText: 'you@example.com',
             errorText: snapshot.error,
+            errorStyle: TextStyle(fontSize: 15.0)
           ),
         );
       },
@@ -368,6 +371,7 @@ class _LoginWidget extends StatelessWidget {
           decoration: InputDecoration(
             hintText: 'password',
             errorText: snapshot.error,
+            errorStyle: TextStyle(fontSize: 15.0)
           ),
         );
       },

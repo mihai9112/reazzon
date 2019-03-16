@@ -332,6 +332,7 @@ class _SignUpPageState extends State<SignUpPage>{
           decoration: InputDecoration(
             hintText: 'you@example.com',
             errorText: snapshot.error,
+            errorStyle: TextStyle(fontSize: 15.0)
           ),
         );
       },
@@ -348,6 +349,7 @@ class _SignUpPageState extends State<SignUpPage>{
           decoration: InputDecoration(
             hintText: 'password',
             errorText: snapshot.error,
+            errorStyle: TextStyle(fontSize: 15.0)
           ),
         );
       },
@@ -364,6 +366,7 @@ class _SignUpPageState extends State<SignUpPage>{
           decoration: InputDecoration(
             hintText: 'password',
             errorText: snapshot.error,
+            errorStyle: TextStyle(fontSize: 15.0)
           ),
         );
       },
