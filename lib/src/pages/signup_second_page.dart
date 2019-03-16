@@ -43,7 +43,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0.0,
-        title: Text("Signup", style: TextStyle(color: Colors.blueAccent)),
+        title: Text("Signup", style: TextStyle(color: Colors.blueAccent, fontSize: 16.0)),
         centerTitle: true,
       ),
       body: new SingleChildScrollView(
@@ -57,110 +57,120 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              Row(
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  EnsureVisibleWhenFocused(
-                    focusNode: _focusFirstName,
-                    child: Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 40.0),
-                        child: Text(
-                          "FIRST NAME",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blueAccent,
-                            fontSize: 20.0,
+                  Row(
+                    children: <Widget>[
+                      EnsureVisibleWhenFocused(
+                        focusNode: _focusFirstName,
+                        child: Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 40.0),
+                            child: Text(
+                              "FIRST NAME",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blueAccent,
+                                fontSize: 16.0,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                      )
+                    ],
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: const EdgeInsets.only(left: 40.0, right: 40.0),
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: firstNameField(_signUpBloc)
+                        )
+                      ],
                     ),
-                  )
+                  ),
                 ],
               ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                margin: const EdgeInsets.only(left: 40.0, right: 40.0),
-                alignment: Alignment.center,
-                padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Expanded(
-                      child: firstNameField(_signUpBloc)
-                    )
-                  ],
-                ),
-              ),
-              Row(
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  EnsureVisibleWhenFocused(
-                    focusNode: _focusLastName,
-                    child: Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 40.0),
-                        child: Text(
-                          "LAST NAME",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blueAccent,
-                            fontSize: 20.0,
+                  Row(
+                    children: <Widget>[
+                      EnsureVisibleWhenFocused(
+                        focusNode: _focusLastName,
+                        child: Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 40.0),
+                            child: Text(
+                              "LAST NAME",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blueAccent,
+                                fontSize: 16.0,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                      )
+                    ],
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: const EdgeInsets.only(left: 40.0, right: 40.0),
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: lastNameField(_signUpBloc)
+                        )
+                      ],
                     ),
-                  )
+                  ),
                 ],
               ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                margin: const EdgeInsets.only(left: 40.0, right: 40.0),
-                alignment: Alignment.center,
-                padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Expanded(
-                      child: lastNameField(_signUpBloc)
-                    )
-                  ],
-                ),
-              ),
-              Row(
+              Column(
                 children: <Widget>[
-                  EnsureVisibleWhenFocused(
-                    focusNode: _focusUserName,
-                    child: Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 40.0),
-                        child: Text(
-                          "USERNAME",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blueAccent,
-                            fontSize: 20.0,
+                  Row(
+                    children: <Widget>[
+                      EnsureVisibleWhenFocused(
+                        focusNode: _focusUserName,
+                        child: Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 40.0),
+                            child: Text(
+                              "USERNAME",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blueAccent,
+                                fontSize: 16.0,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                      )
+                    ],
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: const EdgeInsets.only(left: 40.0, right: 40.0),
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: userNameField(_signUpBloc)
+                        )
+                      ],
                     ),
-                  )
+                  ),
                 ],
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                margin: const EdgeInsets.only(left: 40.0, right: 40.0),
-                alignment: Alignment.center,
-                padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Expanded(
-                      child: userNameField(_signUpBloc)
-                    )
-                  ],
-                ),
               ),
               Container(
                 width: MediaQuery.of(context).size.width,
@@ -186,7 +196,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
       stream: signUpBloc.outFirstName,
       builder: (context, snapshot) {
         return TextField(
-          style: TextStyle(fontSize: 30.0),
+          style: TextStyle(fontSize: 16.0),
           onChanged: signUpBloc.inFirstName,
           decoration: InputDecoration(
             errorText: snapshot.error,
@@ -201,7 +211,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
       stream: signUpBloc.outLastName,
       builder: (context, snapshot) {
         return TextField(
-          style: TextStyle(fontSize: 30.0),
+          style: TextStyle(fontSize: 16.0),
           onChanged: signUpBloc.inLastName,
           decoration: InputDecoration(
             errorText: snapshot.error,
@@ -216,7 +226,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
       stream: signUpBloc.outUserName,
       builder: (context, snapshot) {
         return TextField(
-          style: TextStyle(fontSize: 30.0),
+          style: TextStyle(fontSize: 16.0),
           onChanged: signUpBloc.inUserName,
           decoration: InputDecoration(
             errorText: snapshot.error,
@@ -232,7 +242,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
       builder: (context, snapshot) {
         return RaisedButton(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(50.0),
+            borderRadius: BorderRadius.circular(30.0),
           ),
           color: Colors.blueAccent,
           elevation: 4.0,
@@ -244,6 +254,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
             : null,
           child: Container(
             padding: const EdgeInsets.symmetric(
+              vertical: 20.0,
               horizontal: 20.0
             ),
             child: Row(
@@ -254,7 +265,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
                     "CONTINUE",
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 20.0,
+                      fontSize: 16.0,
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
