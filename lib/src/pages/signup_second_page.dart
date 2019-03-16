@@ -40,6 +40,12 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
     final ApplicationBloc _appBloc = BlocProvider.of<ApplicationBloc>(context);
   
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0.0,
+        title: Text("Signup", style: TextStyle(color: Colors.blueAccent)),
+        centerTitle: true,
+      ),
       body: new SingleChildScrollView(
         child: Container(
           height: MediaQuery.of(context).size.height,
@@ -279,7 +285,10 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
           return Container();
         }
         else {
-          if(snapshot.connectionState !=ConnectionState.none && !snapshot.hasData){
+          if(snapshot.connectionState != ConnectionState.none && !snapshot.hasData){
+            if(snapshot.connectionState == ConnectionState.done)
+              return continueButton(signUpBloc, appBloc);
+
             return new Stack(
               alignment: FractionalOffset.center,
               children: <Widget>[
@@ -289,9 +298,8 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
               ],
             );
           }
-          else {
-            return continueButton(signUpBloc, appBloc);
-          }
+            
+          return continueButton(signUpBloc, appBloc);
         }
       },
     );

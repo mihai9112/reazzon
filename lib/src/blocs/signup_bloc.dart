@@ -30,9 +30,9 @@ class SignUpBloc with Validators implements BlocBase {
         _confirmPasswordController.addError("Passwords do not match");
       }
     });
-  Stream<String> get outFirstName => _firstNameController.stream;
-  Stream<String> get outLastName => _lastNameController.stream;
-  Stream<String> get outUserName => _userNameController.stream;
+  Stream<String> get outFirstName => _firstNameController.stream.transform(validateFirstName);
+  Stream<String> get outLastName => _lastNameController.stream.transform(validateLastName);
+  Stream<String> get outUserName => _userNameController.stream.transform(validateUserName);
   Stream<bool> get submitValid => Observable.combineLatest3(
     outEmail, outPassword, outConfirmPassword, (e, p, cp) => true );
   Stream<bool> get updateDetailsValid => Observable.combineLatest3(

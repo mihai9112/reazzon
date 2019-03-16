@@ -34,6 +34,12 @@ class _ThirdSignUpPageState extends State<ThirdSignUpPage> {
     final _appBloc = BlocProvider.of<ApplicationBloc>(context);
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0.0,
+        title: Text("Signup", style: TextStyle(color: Colors.blueAccent)),
+        centerTitle: true,
+      ),
       body: Container(
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
@@ -42,7 +48,6 @@ class _ThirdSignUpPageState extends State<ThirdSignUpPage> {
         child: Column(
           children: <Widget>[
             Container(height: 20.0),
-            Container(padding: const EdgeInsets.all(55.0)),
             Text("Hello ${_appBloc.currentUser.userName}"),
             Container(
               child: StreamBuilder<String>(

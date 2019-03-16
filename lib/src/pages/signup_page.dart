@@ -47,6 +47,7 @@ class _SignUpPageState extends State<SignUpPage>{
         ),
         backgroundColor: Colors.white,
         elevation: 0.0,
+        title: Text("Signup", style: TextStyle(color: Colors.blueAccent))
       ),
       body: SingleChildScrollView(
         child: Container(
