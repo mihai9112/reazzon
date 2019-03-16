@@ -50,11 +50,14 @@ class _SignUpPageState extends State<SignUpPage>{
       ),
       body: SingleChildScrollView(
         child: Container(
-          height: MediaQuery.of(context).size.height,
+          height: MediaQuery.of(context).size.height - 100.0,
           decoration: BoxDecoration(
             color: Colors.white,
           ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               Container(
                 padding: EdgeInsets.all(55.0),
@@ -79,115 +82,128 @@ class _SignUpPageState extends State<SignUpPage>{
                   )
                 ),
               ),
-              Row(
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  EnsureVisibleWhenFocused(
-                    focusNode: _focusEmail,
-                    child: Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 40.0),
-                        child: Text(
-                          "EMAIL",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blueAccent,
-                            fontSize: 15.0,
+                  Row(
+                    children: <Widget>[
+                      EnsureVisibleWhenFocused(
+                        focusNode: _focusEmail,
+                        child: Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 40.0),
+                            child: Text(
+                              "EMAIL",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blueAccent,
+                                fontSize: 15.0,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                      )
+                    ],
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 5.0),
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(child: emailField(_signUpBloc))
+                      ],
                     ),
                   )
-                ],
+                ]
               ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 5.0),
-                alignment: Alignment.center,
-                padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Expanded(child: emailField(_signUpBloc))
-                  ],
-                ),
-              ),
-              Container(height: 20.0),
-              Row(
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  EnsureVisibleWhenFocused(
-                    focusNode: _focusPassword, 
-                    child: Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 40.0),
-                        child: Text(
-                          "PASSWORD",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blueAccent,
-                            fontSize: 15.0,
+                  Row(
+                    children: <Widget>[
+                      EnsureVisibleWhenFocused(
+                        focusNode: _focusPassword, 
+                        child: Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 40.0),
+                            child: Text(
+                              "PASSWORD",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blueAccent,
+                                fontSize: 15.0,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                      )
+                    ],
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(child: passwordField(_signUpBloc)),
+                      ],
                     ),
                   )
-                ],
+                ]
               ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
-                alignment: Alignment.center,
-                padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Expanded(child: passwordField(_signUpBloc)),
-                  ],
-                ),
-              ),
-              Container(height: 20.0),
-              Row(
+              Column(
                 children: <Widget>[
-                  EnsureVisibleWhenFocused(
-                    focusNode: _focusConfirmPassword,
-                    child: Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 40.0),
-                        child: Text(
-                          "CONFIRM PASSWORD",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blueAccent,
-                            fontSize: 15.0,
+                  Row(
+                    children: <Widget>[
+                      EnsureVisibleWhenFocused(
+                        focusNode: _focusConfirmPassword,
+                        child: Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 40.0),
+                            child: Text(
+                              "CONFIRM PASSWORD",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blueAccent,
+                                fontSize: 15.0,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                      )
+                    ],
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(child: confirmPasswordField(_signUpBloc)),
+                      ],
                     ),
-                  )
-                ],
+                  ),
+                ]
               ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
-                alignment: Alignment.center,
-                padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Expanded(child: confirmPasswordField(_signUpBloc)),
-                  ],
-                ),
-              ),
-              Container(height: 24.0),
-              new Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.only(right: 20.0),
-                    child: new FlatButton(
-                      child: new Text(
+                    child: FlatButton(
+                      child: Text(
                         "Already have an account?",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
