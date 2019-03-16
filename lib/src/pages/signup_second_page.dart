@@ -48,16 +48,15 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
       ),
       body: new SingleChildScrollView(
         child: Container(
-          height: MediaQuery.of(context).size.height,
+          height: MediaQuery.of(context).size.height - 100.0,
           decoration: BoxDecoration(
             color: Colors.white
           ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              Container(height: 20.0),
-              Container(
-                padding: EdgeInsets.all(55.0),
-              ),
               Row(
                 children: <Widget>[
                   EnsureVisibleWhenFocused(
@@ -70,7 +69,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.blueAccent,
-                            fontSize: 15.0,
+                            fontSize: 20.0,
                           ),
                         ),
                       ),
@@ -80,7 +79,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
               ),
               Container(
                 width: MediaQuery.of(context).size.width,
-                margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 5.0),
+                margin: const EdgeInsets.only(left: 40.0, right: 40.0),
                 alignment: Alignment.center,
                 padding: const EdgeInsets.only(left: 0.0, right: 10.0),
                 child: Row(
@@ -93,7 +92,6 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
                   ],
                 ),
               ),
-              Container(height: 20.0),
               Row(
                 children: <Widget>[
                   EnsureVisibleWhenFocused(
@@ -106,7 +104,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.blueAccent,
-                            fontSize: 15.0,
+                            fontSize: 20.0,
                           ),
                         ),
                       ),
@@ -116,7 +114,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
               ),
               Container(
                 width: MediaQuery.of(context).size.width,
-                margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 5.0),
+                margin: const EdgeInsets.only(left: 40.0, right: 40.0),
                 alignment: Alignment.center,
                 padding: const EdgeInsets.only(left: 0.0, right: 10.0),
                 child: Row(
@@ -129,7 +127,6 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
                   ],
                 ),
               ),
-              Container(height: 20.0),
               Row(
                 children: <Widget>[
                   EnsureVisibleWhenFocused(
@@ -142,7 +139,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.blueAccent,
-                            fontSize: 15.0,
+                            fontSize: 20.0,
                           ),
                         ),
                       ),
@@ -152,7 +149,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
               ),
               Container(
                 width: MediaQuery.of(context).size.width,
-                margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 5.0),
+                margin: const EdgeInsets.only(left: 40.0, right: 40.0),
                 alignment: Alignment.center,
                 padding: const EdgeInsets.only(left: 0.0, right: 10.0),
                 child: Row(
@@ -165,10 +162,9 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
                   ],
                 ),
               ),
-              Container(height: 50.0),
               Container(
                 width: MediaQuery.of(context).size.width,
-                margin: const EdgeInsets.only(left: 30.0, right: 30.0, top: 20.0),
+                margin: const EdgeInsets.only(left: 30.0, right: 30.0),
                 alignment: Alignment.center,
                 child: Row(
                   children: <Widget>[
@@ -190,6 +186,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
       stream: signUpBloc.outFirstName,
       builder: (context, snapshot) {
         return TextField(
+          style: TextStyle(fontSize: 30.0),
           onChanged: signUpBloc.inFirstName,
           decoration: InputDecoration(
             errorText: snapshot.error,
@@ -204,6 +201,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
       stream: signUpBloc.outLastName,
       builder: (context, snapshot) {
         return TextField(
+          style: TextStyle(fontSize: 30.0),
           onChanged: signUpBloc.inLastName,
           decoration: InputDecoration(
             errorText: snapshot.error,
@@ -218,6 +216,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
       stream: signUpBloc.outUserName,
       builder: (context, snapshot) {
         return TextField(
+          style: TextStyle(fontSize: 30.0),
           onChanged: signUpBloc.inUserName,
           decoration: InputDecoration(
             errorText: snapshot.error,
@@ -233,7 +232,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
       builder: (context, snapshot) {
         return RaisedButton(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30.0),
+            borderRadius: BorderRadius.circular(50.0),
           ),
           color: Colors.blueAccent,
           elevation: 4.0,
@@ -245,7 +244,6 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
             : null,
           child: Container(
             padding: const EdgeInsets.symmetric(
-              vertical: 20.0,
               horizontal: 20.0
             ),
             child: Row(
@@ -256,6 +254,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
                     "CONTINUE",
                     textAlign: TextAlign.center,
                     style: TextStyle(
+                      fontSize: 20.0,
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
