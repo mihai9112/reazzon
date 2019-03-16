@@ -41,13 +41,15 @@ class _ThirdSignUpPageState extends State<ThirdSignUpPage> {
         centerTitle: true,
       ),
       body: Container(
-        height: MediaQuery.of(context).size.height,
+        height: MediaQuery.of(context).size.height - 100.0,
         decoration: BoxDecoration(
           color: Colors.white
         ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            Container(height: 20.0),
             Text("Hello ${_appBloc.currentUser.userName}"),
             Container(
               child: StreamBuilder<String>(
@@ -68,52 +70,55 @@ class _ThirdSignUpPageState extends State<ThirdSignUpPage> {
                     color: Colors.black
                   )
                 ),
-                height: 300.0,
+                height: 280.0,
                 child: StreamBuilder<List<Reazzon>>(
                   stream: _signUpBloc.outAvailableReazzons,
                   builder: (BuildContext context, AsyncSnapshot<List<Reazzon>> snapshot){
-                    return GridView.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        childAspectRatio: 3.0
-                      ),
-                      itemBuilder: (BuildContext context, int index){
-                        var reazzon = snapshot.data[index];
-                        return GestureDetector(
-                          child: Card(
-                            elevation: 5.0,
-                            child: Container(
-                              alignment: Alignment.center,
-                              child: new Text(reazzon.value,
-                                textAlign: TextAlign.center,
-                                style: new TextStyle(fontWeight: reazzon.isSelected ? FontWeight.bold : FontWeight.normal),
+                    return Align(
+                      alignment: Alignment.center,
+                      child: GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          childAspectRatio: 3.0
+                        ),
+                        itemBuilder: (BuildContext context, int index){
+                          var reazzon = snapshot.data[index];
+                          return GestureDetector(
+                            child: Card(
+                              elevation: 5.0,
+                              child: Container(
+                                alignment: Alignment.center,
+                                child: new Text(reazzon.value,
+                                  textAlign: TextAlign.center,
+                                  style: new TextStyle(fontWeight: reazzon.isSelected ? FontWeight.bold : FontWeight.normal),
+                                ),
                               ),
                             ),
-                          ),
-                          onTap: () {
-                            var isLessThen3 = snapshot.data.where((reazzon) => reazzon.isSelected).length < 3;
-                            var originalValue = reazzon.isSelected;
+                            onTap: () {
+                              var isLessThen3 = snapshot.data.where((reazzon) => reazzon.isSelected).length < 3;
+                              var originalValue = reazzon.isSelected;
 
-                            if(!reazzon.isSelected && isLessThen3){
-                              reazzon.select();
-                              _signUpBloc.updateReazzons(snapshot.data);
-                            }
-                            else{
-                              reazzon.deselect();
-                              _signUpBloc.updateReazzons(snapshot.data);
-                            }
+                              if(!reazzon.isSelected && isLessThen3){
+                                reazzon.select();
+                                _signUpBloc.updateReazzons(snapshot.data);
+                              }
+                              else{
+                                reazzon.deselect();
+                                _signUpBloc.updateReazzons(snapshot.data);
+                              }
 
-                            if(reazzon.isSelected && !isLessThen3) {
-                              reazzon.deselect();
-                              _signUpBloc.updateReazzons(snapshot.data);
-                            }
-                              
-                            if(originalValue == reazzon.isSelected && !isLessThen3)
-                              _signUpBloc.inReazzonMessage("No more then 3 reazzon to be selected");
-                          },
-                        );
-                      },
-                      itemCount: (snapshot.data == null ? 0 : snapshot.data.length),
+                              if(reazzon.isSelected && !isLessThen3) {
+                                reazzon.deselect();
+                                _signUpBloc.updateReazzons(snapshot.data);
+                              }
+                                
+                              if(originalValue == reazzon.isSelected && !isLessThen3)
+                                _signUpBloc.inReazzonMessage("No more then 3 reazzon to be selected");
+                            },
+                          );
+                        },
+                        itemCount: (snapshot.data == null ? 0 : snapshot.data.length),
+                      )
                     );
                   },
                 )
