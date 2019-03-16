@@ -42,7 +42,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0.0,
-        title: Text("Signup", style: TextStyle(color: Colors.blueAccent, fontSize: 16.0)),
+        title: Text("Signup", style: TextStyle(color: Colors.blueAccent, fontSize: 15.0)),
         centerTitle: true,
       ),
       body: new SingleChildScrollView(
@@ -56,6 +56,37 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Icon(
+                    Icons.looks_one,
+                    size: 30.0,
+                    color: Colors.grey,
+                  ),
+                  Icon(
+                    Icons.trending_flat,
+                    color: Colors.blueAccent,
+                    size: 30.0,
+                  ),
+                  Icon(
+                    Icons.looks_two,
+                    color: Colors.blueAccent,
+                    size: 50.0,
+                  ),
+                  Icon(
+                    Icons.trending_flat,
+                    color: Colors.blueAccent,
+                    size: 30.0,
+                  ),
+                  Icon(
+                    Icons.looks_3,
+                    size: 30.0,
+                    color: Colors.grey,
+                  )
+                ],
+              ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,7 +103,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.blueAccent,
-                                fontSize: 16.0,
+                                fontSize: 15.0,
                               ),
                             ),
                           ),
@@ -111,7 +142,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.blueAccent,
-                                fontSize: 16.0,
+                                fontSize: 15.0,
                               ),
                             ),
                           ),
@@ -148,7 +179,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.blueAccent,
-                                fontSize: 16.0,
+                                fontSize: 15.0,
                               ),
                             ),
                           ),
@@ -195,7 +226,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
       stream: signUpBloc.outFirstName,
       builder: (context, snapshot) {
         return TextField(
-          style: TextStyle(fontSize: 16.0),
+          style: TextStyle(fontSize: 15.0),
           onChanged: signUpBloc.inFirstName,
           decoration: InputDecoration(
             errorText: snapshot.error,
@@ -210,7 +241,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
       stream: signUpBloc.outLastName,
       builder: (context, snapshot) {
         return TextField(
-          style: TextStyle(fontSize: 16.0),
+          style: TextStyle(fontSize: 15.0),
           onChanged: signUpBloc.inLastName,
           decoration: InputDecoration(
             errorText: snapshot.error,
@@ -225,7 +256,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
       stream: signUpBloc.outUserName,
       builder: (context, snapshot) {
         return TextField(
-          style: TextStyle(fontSize: 16.0),
+          style: TextStyle(fontSize: 15.0),
           onChanged: signUpBloc.inUserName,
           decoration: InputDecoration(
             errorText: snapshot.error,
@@ -264,7 +295,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
                     "CONTINUE",
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 16.0,
+                      fontSize: 15.0,
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),

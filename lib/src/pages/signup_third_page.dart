@@ -50,6 +50,37 @@ class _ThirdSignUpPageState extends State<ThirdSignUpPage> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Icon(
+                  Icons.looks_one,
+                  size: 30.0,
+                  color: Colors.grey,
+                ),
+                Icon(
+                  Icons.trending_flat,
+                  color: Colors.blueAccent,
+                  size: 30.0,
+                ),
+                Icon(
+                  Icons.looks_two,
+                  color: Colors.grey,
+                  size: 30.0,
+                ),
+                Icon(
+                  Icons.trending_flat,
+                  color: Colors.blueAccent,
+                  size: 30.0,
+                ),
+                Icon(
+                  Icons.looks_3,
+                  size: 50.0,
+                  color: Colors.blueAccent,
+                )
+              ],
+            ),
             Text("Hello ${_appBloc.currentUser.userName}"),
             Container(
               child: StreamBuilder<String>(
