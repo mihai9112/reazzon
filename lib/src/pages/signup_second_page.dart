@@ -4,7 +4,6 @@ import 'package:reazzon/src/blocs/application_bloc.dart';
 import 'package:reazzon/src/blocs/bloc_provider.dart';
 import 'package:reazzon/src/blocs/signup_bloc.dart';
 import 'package:reazzon/src/helpers/fieldFocus.dart';
-import 'package:reazzon/src/models/user.dart';
 import 'package:reazzon/src/pages/signup_third_page.dart';
 
 class SecondSignUpPage extends StatefulWidget {
@@ -14,7 +13,7 @@ class SecondSignUpPage extends StatefulWidget {
 
 class _SecondSignUpPageState extends State<SecondSignUpPage> {
   SignUpBloc _signUpBloc;
-  Future<User> _user;
+  Future<void> _user;
 
   @override
   void initState()
@@ -281,7 +280,9 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
           elevation: 4.0,
           onPressed: snapshot.hasData ? () {
               setState(() {
-               _user = signUpBloc.updateDetails(appBloc.currentUser); 
+                appBloc.outCurrentUser.listen((onData){
+                  _user = signUpBloc.updateDetails(onData);
+                });
               });
             }
             : null,
@@ -315,10 +316,10 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
   Widget buildButton(SignUpBloc signUpBloc, ApplicationBloc appBloc){
     return new FutureBuilder(
       future: _user,
-      builder: (context, AsyncSnapshot<User> snapshot){
-        if(snapshot.hasData){
-          _user.then((updatedUser){
-            appBloc.updateUser(updatedUser);
+      builder: (context, snapshot){
+        if(!snapshot.hasError){
+          signUpBloc.outUser.listen((onData){
+            appBloc.inCurrentUser(onData);
             Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
                   builder: (BuildContext context) => ThirdSignUpPage()

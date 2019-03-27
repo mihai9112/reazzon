@@ -1,24 +1,19 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:async';
+
 import 'package:reazzon/src/blocs/bloc_provider.dart';
 import 'package:reazzon/src/models/user.dart';
+import 'package:rxdart/rxdart.dart';
 
 class ApplicationBloc implements BlocBase {
-  User _currentUser;
-  User get currentUser => _currentUser;
+  final _currentUserController = BehaviorSubject<User>();
 
-  void setCurrentUser(FirebaseUser authenticatedUser)
-  {
-    if(authenticatedUser == null)
-      throw new ArgumentError.notNull(authenticatedUser.runtimeType.toString());
+  Function(User) get inCurrentUser => _currentUserController.sink.add;
+  Stream<User> get outCurrentUser => _currentUserController.stream;
 
-    _currentUser = new User(authenticatedUser);
-  }
-
-  void updateUser(User user){
-    _currentUser = user;
-  }
+  ApplicationBloc();
 
   @override
   void dispose() {
+    _currentUserController?.close();
   }
 }

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:reazzon/src/blocs/bloc_provider.dart';
 import 'package:reazzon/src/domain/validators.dart';
 import 'package:reazzon/src/models/reazzon.dart';
@@ -19,6 +18,7 @@ class SignUpBloc with Validators implements BlocBase {
   final _availableReazzonsController = BehaviorSubject<List<Reazzon>>();
   final _validRegistrationController = BehaviorSubject<bool>();
   final _messages = BehaviorSubject<String>();
+  final _userController = BehaviorSubject<User>();
 
   List<Reazzon> selectedReazzons = new List<Reazzon>();
 
@@ -56,6 +56,9 @@ class SignUpBloc with Validators implements BlocBase {
   Function(String) get _inMessages => _messages.sink.add;
   Stream<String> get outMessages => _messages.stream;
 
+  Function(User) get _inUser => _userController.sink.add;
+  Stream<User> get outUser => _userController.stream;
+
   SignUpBloc(){
     _availableReazzonsController.stream
       .map((convert) => convert.any((Reazzon reazzon) => reazzon.isSelected == true))
@@ -69,22 +72,25 @@ class SignUpBloc with Validators implements BlocBase {
       });
   }
 
-  Future<FirebaseUser> submit() async {
-    return await firebaseAuthentication.signUp(
+  Future<void> submit() async {
+    var user = await firebaseAuthentication.signUp(
       _emailController.value, 
       _passwordController.value
     ).catchError((onError){
       _inMessages(onError.message);
     });
+
+    _inUser(new User(user));
   }
 
-  Future<User> updateDetails(User user) async {
+  Future<void> updateDetails(User user) async {
     await user.updateDetails(
       _firstNameController.value, 
       _lastNameController.value, 
       _userNameController.value
     ); 
-    return user;
+    
+    _inUser(user);
   }
 
   void loadReazzons()
@@ -108,11 +114,11 @@ class SignUpBloc with Validators implements BlocBase {
     _inAvailableReazzons.add(reazzons);
   }
 
-  Future<User> completeRegistration(User user) async {
+  Future<void> completeRegistration(User user) async {
     for (var item in selectedReazzons) {
       user.addSelectedReazzons(item);
     }
-    return user;
+    _inUser(user);
   }
 
   @override
@@ -127,5 +133,6 @@ class SignUpBloc with Validators implements BlocBase {
     _availableReazzonsController?.close();
     _validRegistrationController.close();
     _messages?.close();
+    _userController?.close();
   }
 }

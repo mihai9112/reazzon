@@ -81,7 +81,15 @@ class _ThirdSignUpPageState extends State<ThirdSignUpPage> {
                 )
               ],
             ),
-            Text("Hello ${_appBloc.currentUser.userName}"),
+            StreamBuilder(
+              stream: _appBloc.outCurrentUser,
+              builder: (context, snapshot){
+                if(snapshot.hasData){
+                  return Text("Hello ${snapshot.data.userName}");
+                }
+                return Container();
+              },
+            ),
             Container(
               child: StreamBuilder<String>(
                 stream: _signUpBloc.outReazzonMessage,
@@ -187,13 +195,16 @@ Widget completeRegistrationButton(SignUpBloc signUpBloc, ApplicationBloc appBloc
         color: Colors.blueAccent,
         elevation: 4.0,
         onPressed: snapshot.data ? () {
-          signUpBloc.completeRegistration(appBloc.currentUser).then((user) {
-            appBloc.updateUser(user);
-            var accountRoute = MaterialPageRoute(
-              builder: (BuildContext context) => AccountPage()
-            );
-            Navigator.of(context)
-              .pushAndRemoveUntil(accountRoute, ModalRoute.withName('/account'));
+          appBloc.outCurrentUser.listen((onData){
+            signUpBloc.completeRegistration(onData);
+            signUpBloc.outUser.listen((s){
+              appBloc.inCurrentUser(s);
+              var accountRoute = MaterialPageRoute(
+                builder: (BuildContext context) => AccountPage()
+              );
+              Navigator.of(context)
+                .pushAndRemoveUntil(accountRoute, ModalRoute.withName('/account'));
+            });
           });
         }
         : null,

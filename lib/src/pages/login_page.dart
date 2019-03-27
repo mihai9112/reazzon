@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:reazzon/src/blocs/application_bloc.dart';
 import 'package:reazzon/src/blocs/bloc_provider.dart';
@@ -19,7 +18,7 @@ class _LoginPageState extends State<LoginPage>{
   static const IconData facebookIcon = const IconData(0xe801, fontFamily: _kFontFam);
   static const IconData googleIcon = const IconData(0xf1a0, fontFamily: _kFontFam);
   LoginBloc _loginBloc;
-  Future<FirebaseUser> _authenticatedUser;
+  Future<void> _authenticatedUser;
 
   @override
   void initState(){
@@ -397,10 +396,10 @@ class _LoginPageState extends State<LoginPage>{
   Widget buildButton(LoginBloc loginBloc, ApplicationBloc appBloc) {
     return new FutureBuilder(
       future: _authenticatedUser,
-      builder: (context, AsyncSnapshot<FirebaseUser> snapshot){
-        if(snapshot.hasData){
-          _authenticatedUser.then((currentUser){
-            appBloc.setCurrentUser(currentUser);
+      builder: (context, snapshot){
+        if(!snapshot.hasError){
+          loginBloc.outUser.listen((onData){
+            appBloc.inCurrentUser(onData);
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                 builder: (BuildContext context) => AccountPage()

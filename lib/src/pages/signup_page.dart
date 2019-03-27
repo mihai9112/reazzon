@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:reazzon/src/blocs/application_bloc.dart';
 import 'package:reazzon/src/blocs/bloc_provider.dart';
@@ -15,7 +14,7 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage>{
   SignUpBloc _signUpBloc;
-  Future<FirebaseUser> _user;
+  Future<void> _user;
   
   @override
   void initState(){
@@ -286,10 +285,10 @@ class _SignUpPageState extends State<SignUpPage>{
   Widget buildButton(SignUpBloc signUpBloc, ApplicationBloc appBloc) {
     return new FutureBuilder(
       future: _user,
-      builder: (context, AsyncSnapshot<FirebaseUser> snapshot){
-        if(snapshot.hasData){
-          _user.then((currentUser) {
-            appBloc.setCurrentUser(currentUser);
+      builder: (context, snapshot){
+        if(!snapshot.hasError){
+          signUpBloc.outUser.listen((onData){
+            appBloc.inCurrentUser(onData);
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                 builder: (BuildContext context) => SecondSignUpPage()
