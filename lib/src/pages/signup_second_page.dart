@@ -4,6 +4,7 @@ import 'package:reazzon/src/blocs/application_bloc.dart';
 import 'package:reazzon/src/blocs/bloc_provider.dart';
 import 'package:reazzon/src/blocs/signup_bloc.dart';
 import 'package:reazzon/src/helpers/fieldFocus.dart';
+import 'package:reazzon/src/helpers/spinner.dart';
 import 'package:reazzon/src/pages/signup_third_page.dart';
 
 class SecondSignUpPage extends StatefulWidget {
@@ -315,33 +316,32 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
     return new FutureBuilder(
       future: _isSecondSignUpSuccessful,
       builder: (context, snapshot){
-        if(snapshot.hasData){
-          signUpBloc.outUser.listen((onData){
-            appBloc.appState.setUser(onData);
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (BuildContext context) => ThirdSignUpPage()
-                )
-            );
-          });
-          return Container();
-        }
-        else {
-          if(snapshot.connectionState != ConnectionState.none && !snapshot.hasData){
-            if(snapshot.connectionState == ConnectionState.done)
-              return continueButton(signUpBloc, appBloc);
-
-            return new Stack(
-              alignment: FractionalOffset.center,
-              children: <Widget>[
-                new CircularProgressIndicator(
-                  backgroundColor: Colors.blueAccent,
-                )
-              ],
-            );
+        if(!snapshot.hasData){
+          if(snapshot.connectionState != ConnectionState.none){
+            return Spinner();
           }
-            
           return continueButton(signUpBloc, appBloc);
+        }
+
+        if(snapshot.hasData){
+          if(snapshot.data){
+            signUpBloc.outUser.listen((onData){
+              appBloc.appState.setUser(onData);
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => ThirdSignUpPage()
+                  )
+              );
+            });
+            return Container();
+          }
+
+          if(!snapshot.data){
+            if(snapshot.connectionState == ConnectionState.done){
+              return continueButton(signUpBloc, appBloc);
+            }
+            return Spinner();
+          }
         }
       },
     );
