@@ -9,14 +9,12 @@ class Reazzon {
     _isSelected = false;
   }
 
-  void select(){
-    if(!_isSelected)
-      _isSelected = true;
-  }
-
-  void deselect(){
-    if(_isSelected){
+  void setSelection()
+  {
+    if(isSelected)
       _isSelected = false;
+    else {
+      _isSelected = true;
     }
   }
 }

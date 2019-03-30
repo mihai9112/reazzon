@@ -126,25 +126,8 @@ class _ThirdSignUpPageState extends State<ThirdSignUpPage> {
                               ),
                             ),
                             onTap: () {
-                              var isLessThen3 = snapshot.data.where((reazzon) => reazzon.isSelected).length < 3;
-                              var originalValue = reazzon.isSelected;
-
-                              if(!reazzon.isSelected && isLessThen3){
-                                reazzon.select();
-                                _signUpBloc.updateReazzons(snapshot.data);
-                              }
-                              else{
-                                reazzon.deselect();
-                                _signUpBloc.updateReazzons(snapshot.data);
-                              }
-
-                              if(reazzon.isSelected && !isLessThen3) {
-                                reazzon.deselect();
-                                _signUpBloc.updateReazzons(snapshot.data);
-                              }
-                                
-                              if(originalValue == reazzon.isSelected && !isLessThen3)
-                                _signUpBloc.inReazzonMessage("No more then 3 reazzon to be selected");
+                              reazzon.setSelection();
+                              _signUpBloc.inAvailableReazzons(snapshot.data);
                             },
                           );
                         },

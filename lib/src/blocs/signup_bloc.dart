@@ -20,7 +20,7 @@ class SignUpBloc with Validators implements BlocBase {
   final _messagesController = BehaviorSubject<String>();
   final _userController = BehaviorSubject<User>();
 
-  List<Reazzon> selectedReazzons = new List<Reazzon>();
+  List<Reazzon> _selectedReazzons = new List<Reazzon>();
 
   Stream<String> get outEmail => _emailController.stream.transform(validateEmail);
   Stream<String> get outPassword => _passwordController.stream.transform(validatePassword);
@@ -50,8 +50,8 @@ class SignUpBloc with Validators implements BlocBase {
   Function(String) get inLastName => _lastNameController.sink.add;
   Function(String) get inUserName => _userNameController.sink.add;
 
-  Function(String) get inReazzonMessage => _reazzonMessageController.sink.add;
-  Sink<List<Reazzon>> get _inAvailableReazzons => _availableReazzonsController.sink;
+  Function(String) get _inReazzonMessage => _reazzonMessageController.sink.add;
+  Function(List<Reazzon>) get inAvailableReazzons => _availableReazzonsController.sink.add;
 
   Function(String) get _inMessages => _messagesController.sink.add;
   Stream<String> get outMessages => _messagesController.stream;
@@ -61,14 +61,18 @@ class SignUpBloc with Validators implements BlocBase {
 
   SignUpBloc(){
     _availableReazzonsController.stream
-      .map((convert) => convert.any((Reazzon reazzon) => reazzon.isSelected == true))
-      .listen((onData) => _validRegistrationController.add(onData));
-    
-    _availableReazzonsController.stream
-      .map((convert) => convert.where((Reazzon reazzon) => reazzon.isSelected == true ))
       .listen((onData) {
-        selectedReazzons.clear();
-        selectedReazzons.addAll(onData);
+        if(onData.where((reazzon) => reazzon.isSelected == true).length > 3){
+          _inReazzonMessage("No more then 3 reazzon to be selected");
+          _validRegistrationController.add(false);
+        }
+        else {
+          _selectedReazzons.clear();
+          _selectedReazzons.addAll(onData);
+          _validRegistrationController.add(
+            _selectedReazzons.any((reazzon) => reazzon.isSelected == true));
+          _inReazzonMessage("Select at least 1 reazzon");
+        }
       });
   }
 
@@ -123,18 +127,14 @@ class SignUpBloc with Validators implements BlocBase {
       new Reazzon("#Cheating"), new Reazzon("#SelfEsteem"),
       new Reazzon("#BodyImage"), new Reazzon("#Exercise\nMotivation")
     ]);
-    _inAvailableReazzons.add(availableReazzons);
-  }
-
-  void updateReazzons(List<Reazzon> reazzons){
-    _inAvailableReazzons.add(reazzons);
+    inAvailableReazzons(availableReazzons);
   }
 
   Future<bool> completeRegistration(User user) async {
     var result = false;
 
     try {
-      for (var item in selectedReazzons) {
+      for (var item in _selectedReazzons) {
         user.addSelectedReazzons(item);
       }
       _inUser(user);
