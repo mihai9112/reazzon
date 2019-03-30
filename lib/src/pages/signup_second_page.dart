@@ -13,7 +13,7 @@ class SecondSignUpPage extends StatefulWidget {
 
 class _SecondSignUpPageState extends State<SecondSignUpPage> {
   SignUpBloc _signUpBloc;
-  Future<void> _user;
+  Future<bool> _isSecondSignUpSuccessful;
 
   @override
   void initState()
@@ -66,7 +66,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
                   ),
                   Icon(
                     Icons.trending_flat,
-                    color: Colors.blueAccent,
+                    color: Colors.grey,
                     size: 30.0,
                   ),
                   Icon(
@@ -280,9 +280,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
           elevation: 4.0,
           onPressed: snapshot.hasData ? () {
               setState(() {
-                appBloc.outCurrentUser.listen((onData){
-                  _user = signUpBloc.updateDetails(onData);
-                });
+                _isSecondSignUpSuccessful = signUpBloc.updateDetails(appBloc.appState.user);
               });
             }
             : null,
@@ -315,11 +313,11 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
 
   Widget buildButton(SignUpBloc signUpBloc, ApplicationBloc appBloc){
     return new FutureBuilder(
-      future: _user,
+      future: _isSecondSignUpSuccessful,
       builder: (context, snapshot){
-        if(!snapshot.hasError){
+        if(snapshot.hasData){
           signUpBloc.outUser.listen((onData){
-            appBloc.inCurrentUser(onData);
+            appBloc.appState.setUser(onData);
             Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
                   builder: (BuildContext context) => ThirdSignUpPage()

@@ -14,7 +14,7 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage>{
   SignUpBloc _signUpBloc;
-  Future<void> _user;
+  Future<bool> _isSignUpSuccessful;
   
   @override
   void initState(){
@@ -252,7 +252,7 @@ class _SignUpPageState extends State<SignUpPage>{
           elevation: 4.0,
           onPressed: snapshot.hasData ? () {
               setState(() {
-                _user = _signUpBloc.submit();
+                _isSignUpSuccessful = _signUpBloc.submit();
               });
             }
             : null,
@@ -284,11 +284,11 @@ class _SignUpPageState extends State<SignUpPage>{
 
   Widget buildButton(SignUpBloc signUpBloc, ApplicationBloc appBloc) {
     return new FutureBuilder(
-      future: _user,
+      future: _isSignUpSuccessful,
       builder: (context, snapshot){
-        if(!snapshot.hasError){
+        if(snapshot.hasData){
           signUpBloc.outUser.listen((onData){
-            appBloc.inCurrentUser(onData);
+            appBloc.appState.setUser(onData);
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                 builder: (BuildContext context) => SecondSignUpPage()

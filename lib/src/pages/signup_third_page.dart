@@ -13,7 +13,7 @@ class ThirdSignUpPage extends StatefulWidget {
 class _ThirdSignUpPageState extends State<ThirdSignUpPage> {
   SignUpBloc _signUpBloc;
 
-   @override
+  @override
   void initState()
   {
     super.initState();
@@ -61,7 +61,7 @@ class _ThirdSignUpPageState extends State<ThirdSignUpPage> {
                 ),
                 Icon(
                   Icons.trending_flat,
-                  color: Colors.blueAccent,
+                  color: Colors.grey,
                   size: 30.0,
                 ),
                 Icon(
@@ -71,7 +71,7 @@ class _ThirdSignUpPageState extends State<ThirdSignUpPage> {
                 ),
                 Icon(
                   Icons.trending_flat,
-                  color: Colors.blueAccent,
+                  color: Colors.grey,
                   size: 30.0,
                 ),
                 Icon(
@@ -81,15 +81,7 @@ class _ThirdSignUpPageState extends State<ThirdSignUpPage> {
                 )
               ],
             ),
-            StreamBuilder(
-              stream: _appBloc.outCurrentUser,
-              builder: (context, snapshot){
-                if(snapshot.hasData){
-                  return Text("Hello ${snapshot.data.userName}");
-                }
-                return Container();
-              },
-            ),
+            Text("Hello ${_appBloc.appState.user.userName}"),
             Container(
               child: StreamBuilder<String>(
                 stream: _signUpBloc.outReazzonMessage,
@@ -195,16 +187,14 @@ Widget completeRegistrationButton(SignUpBloc signUpBloc, ApplicationBloc appBloc
         color: Colors.blueAccent,
         elevation: 4.0,
         onPressed: snapshot.data ? () {
-          appBloc.outCurrentUser.listen((onData){
-            signUpBloc.completeRegistration(onData);
-            signUpBloc.outUser.listen((s){
-              appBloc.inCurrentUser(s);
-              var accountRoute = MaterialPageRoute(
-                builder: (BuildContext context) => AccountPage()
-              );
-              Navigator.of(context)
-                .pushAndRemoveUntil(accountRoute, ModalRoute.withName('/account'));
-            });
+          signUpBloc.completeRegistration(appBloc.appState.user);
+          signUpBloc.outUser.listen((s){
+            appBloc.appState.setUser(s);
+            var accountRoute = MaterialPageRoute(
+              builder: (BuildContext context) => AccountPage()
+            );
+            Navigator.of(context)
+              .pushAndRemoveUntil(accountRoute, ModalRoute.withName('/account'));
           });
         }
         : null,

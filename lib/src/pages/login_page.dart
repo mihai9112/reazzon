@@ -18,7 +18,7 @@ class _LoginPageState extends State<LoginPage>{
   static const IconData facebookIcon = const IconData(0xe801, fontFamily: _kFontFam);
   static const IconData googleIcon = const IconData(0xf1a0, fontFamily: _kFontFam);
   LoginBloc _loginBloc;
-  Future<void> _authenticatedUser;
+  Future<bool> _isLoginSuccessful;
 
   @override
   void initState(){
@@ -329,7 +329,7 @@ class _LoginPageState extends State<LoginPage>{
           elevation: 4.0,
           onPressed: snapshot.hasData ? () {
               setState(() {
-                _authenticatedUser = bloc.submit();
+                _isLoginSuccessful = bloc.submit();
               });
             }
             : null,
@@ -395,11 +395,11 @@ class _LoginPageState extends State<LoginPage>{
 
   Widget buildButton(LoginBloc loginBloc, ApplicationBloc appBloc) {
     return new FutureBuilder(
-      future: _authenticatedUser,
+      future: _isLoginSuccessful,
       builder: (context, snapshot){
-        if(!snapshot.hasError){
+        if(snapshot.hasData){
           loginBloc.outUser.listen((onData){
-            appBloc.inCurrentUser(onData);
+            appBloc.appState.setUser(onData);
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                 builder: (BuildContext context) => AccountPage()
