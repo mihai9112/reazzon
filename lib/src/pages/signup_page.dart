@@ -4,6 +4,7 @@ import 'package:reazzon/src/blocs/application_bloc.dart';
 import 'package:reazzon/src/blocs/bloc_provider.dart';
 import 'package:reazzon/src/blocs/signup_bloc.dart';
 import 'package:reazzon/src/helpers/fieldFocus.dart';
+import 'package:reazzon/src/helpers/spinner.dart';
 import 'package:reazzon/src/pages/login_page.dart';
 import 'package:reazzon/src/pages/signup_second_page.dart';
 
@@ -286,34 +287,32 @@ class _SignUpPageState extends State<SignUpPage>{
     return new FutureBuilder(
       future: _isSignUpSuccessful,
       builder: (context, snapshot){
-        if(snapshot.hasData){
-          signUpBloc.outUser.listen((onData){
-            appBloc.appState.setUser(onData);
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (BuildContext context) => SecondSignUpPage()
-              )
-            );
-          });
-          return Container();
+        if(!snapshot.hasData){
+          if(snapshot.connectionState != ConnectionState.none){
+            return Spinner();
+          }
+          return submitButton(signUpBloc, appBloc);
         }
-        else {
-          if(snapshot.connectionState != ConnectionState.none && !snapshot.hasData)
-          {
-            if(snapshot.connectionState == ConnectionState.done)
-              return submitButton(signUpBloc, appBloc);
 
-            return new Stack(
-              alignment: FractionalOffset.center,
-              children: <Widget>[
-                new CircularProgressIndicator(
-                  backgroundColor: Colors.blueAccent,
+        if(snapshot.hasData){
+          if(snapshot.data){
+            signUpBloc.outUser.listen((onData){
+              appBloc.appState.setUser(onData);
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (BuildContext context) => SecondSignUpPage()
                 )
-              ],
-            ); 
+              );
+            });
+            return Container();
           }
 
-          return submitButton(signUpBloc, appBloc);
+          if(!snapshot.data){
+            if(snapshot.connectionState == ConnectionState.done){
+              return submitButton(signUpBloc, appBloc);
+            }
+            return Spinner();
+          }
         }
       },
     );
