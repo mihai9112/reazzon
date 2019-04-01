@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:reazzon/src/models/user.dart';
-import 'package:reazzon/src/services/IUserRepository.dart';
+import 'package:reazzon/src/services/iuser_repository.dart';
 
 class UserRepository implements IUserRepository{
   DocumentReference _userRef;

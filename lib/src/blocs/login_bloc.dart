@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:reazzon/src/blocs/bloc_provider.dart';
 import 'package:reazzon/src/domain/validators.dart';
 import 'package:reazzon/src/models/user.dart';
-import 'package:reazzon/src/services/firebase_authentication.dart';
+import 'package:reazzon/src/services/authentication_repository.dart';
 import 'package:rxdart/rxdart.dart';
 
 class LoginBloc with Validators implements BlocBase {

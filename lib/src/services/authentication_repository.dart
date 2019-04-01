@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:reazzon/src/services/IAuthentication.dart';
+import 'package:reazzon/src/services/iauthentication_repository.dart';
 
-class FirebaseAuthentication implements IAuthentication{
+class AuthenticationRepository implements IAuthenticationRepository {
 
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
@@ -29,4 +29,4 @@ class FirebaseAuthentication implements IAuthentication{
   }
 }
 
-FirebaseAuthentication firebaseAuthentication = new FirebaseAuthentication();
+AuthenticationRepository firebaseAuthentication = new AuthenticationRepository();
