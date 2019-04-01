@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:reazzon/src/services/iauthentication_repository.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthenticationRepository implements IAuthenticationRepository {
 
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   @override
   Future<FirebaseUser> signIn(String email, String password) async {
@@ -26,6 +28,18 @@ class AuthenticationRepository implements IAuthenticationRepository {
       email: email, 
       password: password
     ); 
+  }
+
+  @override
+  Future<FirebaseUser> singInWithGoogle() async {
+    final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+    await _firebaseAuth.signInWithCredential(credential);
+    return _firebaseAuth.currentUser();
   }
 }
 

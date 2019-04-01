@@ -241,7 +241,7 @@ class _SignUpPageState extends State<SignUpPage>{
     );
   }
 
-  Widget submitButton(SignUpBloc signUpBloc, ApplicationBloc appBloc) {
+  Widget submitButton(SignUpBloc signUpBloc) {
     return StreamBuilder(
       stream: signUpBloc.submitValid,
       builder: (context, snapshot) {
@@ -291,7 +291,7 @@ class _SignUpPageState extends State<SignUpPage>{
           if(snapshot.connectionState != ConnectionState.none){
             return Spinner();
           }
-          return submitButton(signUpBloc, appBloc);
+          return submitButton(signUpBloc);
         }
 
         if(snapshot.hasData){
@@ -309,7 +309,7 @@ class _SignUpPageState extends State<SignUpPage>{
 
           if(!snapshot.data){
             if(snapshot.connectionState == ConnectionState.done){
-              return submitButton(signUpBloc, appBloc);
+              return submitButton(signUpBloc);
             }
             return Spinner();
           }

@@ -6,6 +6,7 @@ import 'package:reazzon/src/blocs/bloc_provider.dart';
 import 'package:reazzon/src/blocs/login_bloc.dart';
 import 'package:reazzon/src/helpers/fieldFocus.dart';
 import 'package:flutter/widgets.dart';
+import 'package:reazzon/src/helpers/spinner.dart';
 import 'package:reazzon/src/pages/account.dart';
 
 class LoginPage extends StatefulWidget {
@@ -266,14 +267,18 @@ class _LoginPageState extends State<LoginPage>{
                                   borderRadius: BorderRadius.circular(30.0),
                                 ),
                                 color: Color(0Xffdb3236),
-                                onPressed: () => {}, //TODO:Add functionality
+                                onPressed: () {},
                                 child: Container(
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
                                       Expanded(
                                         child: FlatButton(
-                                          onPressed: ()=>{},
+                                          onPressed: () {
+                                            setState(() {
+                                              _isLoginSuccessful = _loginBloc.registerWithGoogle();
+                                            });
+                                          },
                                           padding: EdgeInsets.only(
                                             top: 20.0,
                                             bottom: 20.0,
@@ -397,32 +402,32 @@ class _LoginPageState extends State<LoginPage>{
     return new FutureBuilder(
       future: _isLoginSuccessful,
       builder: (context, snapshot){
-        if(snapshot.hasData){
-          loginBloc.outUser.listen((onData){
-            appBloc.appState.setUser(onData);
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (BuildContext context) => AccountPage()
-              )
-            );
-          });
-          return Container();
+        if(!snapshot.hasData){
+          if(snapshot.connectionState != ConnectionState.none){
+            return Spinner();
+          }
+          return submitButton(loginBloc);
         }
-        else{
-          if(snapshot.connectionState != ConnectionState.none && !snapshot.hasData)
-          {
-            if(snapshot.connectionState ==ConnectionState.done)
-              return submitButton(loginBloc);
-            
-            return Stack(
-              alignment: FractionalOffset.center,
-              children: <Widget>[
-                CircularProgressIndicator()
-              ],
-            );
+
+        if(snapshot.hasData){
+          if(snapshot.data){
+            loginBloc.outUser.listen((onData){
+              appBloc.appState.setUser(onData);
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (BuildContext context) => AccountPage()
+                )
+              );
+            });
+            return Container();
           }
 
-          return submitButton(loginBloc);
+          if(!snapshot.data){
+            if(snapshot.connectionState == ConnectionState.done){
+              return submitButton(loginBloc);
+            }
+            return Spinner();
+          }
         }
       },
     );

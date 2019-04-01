@@ -22,17 +22,39 @@ class LoginBloc with Validators implements BlocBase {
   Function(String) get changeEmail => _emailController.sink.add;
   Function(String) get changePassword => _passwordController.sink.add;
   Function(String) get _inMessages => _messagesController.sink.add;
+  Function(User) get _inUser => _userController.sink.add;
 
-  Future<void> submit() async {
-    var user = await firebaseAuthentication.signIn(
+  Future<bool> submit() async {
+    var result = false;
+
+    try {
+      var user = await firebaseAuthentication.signIn(
         _emailController.value, 
         _passwordController.value
-      )
-      .catchError((onError){
-        _inMessages(onError.message);
-      });
-    
-    _userController.sink.add(new User(user));
+      );
+      _inUser(new User(user));
+      result = true;
+    } 
+    catch (e) {
+      _inMessages(e.message);
+    }
+
+    return result;
+  }
+
+  Future<bool> registerWithGoogle() async {
+    var result = false;
+
+    try {
+      var user = await firebaseAuthentication.singInWithGoogle();
+      _inUser(new User(user));
+      result = true;
+    } 
+    catch (e) {
+      _inMessages(e.message);
+    }
+
+    return result;
   }
 
   @override
