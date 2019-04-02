@@ -45,14 +45,14 @@ class LoginBloc with Validators implements BlocBase {
   Future<bool> registerWithGoogle() async {
     var result = false;
 
-    try {
-      var user = await firebaseAuthentication.singInWithGoogle();
-      _inUser(new User(user));
-      result = true;
-    } 
-    catch (e) {
-      _inMessages(e.message);
-    }
+    await firebaseAuthentication.singInWithGoogle()
+      .then((onValue){
+        _inUser(new User(onValue));
+        result = true;
+      })
+      .catchError((onError){
+        _inMessages(onError.message);
+      });
 
     return result;
   }

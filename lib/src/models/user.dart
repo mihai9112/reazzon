@@ -25,7 +25,7 @@ class User {
     _firebaseUser = authenticatedUser;
 
     if(authenticatedUser.displayName != null){
-      var split = authenticatedUser.displayName.split('||');
+      var split = authenticatedUser.displayName.split(' ');
       _firstName = split[0];
       _lastName = split[1];
       _userName = split[2];
@@ -34,7 +34,7 @@ class User {
 
   Future<void> updateDetails(String firstName, String lastName, String userName) async {
     var userInfo = new UserUpdateInfo();
-    userInfo.displayName = firstName + '||' + lastName + '||' + userName;
+    userInfo.displayName = firstName + ' ' + lastName + ' ' + userName;
     
     await _firebaseUser.updateProfile(userInfo);
     _firstName = firstName;

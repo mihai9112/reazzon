@@ -4,6 +4,7 @@
 *.log
 *.pyc
 *.swp
+*.jks
 .DS_Store
 .atom/
 .buildlog/
@@ -71,3 +72,4 @@ build/
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 
 android/app/google-services.json
+android/key.properties
