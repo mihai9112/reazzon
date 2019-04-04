@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:queries/collections.dart';
 import 'package:reazzon/src/models/reazzon.dart';
 
 class User {
@@ -16,7 +17,6 @@ class User {
   String get firstName => _firstName;
   String get lastName => _lastName;
   String get userName => _userName;
-  FirebaseUser get firebaseUser => _firebaseUser;
   Set<Reazzon> get selectedReazzons => _selectedReazzons;
   
   User(FirebaseUser authenticatedUser) {
@@ -24,11 +24,18 @@ class User {
     _emailAddress = authenticatedUser.email;
     _firebaseUser = authenticatedUser;
 
+    var _collection = Collection();
+
     if(authenticatedUser.displayName != null){
-      var split = authenticatedUser.displayName.split(' ');
-      _firstName = split[0];
-      _lastName = split[1];
-      _userName = split[2];
+      authenticatedUser.displayName
+        .split(' ')
+        .forEach((f) => _collection.add(f));
+      
+      if(_collection.any()){
+        _firstName = _collection.elementAtOrDefault(0);
+        _lastName = _collection.elementAtOrDefault(1);
+        _userName = _collection.elementAtOrDefault(2);
+      }
     }
   }
 

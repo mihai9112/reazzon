@@ -119,7 +119,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
                     child: Row(
                       children: <Widget>[
                         Expanded(
-                          child: firstNameField(_signUpBloc)
+                          child: firstNameField(_appBloc, _signUpBloc)
                         )
                       ],
                     ),
@@ -158,7 +158,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
                     child: Row(
                       children: <Widget>[
                         Expanded(
-                          child: lastNameField(_signUpBloc)
+                          child: lastNameField(_appBloc, _signUpBloc)
                         )
                       ],
                     ),
@@ -221,8 +221,9 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
     );
   }
 
-  Widget firstNameField(SignUpBloc signUpBloc) {
+  Widget firstNameField(ApplicationBloc appBloc, SignUpBloc signUpBloc) {
     return StreamBuilder(
+      initialData: appBloc.appState.user.firstName,
       stream: signUpBloc.outFirstName,
       builder: (context, snapshot) {
         return TextField(
@@ -237,11 +238,12 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
     );
   }
 
-  Widget lastNameField(SignUpBloc signUpBloc) {
+  Widget lastNameField(ApplicationBloc appBloc, SignUpBloc signUpBloc) {
     return StreamBuilder(
       stream: signUpBloc.outLastName,
       builder: (context, snapshot) {
         return TextField(
+          controller: TextEditingController(text: appBloc.appState.user.lastName),
           style: TextStyle(fontSize: 15.0),
           onChanged: signUpBloc.inLastName,
           decoration: InputDecoration(
