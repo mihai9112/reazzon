@@ -134,7 +134,7 @@ class SignUpBloc with Validators implements BlocBase {
     var result = false;
 
     try {
-      for (var item in _selectedReazzons) {
+      for (var item in _selectedReazzons.where((reazzon) => reazzon.isSelected == true)) {
         user.addSelectedReazzons(item);
       }
       _inUser(user);
