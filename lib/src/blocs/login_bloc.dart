@@ -17,6 +17,7 @@ class LoginBloc with Validators implements BlocBase {
 
   Stream<bool> get submitValid => Observable.combineLatest2(email, password, (e, p) => true);
   Stream<User> get outUser => _userController.stream;
+  Stream<String> get outMessages => _messagesController.stream;
   
   // Change data
   Function(String) get changeEmail => _emailController.sink.add;

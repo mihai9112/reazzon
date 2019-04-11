@@ -223,7 +223,6 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
 
   Widget firstNameField(ApplicationBloc appBloc, SignUpBloc signUpBloc) {
     return StreamBuilder(
-      initialData: appBloc.appState.user.firstName,
       stream: signUpBloc.outFirstName,
       builder: (context, snapshot) {
         return TextField(
@@ -231,7 +230,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
           onChanged: signUpBloc.inFirstName,
           decoration: InputDecoration(
             errorStyle: TextStyle(fontSize: 15.0),
-            errorText: snapshot.error,
+            errorText: snapshot.error
           ),
         );
       },
@@ -243,7 +242,6 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
       stream: signUpBloc.outLastName,
       builder: (context, snapshot) {
         return TextField(
-          controller: TextEditingController(text: appBloc.appState.user.lastName),
           style: TextStyle(fontSize: 15.0),
           onChanged: signUpBloc.inLastName,
           decoration: InputDecoration(
@@ -265,6 +263,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
           decoration: InputDecoration(
             errorStyle: TextStyle(fontSize: 15.0),
             errorText: snapshot.error,
+            prefixText: "@"
           ),
         );
       },

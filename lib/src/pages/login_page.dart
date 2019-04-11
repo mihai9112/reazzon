@@ -7,6 +7,7 @@ import 'package:reazzon/src/blocs/login_bloc.dart';
 import 'package:reazzon/src/helpers/fieldFocus.dart';
 import 'package:flutter/widgets.dart';
 import 'package:reazzon/src/helpers/spinner.dart';
+import 'package:reazzon/src/pages/account.dart';
 import 'package:reazzon/src/pages/signup_second_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -69,6 +70,19 @@ class _LoginPageState extends State<LoginPage>{
                     color: Colors.blueAccent,
                     size: 50.0,
                   ),
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.only(left: 30.0, right: 30.0),
+                child: Center(
+                  child: StreamBuilder(
+                    stream: _loginBloc.outMessages,
+                    builder: (context, snapshot){
+                      return snapshot.hasData ? 
+                        Text(snapshot.data, style: TextStyle(color: Colors.red), textAlign: TextAlign.center, softWrap: true) : 
+                        Container();
+                    },
+                  )
                 ),
               ),
               Row(
@@ -415,7 +429,7 @@ class _LoginPageState extends State<LoginPage>{
               appBloc.appState.setUser(onData);
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (BuildContext context) => SecondSignUpPage()
+                  builder: (BuildContext context) => appBloc.appState.user.userName == null ? SecondSignUpPage() : AccountPage()
                 )
               );
             });
