@@ -24,10 +24,8 @@ class AuthenticationRepository implements IAuthenticationRepository {
   }
 
   @override
-  Future<void> signOut() {
-
-    // TODO: implement signOut
-    return null;
+  Future<void> signOut() async {
+    await _firebaseAuth.signOut();
   }
 
   @override
@@ -69,6 +67,13 @@ class AuthenticationRepository implements IAuthenticationRepository {
       default:
         throw StateError("Unknown Facebook user state");
     }
+  }
+
+  @override
+  Future<void> forgottenPassword(String email) async {
+    await _firebaseAuth.sendPasswordResetEmail(
+      email: email
+    );
   }
 }
 

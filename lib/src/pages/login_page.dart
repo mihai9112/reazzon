@@ -8,6 +8,7 @@ import 'package:reazzon/src/helpers/fieldFocus.dart';
 import 'package:flutter/widgets.dart';
 import 'package:reazzon/src/helpers/spinner.dart';
 import 'package:reazzon/src/pages/account.dart';
+import 'package:reazzon/src/pages/forgotten_password_page.dart';
 import 'package:reazzon/src/pages/signup_second_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -63,7 +64,7 @@ class _LoginPageState extends State<LoginPage>{
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               Container(
-                padding: EdgeInsets.all(55.0),
+                padding: EdgeInsets.all(50.0),
                 child: Center(
                   child: Icon(
                     Icons.developer_board,
@@ -166,7 +167,13 @@ class _LoginPageState extends State<LoginPage>{
                         ),
                         textAlign: TextAlign.end,
                       ),
-                      onPressed: () => {}, //TODO:Functionality to be added
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ForgottenPasswordPage()) 
+                        );
+                      }, 
                     ),
                   ),
                 ],

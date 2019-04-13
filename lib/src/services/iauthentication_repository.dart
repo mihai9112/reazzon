@@ -7,4 +7,5 @@ abstract class IAuthenticationRepository {
   Future<FirebaseUser> signInWithGoogle();
   Future<FirebaseUser> signInWithFacebook();
   Future<void> signOut();
+  Future<void> forgottenPassword(String email);
 }
