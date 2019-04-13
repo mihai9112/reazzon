@@ -25,6 +25,7 @@ class AuthenticationRepository implements IAuthenticationRepository {
 
   @override
   Future<void> signOut() {
+
     // TODO: implement signOut
     return null;
   }
@@ -50,14 +51,14 @@ class AuthenticationRepository implements IAuthenticationRepository {
 
   @override
   Future<FirebaseUser> signInWithFacebook() async {
-    AuthCredential credential;
     final facebookUser = await _facebookLogin.logInWithReadPermissions(['email']);
 
     switch (facebookUser.status) {
       case FacebookLoginStatus.loggedIn :
-          credential = FacebookAuthProvider.getCredential(
+          final AuthCredential credential = FacebookAuthProvider.getCredential(
             accessToken: facebookUser.accessToken.token
           );
+          return await _firebaseAuth.signInWithCredential(credential);
         break;
       case FacebookLoginStatus.error :
         throw StateError(facebookUser.errorMessage);
@@ -66,9 +67,8 @@ class AuthenticationRepository implements IAuthenticationRepository {
         throw StateError("User cancelled");
         break;
       default:
-        throw StateError("Unknown facebook user state");
+        throw StateError("Unknown Facebook user state");
     }
-    return await _firebaseAuth.signInWithCredential(credential);
   }
 }
 
