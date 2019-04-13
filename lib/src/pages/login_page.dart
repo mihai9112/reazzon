@@ -228,14 +228,18 @@ class _LoginPageState extends State<LoginPage>{
                                   borderRadius: BorderRadius.circular(30.0),
                                 ),
                                 color: Color(0Xff3B5998),
-                                onPressed: () => {}, //TODO: Add functionality
+                                onPressed: () {},
                                 child: Container(
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
                                       Expanded(
                                         child: FlatButton(
-                                          onPressed: ()=>{},
+                                          onPressed: () {
+                                            setState(() {
+                                              _isLoginSuccessful = _loginBloc.registerWithFacebook();
+                                            });
+                                          },
                                           padding: EdgeInsets.only(
                                             top: 20.0,
                                             bottom: 20.0,

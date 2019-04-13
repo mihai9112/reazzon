@@ -46,7 +46,7 @@ class LoginBloc with Validators implements BlocBase {
   Future<bool> registerWithGoogle() async {
     var result = false;
 
-    await firebaseAuthentication.singInWithGoogle()
+    await firebaseAuthentication.signInWithGoogle()
       .then((onValue){
         _inUser(new User(onValue));
         result = true;
@@ -56,6 +56,21 @@ class LoginBloc with Validators implements BlocBase {
       });
 
     return result;
+  }
+
+  Future<bool> registerWithFacebook() async {
+    var result = false;
+
+    await firebaseAuthentication.signInWithFacebook()
+      .then((onValue){
+        _inUser(new User(onValue));
+        result = true;
+      })
+      .catchError((onError){
+        _inMessages(onError.message);
+      });
+
+      return result;
   }
 
   @override

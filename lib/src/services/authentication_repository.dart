@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:reazzon/src/services/iauthentication_repository.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 
 class AuthenticationRepository implements IAuthenticationRepository {
 
@@ -12,6 +13,7 @@ class AuthenticationRepository implements IAuthenticationRepository {
       'https://www.googleapis.com/auth/contacts.readonly',
     ],
   );
+  final FacebookLogin _facebookLogin = FacebookLogin();
 
   @override
   Future<FirebaseUser> signIn(String email, String password) async {
@@ -36,15 +38,32 @@ class AuthenticationRepository implements IAuthenticationRepository {
   }
 
   @override
-  Future<FirebaseUser> singInWithGoogle() async {
+  Future<FirebaseUser> signInWithGoogle() async {
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
     final AuthCredential credential = GoogleAuthProvider.getCredential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-    await _firebaseAuth.signInWithCredential(credential);
-    return _firebaseAuth.currentUser();
+    return await _firebaseAuth.signInWithCredential(credential);
+  }
+
+  @override
+  Future<FirebaseUser> signInWithFacebook() async {
+    AuthCredential credential;
+    final facebookUser = await _facebookLogin.logInWithReadPermissions(['email']);
+
+    switch (facebookUser.status) {
+      case FacebookLoginStatus.loggedIn :
+          credential = FacebookAuthProvider.getCredential(
+            accessToken: facebookUser.accessToken.token
+          );
+        break;
+      default:
+    }
+
+    
+    return await _firebaseAuth.signInWithCredential(credential);
   }
 }
 
