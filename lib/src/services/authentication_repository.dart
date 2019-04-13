@@ -59,10 +59,15 @@ class AuthenticationRepository implements IAuthenticationRepository {
             accessToken: facebookUser.accessToken.token
           );
         break;
+      case FacebookLoginStatus.error :
+        throw StateError(facebookUser.errorMessage);
+        break;
+      case FacebookLoginStatus.cancelledByUser :
+        throw StateError("User cancelled");
+        break;
       default:
+        throw StateError("Unknown facebook user state");
     }
-
-    
     return await _firebaseAuth.signInWithCredential(credential);
   }
 }
