@@ -53,4 +53,19 @@ class User {
   {
     _selectedReazzons.add(selectedReazzons);
   }
+
+  Map<String, dynamic> toMap()
+  {
+    var map = new Map<String, dynamic>();
+
+    if(_userId != null){
+      map['userId'] = _userId;
+    }
+    map['firstName'] = _firstName;
+    map['lastName'] = _lastName;
+    map['userName'] = _userName;
+    map['reazzons'] = _selectedReazzons.map((r) => r.value).toList();
+
+    return map;
+  }
 }

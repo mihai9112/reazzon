@@ -4,6 +4,7 @@ import 'package:reazzon/src/domain/validators.dart';
 import 'package:reazzon/src/models/reazzon.dart';
 import 'package:reazzon/src/models/user.dart';
 import 'package:reazzon/src/services/authentication_repository.dart';
+import 'package:reazzon/src/services/user_repository.dart';
 import 'package:rxdart/rxdart.dart';
 
 class SignUpBloc with Validators implements BlocBase {
@@ -80,11 +81,13 @@ class SignUpBloc with Validators implements BlocBase {
     var result = false;
 
     try {
-      var user = await firebaseAuthentication.signUp(
+      var user = await authenticationRepository.signUp(
         _emailController.value, 
         _passwordController.value
       );
-      _inUser(new User(user));
+      var reazzonUser = new User(user);
+      await userRepository.createUserDetails(reazzonUser);
+      _inUser(reazzonUser);
       result = true;
     } 
     catch (e) {
@@ -103,6 +106,7 @@ class SignUpBloc with Validators implements BlocBase {
         _lastNameController.value, 
         _userNameController.value
       );
+      await userRepository.updateUserDetails(user);
       _inUser(user);
       result = true;
     } 
@@ -137,6 +141,7 @@ class SignUpBloc with Validators implements BlocBase {
       for (var item in _selectedReazzons.where((reazzon) => reazzon.isSelected == true)) {
         user.addSelectedReazzons(item);
       }
+      await userRepository.updateUserDetails(user);
       _inUser(user);
       result = true;
     } 

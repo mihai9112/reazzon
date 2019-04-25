@@ -77,4 +77,4 @@ class AuthenticationRepository implements IAuthenticationRepository {
   }
 }
 
-AuthenticationRepository firebaseAuthentication = new AuthenticationRepository();
+AuthenticationRepository authenticationRepository = new AuthenticationRepository();

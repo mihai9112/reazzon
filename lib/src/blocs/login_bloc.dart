@@ -33,7 +33,7 @@ class LoginBloc with Validators implements BlocBase {
     var result = false;
 
     try {
-      var user = await firebaseAuthentication.signIn(
+      var user = await authenticationRepository.signIn(
         _emailController.value, 
         _passwordController.value
       );
@@ -50,7 +50,7 @@ class LoginBloc with Validators implements BlocBase {
   Future<bool> registerWithGoogle() async {
     var result = false;
 
-    await firebaseAuthentication.signInWithGoogle()
+    await authenticationRepository.signInWithGoogle()
       .then((onValue){
         _inUser(new User(onValue));
         result = true;
@@ -65,7 +65,7 @@ class LoginBloc with Validators implements BlocBase {
   Future<bool> registerWithFacebook() async {
     var result = false;
 
-    await firebaseAuthentication.signInWithFacebook()
+    await authenticationRepository.signInWithFacebook()
       .then((onValue){
         _inUser(new User(onValue));
         result = true;
@@ -80,7 +80,7 @@ class LoginBloc with Validators implements BlocBase {
   Future<bool> forgottenPassword() async {
     var result = false;
 
-    await firebaseAuthentication.forgottenPassword(_emailController.value)
+    await authenticationRepository.forgottenPassword(_emailController.value)
       .then((_){
         _inSuccessForgottenMessages("Email sent successfully to ${_emailController.value}. \n Please follow instructions contained in the reset email.");
         _inMessages(null);
