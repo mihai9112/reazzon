@@ -26,13 +26,16 @@ class UserRepository implements IUserRepository{
       return data;
     };
 
-    return Firestore.instance.runTransaction(createTransaction)
-      .then((_) => true)
+    Firestore.instance.runTransaction(createTransaction)
+      .then((_) {
+        return true;
+      })
       .catchError((onError){
         //TODO: log error
-        print(onError);
-        return false;
+        throw(onError);
       });
+    
+    return false;
   }
 
   @override

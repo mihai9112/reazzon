@@ -79,21 +79,30 @@ class SignUpBloc with Validators implements BlocBase {
 
   Future<bool> submit() async {
     var result = false;
+    User reazzonUser;
 
-    try {
-      var user = await authenticationRepository.signUp(
-        _emailController.value, 
-        _passwordController.value
-      );
-      var reazzonUser = new User(user);
-      await userRepository.createUserDetails(reazzonUser);
-      _inUser(reazzonUser);
-      result = true;
-    } 
-    catch (e) {
-      _inMessages(e.message);
+    await authenticationRepository.signUp(
+      _emailController.value, 
+      _passwordController.value
+    ).then((onValue){
+      reazzonUser = new User(onValue);
+    }).catchError((onError){
+      _inMessages(onError.message);
+    });
+
+    if(reazzonUser != null){
+      try {
+        var dbResult = await userRepository.createUserDetails(reazzonUser);
+        result = dbResult;
+      } catch (e) {
+        _inMessages(e.message);
+      }
     }
 
+    if(reazzonUser.hasCreatedUser() && !result){
+      _inMessages("Unable to complete registration process at the moment. Please login to complete");
+    }
+    
     return result;
   }
 
