@@ -15,7 +15,7 @@ class Application extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: new HomeScreen(),
+        home: new HomePage(),
         routes: {
           '/account' : (BuildContext context) => AccountPage(),
           '/register' : (BuildContext context) => SignUpPage(),

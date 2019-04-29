@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:reazzon/src/pages/login_page.dart';
 import 'package:reazzon/src/pages/signup_page.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomePage extends StatelessWidget {
   final _controller = new PageController();
   static const _kDuration = const Duration(milliseconds: 300);
   static const _kCurve = Curves.ease;

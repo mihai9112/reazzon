@@ -438,11 +438,19 @@ class _LoginPageState extends State<LoginPage>{
           if(snapshot.data){
             loginBloc.outUser.listen((onData){
               appBloc.appState.setUser(onData);
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (BuildContext context) => appBloc.appState.user.userName == null ? SecondSignUpPage() : AccountPage()
-                )
-              );
+              
+              if(appBloc.appState.user.hasUserName()){
+                var accountRoute = MaterialPageRoute(
+                  builder: (BuildContext context) => AccountPage()
+                );
+                Navigator.of(context)
+                  .pushAndRemoveUntil(accountRoute, ModalRoute.withName('/account'));
+              } else {
+                var secondSignUpRoute = MaterialPageRoute(
+                  builder: (BuildContext context) => SecondSignUpPage()
+                );
+                Navigator.pushReplacement(context, secondSignUpRoute);
+              }
             });
             return Container();
           }

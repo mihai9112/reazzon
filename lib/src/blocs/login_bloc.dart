@@ -94,6 +94,10 @@ class LoginBloc with Validators implements BlocBase {
     return result;
   }
 
+  Future<void> signOut() async {
+    return await authenticationRepository.signOut();
+  }
+
   @override
   void dispose() {
     _emailController.close();

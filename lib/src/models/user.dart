@@ -41,6 +41,9 @@ class User {
 
   bool hasCreatedUser() 
     => _firebaseUser != null;
+  
+  bool hasUserName()
+    => _userName != null;
 
   Future<void> updateDetails(String firstName, String lastName, String userName) async {
     var userInfo = new UserUpdateInfo();
