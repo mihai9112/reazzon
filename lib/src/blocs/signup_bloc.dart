@@ -86,6 +86,7 @@ class SignUpBloc with Validators implements BlocBase {
       _passwordController.value
     ).then((onValue){
       reazzonUser = new User(onValue);
+      _inUser(reazzonUser);
     }).catchError((onError){
       _inMessages(onError.message);
     });

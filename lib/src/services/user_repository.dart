@@ -19,23 +19,19 @@ class UserRepository implements IUserRepository{
   Future<bool> createUserDetails(User user) async {
     final TransactionHandler createTransaction = (Transaction tx) async {
       final DocumentSnapshot ds = await tx.get(_userCollection.document(user.userId));
-      final Map<String, dynamic> data = user.toMap();
       
-      await tx.set(ds.reference, data);
+      await tx.set(ds.reference, user.toMap());
 
-      return data;
+      return { 'added': true };
     };
 
-    Firestore.instance.runTransaction(createTransaction)
-      .then((_) {
-        return true;
-      })
+    return Firestore.instance.runTransaction(createTransaction)
+      .then((_) => true)
       .catchError((onError){
         //TODO: log error
-        throw(onError);
+        print(onError);
+        return false;
       });
-    
-    return false;
   }
 
   @override
