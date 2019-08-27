@@ -4,6 +4,7 @@
 *.log
 *.pyc
 *.swp
+*.jks
 .DS_Store
 .atom/
 .buildlog/
@@ -69,3 +70,6 @@ build/
 !**/ios/**/default.pbxuser
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
+
+android/app/google-services.json
+android/key.properties
