@@ -5,9 +5,26 @@ class ChatPage extends StatelessWidget {
   Widget build(BuildContext context) {
     double _size = 72;
 
+    ThemeData darkTheme = ThemeData.dark().copyWith(
+      textTheme: TextTheme(
+        title: TextStyle(
+          fontSize: 16,
+          color: Color(0XFFCCCCCC),
+        ),
+      ),
+    );
+
+    ThemeData lightTheme = ThemeData.light().copyWith(
+      textTheme: TextTheme(
+        title: TextStyle(
+          fontSize: 16,
+          color: Color(0XFF575B5E),
+        ),
+      ),
+    );
+
     return MaterialApp(
-      darkTheme: ThemeData.dark(),
-      theme: ThemeData(fontFamily: 'reazzon'),
+      theme: lightTheme,
       home: DefaultTabController(
         length: 2,
         child: Scaffold(
@@ -25,7 +42,6 @@ class ChatPage extends StatelessWidget {
               Container(
                 padding:
                     const EdgeInsets.symmetric(vertical: 0, horizontal: 12.0),
-                color: Color(0XFFFBFBFF),
                 child: ListView.separated(
                   itemCount: getMessageItemList().length,
                   itemBuilder: (BuildContext context, int index) {
@@ -82,7 +98,7 @@ List<ChatItemModel> getMessageItemList() {
         name: names[i - 1],
         latestMessage:
             'How are you doing? How do you do etc etc lorem lorem ipsum',
-        unreadMessages: i % 4,
+        unreadMessages: i % 11,
         isActive: (i % 3 == 0),
       ),
     );
@@ -112,34 +128,23 @@ class ChatItem extends StatelessWidget {
 
   ChatItem({this.messageItem});
 
-  final TextStyle itemNameStyle = TextStyle(
-    fontWeight: FontWeight.bold,
-    fontSize: 16,
-    color: Color(0XFF575B5E),
-  );
+  TextStyle itemNameStyle;
 
-  final TextStyle itemMessageStyle = TextStyle(
-    color: Color(0XFF575B5E).withOpacity(0.8),
-  );
-
-  final List<BoxShadow> materialBoxShadow = [
-    BoxShadow(
-      color: Colors.black.withOpacity(0.05),
-      offset: Offset(6, 6),
-      blurRadius: 5,
-      spreadRadius: 6,
-    ),
-    BoxShadow(
-      color: Colors.black.withOpacity(0.01),
-      offset: Offset(4, 2),
-      blurRadius: 4,
-      spreadRadius: 5,
-    ),
-  ];
+  TextStyle itemMessageStyle;
 
   @override
   Widget build(BuildContext context) {
     double _size = 54;
+
+    itemNameStyle = Theme.of(context).textTheme.title.copyWith(
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
+        );
+    itemMessageStyle = Theme.of(context).textTheme.title.copyWith(
+          fontWeight: FontWeight.normal,
+          fontSize: 14,
+          color: Theme.of(context).textTheme.title.color.withOpacity(0.8),
+        );
 
     return Container(
       child: Container(
@@ -213,15 +218,19 @@ class ChatItem extends StatelessWidget {
                             ? Container()
                             : Container(
                                 margin: const EdgeInsets.only(left: 12.0),
-                                width: 18,
-                                height: 18,
+                                padding: EdgeInsets.symmetric(horizontal: 4),
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
                                   color: Colors.red,
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                                 child: Text(
-                                    this.messageItem.unreadMessages.toString(),
+                                    (this.messageItem.unreadMessages >= 10)
+                                        ? '9+'
+                                        : this
+                                            .messageItem
+                                            .unreadMessages
+                                            .toString(),
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 10)),
                               ),
