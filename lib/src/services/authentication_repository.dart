@@ -17,10 +17,10 @@ class AuthenticationRepository implements IAuthenticationRepository {
 
   @override
   Future<FirebaseUser> signIn(String email, String password) async {
-    return await _firebaseAuth.signInWithEmailAndPassword(
+    return (await _firebaseAuth.signInWithEmailAndPassword(
       email: email,
       password: password
-    );
+    )).user;
   }
 
   @override
@@ -30,10 +30,10 @@ class AuthenticationRepository implements IAuthenticationRepository {
 
   @override
   Future<FirebaseUser> signUp(String email, String password) async {
-    return await _firebaseAuth.createUserWithEmailAndPassword(
+    return (await _firebaseAuth.createUserWithEmailAndPassword(
       email: email, 
       password: password
-    ); 
+    )).user; 
   }
 
   @override
@@ -44,7 +44,7 @@ class AuthenticationRepository implements IAuthenticationRepository {
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-    return await _firebaseAuth.signInWithCredential(credential);
+    return (await _firebaseAuth.signInWithCredential(credential)).user;
   }
 
   @override
@@ -56,7 +56,7 @@ class AuthenticationRepository implements IAuthenticationRepository {
           final AuthCredential credential = FacebookAuthProvider.getCredential(
             accessToken: facebookUser.accessToken.token
           );
-          return await _firebaseAuth.signInWithCredential(credential);
+          return (await _firebaseAuth.signInWithCredential(credential)).user;
         break;
       case FacebookLoginStatus.error :
         throw StateError(facebookUser.errorMessage);
