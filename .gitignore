@@ -73,3 +73,6 @@ build/
 
 android/app/google-services.json
 android/key.properties
+
+# Environment.sh
+ios/Flutter/flutter_export_environment.sh

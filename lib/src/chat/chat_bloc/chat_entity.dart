@@ -55,12 +55,4 @@ class ChatEntity {
       isActive: snap.data['isActive'] as bool ?? false,
     );
   }
-
-//  Map<String, Object> toDocument() {
-//    return {
-//      'complete': complete,
-//      'task': task,
-//      'note': note,
-//    };
-//  }
 }

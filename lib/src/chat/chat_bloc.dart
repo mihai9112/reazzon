@@ -1,3 +1,0 @@
-class ChatBloc {
-  loadChat() {}
-}
