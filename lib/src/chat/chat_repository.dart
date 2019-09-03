@@ -2,79 +2,49 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'message_model.dart';
+import 'package:reazzon/src/chat/chat_bloc/chat_entity.dart';
+import 'package:reazzon/src/chat/message_bloc/message_entity.dart';
 
-class User {
-  String firstName;
-  String lastName;
-  String userName;
-  String userId;
-  String image =
-      'https://i.pinimg.com/236x/5e/32/7a/5e327a1f41086bb9adfb9b0be524860d.jpg';
-
-  bool isActive = false;
-  int unreadMessage = 3;
-
-  User({
-    this.firstName,
-    this.lastName,
-    this.userId,
-    this.userName,
-  });
-
-  @override
-  String toString() {
-    // TODO: implement toString
-    return 'firstName: $firstName, lastName: $lastName, user_id: $userId';
-  }
+abstract class ChatRepository {
+  Stream<List<ChatEntity>> chatEntities();
+  Stream<List<MessageEntity>> getMessages(String uid);
+  Future<bool> sendMessage(MessageEntity message);
 }
 
-class FireBaseChatRepository {
+class FireBaseChatRepositories extends ChatRepository {
+  final usersCollection = Firestore.instance.collection('Users');
+  final chatsCollection = Firestore.instance.collection('chats');
+
   @override
-  Future<List<User>> getChattedUsers() async {
-//    var temp = Firestore.instance
-//        .collection('chat')
-//        .document(generateGroupId())
-//        .collection(generateGroupId());
-//
-//    print(temp);
-
-    List<User> userList = [];
-
-    var snapshots = Firestore.instance.collection('Users').getDocuments();
-
-    await snapshots.then((val) {
-      val.documents.forEach((f) {
-        var temp = User(
-          firstName: f.data['firstName'],
-          lastName: f.data['lastName'] ?? '',
-          userId: f.data['userId'],
-          userName: f.data['userName'] ?? '',
-        );
-
-        userList.add(temp);
-      });
+  Stream<List<ChatEntity>> chatEntities() {
+    return usersCollection.snapshots().map((snapshot) {
+      return snapshot.documents
+          .map((doc) => ChatEntity.fromSnapshot(doc))
+          .toList();
     });
-
-    return userList;
   }
 
   @override
-  Stream<QuerySnapshot> getMessages(String uid) {
-    String MyID = 'OMA4VjyncrWeIlGIrGtVwLpLe3D3';
+  Stream<List<MessageEntity>> getMessages(String uid) {
+    // todo: store logged user id and retrieve here
+    final String myID = 'OMA4VjyncrWeIlGIrGtVwLpLe3D3';
 
-    String groupID = generateGroupId(uid, MyID);
+    String groupID = generateGroupId(uid, myID);
 
-    return Firestore.instance
-        .collection('chats')
+    return chatsCollection
         .document(groupID)
         .collection(groupID)
         .orderBy('time', descending: true)
-        .snapshots();
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.documents
+          .map((doc) => MessageEntity.fromSnapshot(doc))
+          .toList();
+    });
   }
 
   @override
-  Future<bool> sendMessage(Message message) {
+  Future<bool> sendMessage(MessageEntity message) {
     var documentReference = Firestore.instance
         .collection('chats')
         .document(generateGroupId(message.from, message.to))
@@ -82,14 +52,11 @@ class FireBaseChatRepository {
         .document(DateTime.now().millisecondsSinceEpoch.toString());
 
     Firestore.instance.runTransaction((transaction) async {
-      await transaction.set(documentReference, message.toJSON());
+      await transaction.set(documentReference, message.toJson());
     }).then((onValue) {
-      print('\n\n\nSuccess');
-      print(onValue);
+      return true;
     }).catchError((onError) {
-      print('\n\n\Failed');
-
-      print(onError);
+      return {'success': false, 'error': onError};
     });
 
     return null;

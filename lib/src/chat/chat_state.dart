@@ -1,1 +1,0 @@
-enum ChatState { UNINITIALIZED, NOT_LOADED, LOADED }

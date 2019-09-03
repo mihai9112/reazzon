@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:reazzon/src/chat/message_model.dart';
+import 'package:reazzon/src/blocs/bloc_provider.dart';
+import 'package:reazzon/src/chat/message_bloc/message_bloc.dart';
+import 'package:reazzon/src/chat/message_bloc/message_events.dart';
+import 'package:reazzon/src/chat/message_bloc/message_state.dart';
+import 'package:reazzon/src/chat/message_bloc/message_entity.dart';
 import 'package:reazzon/src/helpers/spinner.dart';
 
+import 'package:reazzon/src/chat/chat_bloc/chat_entity.dart';
 import 'chat_repository.dart';
 
 class MessagePage extends StatefulWidget {
-  var data;
+  final ChatEntity data;
 
   MessagePage(this.data);
 
@@ -14,9 +19,19 @@ class MessagePage extends StatefulWidget {
 }
 
 class _MessagePageState extends State<MessagePage> {
+  MessageBloc messageBloc;
+
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    messageBloc = MessageBloc(this.widget.data.userId,
+        chatRepository: FireBaseChatRepositories());
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    messageBloc.dispose();
+    super.dispose();
   }
 
   @override
@@ -39,48 +54,58 @@ class _MessagePageState extends State<MessagePage> {
             )
           ],
         ),
-        body: Stack(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(bottom: 48.0),
-              child: _ChatListWidget(this.widget.data['userId']),
-            ),
-            Positioned(
-                bottom: 0, child: _InputWidget(this.widget.data['userId'])),
-          ],
+        body: BlocProvider(
+          bloc: this.messageBloc,
+          child: Stack(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(bottom: 48.0),
+                child: _MessageListWidget(),
+              ),
+              Positioned(
+                bottom: 0,
+                child: _InputWidget(),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-class _ChatListWidget extends StatelessWidget {
-  String uid;
-
-  _ChatListWidget(this.uid);
-
+class _MessageListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    String userId = BlocProvider.of<MessageBloc>(context).userId;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: StreamBuilder<Object>(
-          stream: FireBaseChatRepository().getMessages(uid),
-          builder: (context, AsyncSnapshot snapshot) {
-            if (snapshot.hasData) {
+      child: StreamBuilder(
+          stream: BlocProvider.of<MessageBloc>(context).stream,
+          builder: (context, AsyncSnapshot<MessagesState> snapshot) {
+            if (!snapshot.hasData) {
+              BlocProvider.of<MessageBloc>(context)
+                  .dispatch(LoadMessageListEvent());
+            }
+
+            if (snapshot.hasData && snapshot.data is MessagesLoaded) {
               return ListView.separated(
                 reverse: true,
-                itemCount: snapshot.data.documents.length,
+                itemCount:
+                    (snapshot.data as MessagesLoaded).messageEntities.length,
                 separatorBuilder: (context, index) {
                   return SizedBox(height: 8);
                 },
                 itemBuilder: (context, index) {
-                  var data = snapshot.data.documents[index];
+                  MessageEntity data =
+                      (snapshot.data as MessagesLoaded).messageEntities[index];
 
-                  return _ChatListItem(
-                    sent: (data['from'].toString().compareTo(this.uid) == 0)
+                  return _MessageListItem(
+                    sent: (data.from.toString().compareTo(userId) == 0)
                         ? false
                         : true,
-                    text: data['content'],
+                    text: data.content,
                   );
                 },
               );
@@ -92,11 +117,11 @@ class _ChatListWidget extends StatelessWidget {
   }
 }
 
-class _ChatListItem extends StatelessWidget {
-  bool sent = false;
-  String text = 'Good Day !';
+class _MessageListItem extends StatelessWidget {
+  final bool sent;
+  final String text;
 
-  _ChatListItem({this.sent, this.text});
+  _MessageListItem({this.sent, this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -128,20 +153,21 @@ class _ChatListItem extends StatelessWidget {
 }
 
 class _InputWidget extends StatefulWidget {
-  final String receiverID;
-
-  _InputWidget(this.receiverID);
-
   @override
   __InputWidgetState createState() => __InputWidgetState();
 }
 
 class __InputWidgetState extends State<_InputWidget> {
   TextEditingController messageController;
+  String userId;
+  MessageBloc _messageBloc;
 
   @override
   void initState() {
     messageController = TextEditingController();
+    _messageBloc = BlocProvider.of<MessageBloc>(context);
+    userId = _messageBloc.userId;
+
     super.initState();
   }
 
@@ -179,15 +205,13 @@ class __InputWidgetState extends State<_InputWidget> {
           ),
           InkWell(
             onTap: () {
-              print('Send Clicked');
-              FireBaseChatRepository().sendMessage(
-                Message(
-                  from: 'OMA4VjyncrWeIlGIrGtVwLpLe3D3',
-                  to: this.widget.receiverID,
-                  content: this.messageController.text,
-                  timeStamp: DateTime.now(),
-                ),
-              );
+              _messageBloc.dispatch(SendMessageEvent(MessageEntity(
+                from: 'OMA4VjyncrWeIlGIrGtVwLpLe3D3',
+                to: this.userId,
+                content: this.messageController.text,
+                time: DateTime.now(),
+              )));
+
               this.messageController.text = '';
             },
             child: Icon(
