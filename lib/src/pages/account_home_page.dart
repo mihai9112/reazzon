@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:reazzon/src/blocs/account_home_bloc.dart';
-import 'package:reazzon/src/chat/chat_bloc/chat_entity.dart';
 import 'package:reazzon/src/helpers/spinner.dart';
+
+import 'package:reazzon/src/helpers/filter_icon.dart';
+import 'package:reazzon/src/pages/filter_page.dart';
 
 class AccountHomePage extends StatefulWidget {
   @override
@@ -9,42 +11,79 @@ class AccountHomePage extends StatefulWidget {
 }
 
 class _AccountHomePageState extends State<AccountHomePage> {
+  List<String> filteredList;
+
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<AccountHomeEntity>>(
-        stream: AccountHomeBloc().users(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return ListView.separated(
-              itemCount: snapshot.data.length,
-              itemBuilder: (BuildContext context, int index) {
-                return InkWell(
-                  onTap: () async {},
-                  child: _AccountHomePageItem(snapshot.data[index]),
-                );
-              },
-              separatorBuilder: (BuildContext context, int index) {
-                return Align(
-                  alignment: Alignment.bottomRight,
-                  child: Container(
-                    height: 1,
-                    margin: EdgeInsets.symmetric(vertical: 2),
-                    color: Color(0XFFE0E0E0),
-                    width: MediaQuery.of(context).size.width - 72 - 16,
-                  ),
-                );
-              },
-            );
-          }
+    return Scaffold(
+      body: StreamBuilder<List<AccountHomeEntity>>(
+          stream: (filteredList == null)
+              ? AccountHomeBloc().users()
+              : AccountHomeBloc().filterUsers(filteredList),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: ListView.separated(
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return InkWell(
+                      onTap: () async {},
+                      child: _AccountHomePageItem(snapshot.data[index]),
+                    );
+                  },
+                  separatorBuilder: (BuildContext context, int index) {
+                    return Align(
+                      alignment: Alignment.bottomRight,
+                      child: Container(
+                        height: 1,
+                        margin: EdgeInsets.symmetric(vertical: 2),
+                        color: Color(0XFFE0E0E0),
+                        width: MediaQuery.of(context).size.width - 72 - 16,
+                      ),
+                    );
+                  },
+                ),
+              );
+            }
 
-          return Center(child: Spinner());
-        });
+            return Center(child: Spinner());
+          }),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0.0,
+        title: Text("Home", style: TextStyle(color: Colors.blueAccent)),
+        centerTitle: true,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(FilterIcon.filter_list_01, color: Colors.blue, size: 28),
+            onPressed: () async {
+              var x = await Navigator.push(
+                  context,
+                  new MaterialPageRoute(
+                      builder: (BuildContext context) => FilterDialog()));
+              setState(() {
+                if (x != null) {
+                  if (x.list.length > 0) {
+                    filteredList = x.list;
+                  } else {
+                    filteredList = null;
+                  }
+                } else {
+                  filteredList = null;
+                }
+              });
+            },
+          ),
+        ],
+      ),
+    );
     ;
   }
 }
 
 class _AccountHomePageItem extends StatelessWidget {
-  AccountHomeEntity accountHomeEntity;
+  final AccountHomeEntity accountHomeEntity;
 
   _AccountHomePageItem(this.accountHomeEntity);
   @override
@@ -121,6 +160,7 @@ class _AccountHomePageItem extends StatelessWidget {
       ),
       child: Text(
         reazzon,
+        maxLines: 1,
         style: TextStyle(fontSize: 10, color: Colors.black.withOpacity(0.45)),
       ),
     );

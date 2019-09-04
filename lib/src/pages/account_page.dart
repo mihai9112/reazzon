@@ -100,12 +100,6 @@ class _AccountPageState extends State<AccountPage> {
       onWillPop: () => Future.value(false),
       child: Scaffold(
         drawer: _drawer(),
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0.0,
-          title: Text("Overview", style: TextStyle(color: Colors.blueAccent)),
-          centerTitle: true,
-        ),
         body: BlocProvider<AccountPageBloc>(
           bloc: _accountPageBloc,
           child: _selectedWidget,

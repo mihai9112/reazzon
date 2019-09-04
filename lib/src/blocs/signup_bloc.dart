@@ -132,28 +132,7 @@ class SignUpBloc with Validators implements BlocBase {
   }
 
   void loadReazzons() {
-    var availableReazzons = new List<Reazzon>();
-    availableReazzons.addAll([
-      new Reazzon("#Divorce"),
-      new Reazzon("#Perfectionist"),
-      new Reazzon("#Breakups"),
-      new Reazzon("#Loneliness"),
-      new Reazzon("#Grief"),
-      new Reazzon("#WorkStress"),
-      new Reazzon("#FinancialStress"),
-      new Reazzon("#KidsCustody"),
-      new Reazzon("#Bullying"),
-      new Reazzon("#Insomnia"),
-      new Reazzon("#MoodSwings"),
-      new Reazzon("#Preasure\nToSucceed"),
-      new Reazzon("#Anxiety"),
-      new Reazzon("#Breakups"),
-      new Reazzon("#Cheating"),
-      new Reazzon("#SelfEsteem"),
-      new Reazzon("#BodyImage"),
-      new Reazzon("#Exercise\nMotivation")
-    ]);
-    inAvailableReazzons(availableReazzons);
+    inAvailableReazzons(Reazzon.allReazzons());
   }
 
   Future<bool> completeRegistration(User user) async {

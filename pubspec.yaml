@@ -87,3 +87,6 @@ flutter:
       - family: reazzon
         fonts:
         - asset: lib/assets/fonts/reazzon.ttf
+      - family: filter_icon
+        fonts:
+        - asset: lib/assets/fonts/filter_icon.ttf
