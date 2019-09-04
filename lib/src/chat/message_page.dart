@@ -4,15 +4,16 @@ import 'package:reazzon/src/chat/message_bloc/message_bloc.dart';
 import 'package:reazzon/src/chat/message_bloc/message_events.dart';
 import 'package:reazzon/src/chat/message_bloc/message_state.dart';
 import 'package:reazzon/src/chat/message_bloc/message_entity.dart';
+import 'package:reazzon/src/chat/repository/message_repository.dart';
 import 'package:reazzon/src/helpers/spinner.dart';
 
 import 'package:reazzon/src/chat/chat_bloc/chat_entity.dart';
-import 'chat_repository.dart';
 
 class MessagePage extends StatefulWidget {
   final ChatEntity data;
+  final String loggedUserId;
 
-  MessagePage(this.data);
+  MessagePage(this.data, this.loggedUserId);
 
   @override
   _MessagePageState createState() => _MessagePageState();
@@ -22,10 +23,14 @@ class _MessagePageState extends State<MessagePage> {
   MessageBloc messageBloc;
 
   @override
-  void didChangeDependencies() {
-    messageBloc = MessageBloc(this.widget.data.userId,
-        chatRepository: FireBaseChatRepositories());
-    super.didChangeDependencies();
+  void initState() {
+    messageBloc = MessageBloc(
+      messageRepository: FireBaseMessageRepository(
+        userId: this.widget.data.userId,
+        loggedUserID: this.widget.loggedUserId,
+      ),
+    );
+    super.initState();
   }
 
   @override
@@ -77,7 +82,7 @@ class _MessagePageState extends State<MessagePage> {
 class _MessageListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    String userId = BlocProvider.of<MessageBloc>(context).userId;
+    String userId = BlocProvider.of<MessageBloc>(context).messageRepo.userId;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -166,7 +171,7 @@ class __InputWidgetState extends State<_InputWidget> {
   void initState() {
     messageController = TextEditingController();
     _messageBloc = BlocProvider.of<MessageBloc>(context);
-    userId = _messageBloc.userId;
+    userId = _messageBloc.messageRepo.userId;
 
     super.initState();
   }
@@ -205,12 +210,12 @@ class __InputWidgetState extends State<_InputWidget> {
           ),
           InkWell(
             onTap: () {
-              _messageBloc.dispatch(SendMessageEvent(MessageEntity(
-                from: 'OMA4VjyncrWeIlGIrGtVwLpLe3D3',
+              _messageBloc.sendMessage(MessageEntity(
+                from: this._messageBloc.messageRepo.loggedUserId,
                 to: this.userId,
                 content: this.messageController.text,
                 time: DateTime.now(),
-              )));
+              ));
 
               this.messageController.text = '';
             },

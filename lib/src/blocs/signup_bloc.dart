@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:reazzon/src/blocs/bloc_provider.dart';
 import 'package:reazzon/src/domain/validators.dart';
+import 'package:reazzon/src/helpers/user.dart';
 import 'package:reazzon/src/models/reazzon.dart';
 import 'package:reazzon/src/models/user.dart';
 import 'package:reazzon/src/services/authentication_repository.dart';
@@ -8,7 +9,6 @@ import 'package:reazzon/src/services/user_repository.dart';
 import 'package:rxdart/rxdart.dart';
 
 class SignUpBloc with Validators implements BlocBase {
-
   final _emailController = BehaviorSubject<String>();
   final _passwordController = BehaviorSubject<String>();
   final _confirmPasswordController = BehaviorSubject<String>();
@@ -23,25 +23,33 @@ class SignUpBloc with Validators implements BlocBase {
 
   List<Reazzon> _selectedReazzons = new List<Reazzon>();
 
-  Stream<String> get outEmail => _emailController.stream.transform(validateEmail);
-  Stream<String> get outPassword => _passwordController.stream.transform(validatePassword);
-  Stream<String> get outConfirmPassword => _confirmPasswordController.stream.transform(validatePassword)
-    .doOnData((String c){
-      if (0 != _passwordController.value.compareTo(c)){
-        _confirmPasswordController.addError("Passwords do not match");
-      }
-    });
-  Stream<String> get outFirstName => _firstNameController.stream.transform(validateFirstName);
-  Stream<String> get outLastName => _lastNameController.stream.transform(validateLastName);
-  Stream<String> get outUserName => _userNameController.stream.transform(validateUserName);
+  Stream<String> get outEmail =>
+      _emailController.stream.transform(validateEmail);
+  Stream<String> get outPassword =>
+      _passwordController.stream.transform(validatePassword);
+  Stream<String> get outConfirmPassword => _confirmPasswordController.stream
+          .transform(validatePassword)
+          .doOnData((String c) {
+        if (0 != _passwordController.value.compareTo(c)) {
+          _confirmPasswordController.addError("Passwords do not match");
+        }
+      });
+  Stream<String> get outFirstName =>
+      _firstNameController.stream.transform(validateFirstName);
+  Stream<String> get outLastName =>
+      _lastNameController.stream.transform(validateLastName);
+  Stream<String> get outUserName =>
+      _userNameController.stream.transform(validateUserName);
   Stream<bool> get submitValid => Observable.combineLatest3(
-    outEmail, outPassword, outConfirmPassword, (e, p, cp) => true );
+      outEmail, outPassword, outConfirmPassword, (e, p, cp) => true);
   Stream<bool> get updateDetailsValid => Observable.combineLatest3(
-    outFirstName, outLastName, outUserName, (f, l, u) => true );
+      outFirstName, outLastName, outUserName, (f, l, u) => true);
   Stream<String> get outReazzonMessage => _reazzonMessageController.stream;
-  Stream<List<Reazzon>> get outAvailableReazzons => _availableReazzonsController.stream;
-  Stream<bool> get completeRegistrationValid => _validRegistrationController.stream;
-  
+  Stream<List<Reazzon>> get outAvailableReazzons =>
+      _availableReazzonsController.stream;
+  Stream<bool> get completeRegistrationValid =>
+      _validRegistrationController.stream;
+
   // Change data
   Function(String) get inEmail => _emailController.sink.add;
   Function(String) get inPassword => _passwordController.sink.add;
@@ -52,7 +60,8 @@ class SignUpBloc with Validators implements BlocBase {
   Function(String) get inUserName => _userNameController.sink.add;
 
   Function(String) get _inReazzonMessage => _reazzonMessageController.sink.add;
-  Function(List<Reazzon>) get inAvailableReazzons => _availableReazzonsController.sink.add;
+  Function(List<Reazzon>) get inAvailableReazzons =>
+      _availableReazzonsController.sink.add;
 
   Function(String) get _inMessages => _messagesController.sink.add;
   Stream<String> get outMessages => _messagesController.stream;
@@ -60,38 +69,36 @@ class SignUpBloc with Validators implements BlocBase {
   Function(User) get _inUser => _userController.sink.add;
   Stream<User> get outUser => _userController.stream;
 
-  SignUpBloc(){
-    _availableReazzonsController.stream
-      .listen((onData) {
-        if(onData.where((reazzon) => reazzon.isSelected == true).length > 3){
-          _inReazzonMessage("No more then 3 reazzon to be selected");
-          _validRegistrationController.add(false);
-        }
-        else {
-          _selectedReazzons.clear();
-          _selectedReazzons.addAll(onData);
-          _validRegistrationController.add(
+  SignUpBloc() {
+    _availableReazzonsController.stream.listen((onData) {
+      if (onData.where((reazzon) => reazzon.isSelected == true).length > 3) {
+        _inReazzonMessage("No more then 3 reazzon to be selected");
+        _validRegistrationController.add(false);
+      } else {
+        _selectedReazzons.clear();
+        _selectedReazzons.addAll(onData);
+        _validRegistrationController.add(
             _selectedReazzons.any((reazzon) => reazzon.isSelected == true));
-          _inReazzonMessage("Select at least 1 reazzon");
-        }
-      });
+        _inReazzonMessage("Select at least 1 reazzon");
+      }
+    });
   }
 
   Future<bool> submit() async {
     var result = false;
     User reazzonUser;
 
-    await authenticationRepository.signUp(
-      _emailController.value, 
-      _passwordController.value
-    ).then((onValue){
+    await authenticationRepository
+        .signUp(_emailController.value, _passwordController.value)
+        .then((onValue) {
       reazzonUser = new User(onValue);
+      UserHelper.storeUserId(reazzonUser.userId);
       _inUser(reazzonUser);
-    }).catchError((onError){
+    }).catchError((onError) {
       _inMessages(onError.message);
     });
 
-    if(reazzonUser != null){
+    if (reazzonUser != null) {
       try {
         var dbResult = await userRepository.createUserDetails(reazzonUser);
         result = dbResult;
@@ -100,10 +107,11 @@ class SignUpBloc with Validators implements BlocBase {
       }
     }
 
-    if(reazzonUser.hasCreatedUser() && !result){
-      _inMessages("Unable to complete registration process at the moment. Please login to complete");
+    if (reazzonUser.hasCreatedUser() && !result) {
+      _inMessages(
+          "Unable to complete registration process at the moment. Please login to complete");
     }
-    
+
     return result;
   }
 
@@ -111,35 +119,39 @@ class SignUpBloc with Validators implements BlocBase {
     var result = false;
 
     try {
-      await user.updateDetails(
-        _firstNameController.value, 
-        _lastNameController.value, 
-        _userNameController.value
-      );
+      await user.updateDetails(_firstNameController.value,
+          _lastNameController.value, _userNameController.value);
       await userRepository.updateUserDetails(user);
       _inUser(user);
       result = true;
-    } 
-    catch (e) {
+    } catch (e) {
       _inMessages(e.message);
     }
 
     return result;
   }
 
-  void loadReazzons()
-  {
+  void loadReazzons() {
     var availableReazzons = new List<Reazzon>();
     availableReazzons.addAll([
-      new Reazzon("#Divorce"), new Reazzon("#Perfectionist"),
-      new Reazzon("#Breakups"), new Reazzon("#Loneliness"),
-      new Reazzon("#Grief"), new Reazzon("#WorkStress"),
-      new Reazzon("#FinancialStress"), new Reazzon("#KidsCustody"),
-      new Reazzon("#Bullying"), new Reazzon("#Insomnia"),
-      new Reazzon("#MoodSwings"), new Reazzon("#Preasure\nToSucceed"),
-      new Reazzon("#Anxiety"), new Reazzon("#Breakups"),
-      new Reazzon("#Cheating"), new Reazzon("#SelfEsteem"),
-      new Reazzon("#BodyImage"), new Reazzon("#Exercise\nMotivation")
+      new Reazzon("#Divorce"),
+      new Reazzon("#Perfectionist"),
+      new Reazzon("#Breakups"),
+      new Reazzon("#Loneliness"),
+      new Reazzon("#Grief"),
+      new Reazzon("#WorkStress"),
+      new Reazzon("#FinancialStress"),
+      new Reazzon("#KidsCustody"),
+      new Reazzon("#Bullying"),
+      new Reazzon("#Insomnia"),
+      new Reazzon("#MoodSwings"),
+      new Reazzon("#Preasure\nToSucceed"),
+      new Reazzon("#Anxiety"),
+      new Reazzon("#Breakups"),
+      new Reazzon("#Cheating"),
+      new Reazzon("#SelfEsteem"),
+      new Reazzon("#BodyImage"),
+      new Reazzon("#Exercise\nMotivation")
     ]);
     inAvailableReazzons(availableReazzons);
   }
@@ -148,18 +160,18 @@ class SignUpBloc with Validators implements BlocBase {
     var result = false;
 
     try {
-      for (var item in _selectedReazzons.where((reazzon) => reazzon.isSelected == true)) {
+      for (var item
+          in _selectedReazzons.where((reazzon) => reazzon.isSelected == true)) {
         user.addSelectedReazzons(item);
       }
       await userRepository.updateUserDetails(user);
       _inUser(user);
       result = true;
-    } 
-    catch (e) {
+    } catch (e) {
       _inMessages(e.message);
     }
 
-    return result;    
+    return result;
   }
 
   @override

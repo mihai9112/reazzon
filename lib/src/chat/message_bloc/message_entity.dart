@@ -38,19 +38,10 @@ class MessageEntity {
 
   static MessageEntity fromSnapshot(DocumentSnapshot snap) {
     return MessageEntity(
-      from: snap.data['userName'] as String,
-      to: snap.data['userId'] as String,
+      from: snap.data['from'] as String,
+      to: snap.data['to'] as String,
       content: snap.data['content'] as String,
       time: snap.data['unreadMessageCount'] as DateTime,
     );
   }
-
-//  Map<String, Object> toDocument() {
-//    return {
-//      'complete': complete,
-//      'task': task,
-//      'note': note,
-//    };
-//  }
-
 }

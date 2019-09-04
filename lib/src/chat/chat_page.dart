@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:reazzon/src/blocs/account_page_bloc.dart';
 import 'package:reazzon/src/blocs/bloc_provider.dart';
 import 'package:reazzon/src/chat/chat_bloc/chat_bloc.dart';
+import 'package:reazzon/src/chat/chat_bloc/chat_events.dart';
 import 'package:reazzon/src/chat/chat_bloc/chat_state.dart';
 import 'package:reazzon/src/chat/chat_bloc/chat_entity.dart';
 import 'package:reazzon/src/helpers/spinner.dart';
+import 'package:reazzon/src/helpers/user.dart';
 
-import 'chat_repository.dart';
+import 'package:reazzon/src/chat/repository/chat_repository.dart';
 import 'message_page.dart';
 
 class ChatPage extends StatefulWidget {
@@ -15,10 +18,13 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   ChatBloc chatBloc;
+  FireBaseChatRepository fireBaseRepo;
 
   @override
   void didChangeDependencies() {
-    chatBloc = ChatBloc(chatRepository: FireBaseChatRepositories());
+    fireBaseRepo = FireBaseChatRepository();
+    chatBloc = ChatBloc(chatRepository: fireBaseRepo);
+
     super.didChangeDependencies();
   }
 
@@ -30,26 +36,9 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: _getTheme(0),
-      home: DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          appBar: AppBar(
-//            bottom: TabBar(
-//              tabs: [
-//                Tab(icon: null, child: Text('Message')),
-//                Tab(icon: null, child: Text('Groups')),
-//              ],
-//            ),
-            title: Text('Reazzon Chat'),
-          ),
-//
-          body: BlocProvider(bloc: this.chatBloc, child: TestSecondPage()),
-//            ],
-        ),
-      ),
-//      ),
+    return BlocProvider(
+      bloc: this.chatBloc,
+      child: TestSecondPage(),
     );
   }
 }
@@ -93,7 +82,6 @@ class _TestSecondPageState extends State<TestSecondPage> {
         stream: BlocProvider.of<ChatBloc>(context).stream,
         builder: (context, AsyncSnapshot snapshot) {
           if (snapshot.hasData && snapshot.data is ChatsLoaded) {
-            // data loaded
             ChatsLoaded loadedChats = (snapshot.data as ChatsLoaded);
             return ListView.separated(
               itemCount: loadedChats.chatEntities.length,
@@ -101,9 +89,11 @@ class _TestSecondPageState extends State<TestSecondPage> {
                 ChatEntity data = loadedChats.chatEntities[index];
 
                 return InkWell(
-                  onTap: () {
+                  onTap: () async {
+                    String loggedUserId = await UserHelper.retrieveUserId();
+
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => MessagePage(data)));
+                        builder: (context) => MessagePage(data, loggedUserId)));
                   },
                   child: ChatItem(
                     chatItem: data,
@@ -122,8 +112,10 @@ class _TestSecondPageState extends State<TestSecondPage> {
                 );
               },
             );
+          } else if (snapshot.hasData && snapshot.data is ChatsNotLoaded) {
+            BlocProvider.of<ChatBloc>(context).dispatch(LoadChatList());
           }
-          return Spinner();
+          return Center(child: Spinner());
         },
       ),
     );

@@ -1,4 +1,4 @@
-import 'package:reazzon/src/chat/base/base_bloc.dart';
+import 'package:reazzon/src/chat/base_bloc/base_bloc.dart';
 
 abstract class ChatsEvent extends BLOCEvents {}
 
