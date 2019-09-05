@@ -9,7 +9,7 @@ import 'package:reazzon/src/chat/chat_bloc/chat_state.dart';
 
 import 'package:reazzon/src/chat/repository/chat_repository.dart';
 
-class ChatBloc extends BLOCBase<ChatsEvent, ChatsState> {
+class ChatBloc extends BlocEventStateBase<ChatsEvent, ChatsState> {
   ChatRepository _chatRepository;
 
   ChatBloc({@required ChatRepository chatRepository})

@@ -30,11 +30,11 @@ class FireBaseMessageRepository extends MessageRepository {
   }
 
   @override
-  Stream<List<MessageEntity>> getMessages() {
+  Stream<List<MessageEntity>> getMessages() async* {
     String groupID =
         MessageRepository.generateGroupId(this._userId, this._loggedUserId);
 
-    return chatsCollection
+    yield* chatsCollection
         .document(groupID)
         .collection(groupID)
         .orderBy('time', descending: true)
@@ -47,14 +47,14 @@ class FireBaseMessageRepository extends MessageRepository {
   }
 
   @override
-  Stream<bool> sendMessage(MessageEntity message) {
+  Stream<bool> sendMessage(MessageEntity message) async* {
     var documentReference = Firestore.instance
         .collection('chats')
         .document(MessageRepository.generateGroupId(message.from, message.to))
         .collection(MessageRepository.generateGroupId(message.from, message.to))
         .document(DateTime.now().millisecondsSinceEpoch.toString());
 
-    return Firestore.instance.runTransaction((transaction) async {
+    yield* Firestore.instance.runTransaction((transaction) async {
       await transaction.set(documentReference, message.toJson());
     }).then((onValue) {
       return true;

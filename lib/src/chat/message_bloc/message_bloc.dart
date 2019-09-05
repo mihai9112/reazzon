@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'message_events.dart';
 import 'message_state.dart';
 
-class MessageBloc extends BLOCBase<MessagesEvent, MessagesState> {
+class MessageBloc extends BlocEventStateBase<MessagesEvent, MessagesState> {
   MessageRepository _messageRepository;
 
   MessageRepository get messageRepo => _messageRepository;

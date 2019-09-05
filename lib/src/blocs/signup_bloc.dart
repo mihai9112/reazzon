@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:reazzon/src/blocs/bloc_provider.dart';
 import 'package:reazzon/src/domain/validators.dart';
-import 'package:reazzon/src/helpers/user.dart';
 import 'package:reazzon/src/models/reazzon.dart';
 import 'package:reazzon/src/models/user.dart';
 import 'package:reazzon/src/services/authentication_repository.dart';
@@ -92,7 +91,7 @@ class SignUpBloc with Validators implements BlocBase {
         .signUp(_emailController.value, _passwordController.value)
         .then((onValue) {
       reazzonUser = new User(onValue);
-      UserHelper.storeUserId(reazzonUser.userId);
+      User.storeUserId(reazzonUser.userId);
       _inUser(reazzonUser);
     }).catchError((onError) {
       _inMessages(onError.message);

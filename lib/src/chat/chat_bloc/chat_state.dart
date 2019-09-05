@@ -1,7 +1,7 @@
 import 'package:reazzon/src/chat/base_bloc/base_bloc.dart';
 import 'package:reazzon/src/chat/chat_bloc/chat_entity.dart';
 
-abstract class ChatsState extends BLOCStates {}
+abstract class ChatsState extends BlocStates {}
 
 class ChatsNotLoaded extends ChatsState {
   @override

@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:reazzon/src/blocs/account_page_bloc.dart';
 import 'package:reazzon/src/blocs/bloc_provider.dart';
 import 'package:reazzon/src/chat/chat_bloc/chat_bloc.dart';
 import 'package:reazzon/src/chat/chat_bloc/chat_events.dart';
 import 'package:reazzon/src/chat/chat_bloc/chat_state.dart';
 import 'package:reazzon/src/chat/chat_bloc/chat_entity.dart';
 import 'package:reazzon/src/helpers/spinner.dart';
-import 'package:reazzon/src/helpers/user.dart';
 
 import 'package:reazzon/src/chat/repository/chat_repository.dart';
+import 'package:reazzon/src/models/user.dart';
 import 'message_page.dart';
 
 class ChatPage extends StatefulWidget {
@@ -38,7 +37,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       bloc: this.chatBloc,
-      child: TestSecondPage(),
+      child: _Chat(),
     );
   }
 }
@@ -67,12 +66,12 @@ ThemeData _getTheme(int i) {
   }
 }
 
-class TestSecondPage extends StatefulWidget {
+class _Chat extends StatefulWidget {
   @override
-  _TestSecondPageState createState() => _TestSecondPageState();
+  _ChatState createState() => _ChatState();
 }
 
-class _TestSecondPageState extends State<TestSecondPage> {
+class _ChatState extends State<_Chat> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -90,7 +89,8 @@ class _TestSecondPageState extends State<TestSecondPage> {
 
                 return InkWell(
                   onTap: () async {
-                    String loggedUserId = await UserHelper.retrieveUserId();
+                    // todo retrieve from upper level bloc
+                    String loggedUserId = await User.retrieveUserId();
 
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => MessagePage(data, loggedUserId)));

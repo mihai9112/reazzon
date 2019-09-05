@@ -5,20 +5,20 @@ import 'package:reazzon/src/blocs/bloc_provider.dart';
 
 import 'package:rxdart/rxdart.dart';
 
-abstract class BLOCEvents extends Equatable {}
+abstract class BlocEvents extends Equatable {}
 
-abstract class BLOCStates extends Equatable {}
+abstract class BlocStates extends Equatable {}
 
-abstract class BLOCBase<BLOCEvents, BLOCStates> extends BlocBase {
-  BehaviorSubject<BLOCEvents> _eventStreamController =
-      BehaviorSubject<BLOCEvents>();
-  BehaviorSubject<BLOCStates> _stateStreamController =
-      BehaviorSubject<BLOCStates>();
+abstract class BlocEventStateBase<BlocEvents, BlocStates> extends BlocBase {
+  BehaviorSubject<BlocEvents> _eventStreamController =
+      BehaviorSubject<BlocEvents>();
+  BehaviorSubject<BlocStates> _stateStreamController =
+      BehaviorSubject<BlocStates>();
 
   // states stream getter
-  Stream<BLOCStates> get stream => _stateStreamController.stream;
+  Stream<BlocStates> get stream => _stateStreamController.stream;
 
-  BLOCBase() {
+  BlocEventStateBase() {
     _stateStreamController.add(initialState());
     _eventStreamController.listen((event) {
       mapEventToState(event)
@@ -26,11 +26,11 @@ abstract class BLOCBase<BLOCEvents, BLOCStates> extends BlocBase {
     });
   }
 
-  void dispatch(BLOCEvents event) => _eventStreamController.add(event);
+  void dispatch(BlocEvents event) => _eventStreamController.add(event);
 
-  BLOCStates initialState();
+  BlocStates initialState();
 
-  Stream<BLOCStates> mapEventToState(BLOCEvents event);
+  Stream<BlocStates> mapEventToState(BlocEvents event);
 
   @override
   void dispose() {

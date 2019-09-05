@@ -1,7 +1,7 @@
 import 'package:reazzon/src/chat/base_bloc/base_bloc.dart';
 import 'package:reazzon/src/chat/message_bloc/message_entity.dart';
 
-abstract class MessagesEvent extends BLOCEvents {}
+abstract class MessagesEvent extends BlocEvents {}
 
 class LoadMessageListEvent extends MessagesEvent {
   @override
