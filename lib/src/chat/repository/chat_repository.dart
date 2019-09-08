@@ -14,8 +14,8 @@ class FireBaseChatRepository extends ChatRepository {
   final chatsCollection = Firestore.instance.collection('chats');
 
   @override
-  Stream<List<ChatEntity>> chatEntities() async* {
-    yield* usersCollection.snapshots().map((snapshot) {
+  Stream<List<ChatEntity>> chatEntities() {
+    return Firestore.instance.collection('Users').snapshots().map((snapshot) {
       return snapshot.documents
           .map((doc) => ChatEntity.fromSnapshot(doc))
           .toList();
@@ -23,7 +23,7 @@ class FireBaseChatRepository extends ChatRepository {
   }
 
   @override
-  Stream<List<ChatEntity>> chattedEntities(String loggedUserId) async* {
-    yield* null;
+  Stream<List<ChatEntity>> chattedEntities(String loggedUserId) {
+    return null;
   }
 }

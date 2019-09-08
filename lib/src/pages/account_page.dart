@@ -43,13 +43,12 @@ class _AccountPageState extends State<AccountPage> {
           child: Text('Notifications Page'),
         ),
       ),
-//      Center(
-//        child: Container(
-//          decoration: BoxDecoration(color: Colors.white),
-//          child: Text('Person Page'),
-//        ),
-//      ),
-      _buildBody(),
+      Center(
+        child: Container(
+          decoration: BoxDecoration(color: Colors.white),
+          child: Text('Person Page'),
+        ),
+      ),
     ];
   }
 
@@ -149,21 +148,4 @@ class _AccountPageState extends State<AccountPage> {
           ],
         ),
       );
-
-  Widget _buildBody() {
-    return StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance.collection('chats').snapshots(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) return LinearProgressIndicator();
-
-        return ListView.builder(
-            itemCount: snapshot.data.documents.length,
-            itemBuilder: (context, index) {
-              print('Index: $index');
-              var data = snapshot.data.documents[index];
-              return Text(data.documentID.toString());
-            });
-      },
-    );
-  }
 }

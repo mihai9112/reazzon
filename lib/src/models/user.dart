@@ -76,8 +76,6 @@ class User {
 
   static void storeUserId(String userId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    print('Store User: ' + userId);
-
     await prefs.setString('user_id', userId);
   }
 

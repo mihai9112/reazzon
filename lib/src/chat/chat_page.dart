@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:reazzon/src/blocs/bloc_provider.dart';
 import 'package:reazzon/src/chat/chat_bloc/chat_bloc.dart';
 import 'package:reazzon/src/chat/chat_bloc/chat_events.dart';
 import 'package:reazzon/src/chat/chat_bloc/chat_state.dart';
 import 'package:reazzon/src/chat/chat_bloc/chat_entity.dart';
+import 'package:reazzon/src/chat/message_bloc/message_bloc.dart';
+import 'package:reazzon/src/chat/repository/message_repository.dart';
 import 'package:reazzon/src/helpers/spinner.dart';
 
 import 'package:reazzon/src/chat/repository/chat_repository.dart';
@@ -35,9 +36,53 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      bloc: this.chatBloc,
-      child: _Chat(),
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 0, horizontal: 12.0),
+      child: StreamBuilder(
+        stream: chatBloc.stream,
+        builder: (context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData && snapshot.data is ChatsLoaded) {
+            ChatsLoaded loadedChats = (snapshot.data as ChatsLoaded);
+            return ListView.separated(
+              itemCount: loadedChats.chatEntities.length,
+              itemBuilder: (BuildContext context, int index) {
+                ChatEntity data = loadedChats.chatEntities[index];
+
+                return InkWell(
+                  onTap: () async {
+                    String loggedUserId = await User.retrieveUserId();
+
+                    MessageBloc messageBloc = MessageBloc(
+                        messageRepository: FireBaseMessageRepository(
+                      loggedUserID: loggedUserId,
+                    ));
+
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => MessagePage(data, messageBloc)));
+                  },
+                  child: ChatItem(
+                    chatItem: data,
+                  ),
+                );
+              },
+              separatorBuilder: (BuildContext context, int index) {
+                return Align(
+                  alignment: Alignment.bottomRight,
+                  child: Container(
+                    height: 1,
+                    margin: EdgeInsets.symmetric(vertical: 2),
+                    color: Color(0XFFE0E0E0),
+                    width: MediaQuery.of(context).size.width - 72 - 16,
+                  ),
+                );
+              },
+            );
+          } else if (snapshot.hasData && snapshot.data is ChatsNotLoaded) {
+            chatBloc.dispatch(LoadChatList());
+          }
+          return Center(child: Spinner());
+        },
+      ),
     );
   }
 }
@@ -61,62 +106,6 @@ ThemeData _getTheme(int i) {
           fontSize: 16,
           color: Color(0XFF575B5E),
         ),
-      ),
-    );
-  }
-}
-
-class _Chat extends StatefulWidget {
-  @override
-  _ChatState createState() => _ChatState();
-}
-
-class _ChatState extends State<_Chat> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 0, horizontal: 12.0),
-      child: StreamBuilder(
-        // stream from chat bloc
-        stream: BlocProvider.of<ChatBloc>(context).stream,
-        builder: (context, AsyncSnapshot snapshot) {
-          if (snapshot.hasData && snapshot.data is ChatsLoaded) {
-            ChatsLoaded loadedChats = (snapshot.data as ChatsLoaded);
-            return ListView.separated(
-              itemCount: loadedChats.chatEntities.length,
-              itemBuilder: (BuildContext context, int index) {
-                ChatEntity data = loadedChats.chatEntities[index];
-
-                return InkWell(
-                  onTap: () async {
-                    // todo retrieve from upper level bloc
-                    String loggedUserId = await User.retrieveUserId();
-
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => MessagePage(data, loggedUserId)));
-                  },
-                  child: ChatItem(
-                    chatItem: data,
-                  ),
-                );
-              },
-              separatorBuilder: (BuildContext context, int index) {
-                return Align(
-                  alignment: Alignment.bottomRight,
-                  child: Container(
-                    height: 1,
-                    margin: EdgeInsets.symmetric(vertical: 2),
-                    color: Color(0XFFE0E0E0),
-                    width: MediaQuery.of(context).size.width - 72 - 16,
-                  ),
-                );
-              },
-            );
-          } else if (snapshot.hasData && snapshot.data is ChatsNotLoaded) {
-            BlocProvider.of<ChatBloc>(context).dispatch(LoadChatList());
-          }
-          return Center(child: Spinner());
-        },
       ),
     );
   }

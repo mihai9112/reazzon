@@ -10,13 +10,6 @@ class ChatsNotLoaded extends ChatsState {
   }
 }
 
-class ChatsLoading extends ChatsState {
-  @override
-  String toString() {
-    return '{ ChatState: Loading }';
-  }
-}
-
 class ChatsLoaded extends ChatsState {
   final List<ChatEntity> chatEntities;
 

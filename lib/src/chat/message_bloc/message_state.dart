@@ -10,13 +10,6 @@ class MessagesNotLoaded extends MessagesState {
   }
 }
 
-class MessagesLoading extends MessagesState {
-  @override
-  String toString() {
-    return '{ MessageState: Loading }';
-  }
-}
-
 class MessagesLoaded extends MessagesState {
   final List<MessageEntity> messageEntities;
 

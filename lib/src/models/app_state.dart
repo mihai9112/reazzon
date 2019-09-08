@@ -12,7 +12,6 @@ class AppState {
   AppState() {
     _userController.listen((onData) {
       _user = onData;
-      print("USER ADDED ON APP STATE");
     });
   }
 
