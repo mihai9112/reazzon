@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:reazzon/src/helpers/user.dart';
+import 'package:reazzon/src/models/user.dart';
 import 'package:reazzon/src/pages/home_page.dart';
 
 import 'account_page.dart';
@@ -8,12 +8,12 @@ class HomeRouter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<bool>(
-      stream: UserHelper.hasUserId(),
+      stream: User.hasUserId(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data == true) {
             return FutureBuilder<String>(
-              future: UserHelper.retrieveUserId(),
+              future: User.retrieveUserId(),
               builder: (context, snapshot) {
                 return AccountPage(loggedUserId: snapshot.data);
               },

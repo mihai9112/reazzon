@@ -5,13 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:reazzon/src/chat/message_bloc/message_entity.dart';
 
 abstract class MessageRepository {
-  String _userId;
   String _loggedUserId;
 
-  String get userId => _userId;
   String get loggedUserId => _loggedUserId;
 
-  Stream<List<MessageEntity>> getMessages();
+  Stream<List<MessageEntity>> getMessages(String userId);
   Stream<bool> sendMessage(MessageEntity message);
 
   static String generateGroupId(String from, String to) {
@@ -22,17 +20,15 @@ abstract class MessageRepository {
 class FireBaseMessageRepository extends MessageRepository {
   final chatsCollection = Firestore.instance.collection('chats');
 
-  FireBaseMessageRepository(
-      {@required String userId, @required String loggedUserID})
-      : assert((userId != null) && (loggedUserID != null)) {
-    this._userId = userId;
+  FireBaseMessageRepository({@required String loggedUserID})
+      : assert(loggedUserID != null) {
     this._loggedUserId = loggedUserID;
   }
 
   @override
-  Stream<List<MessageEntity>> getMessages() {
+  Stream<List<MessageEntity>> getMessages(String userId) {
     String groupID =
-        MessageRepository.generateGroupId(this._userId, this._loggedUserId);
+        MessageRepository.generateGroupId(userId, this._loggedUserId);
 
     return chatsCollection
         .document(groupID)

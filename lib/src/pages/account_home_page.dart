@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:reazzon/src/blocs/account_home_bloc.dart';
 import 'package:reazzon/src/helpers/spinner.dart';
 
 import 'package:reazzon/src/helpers/filter_icon.dart';
 import 'package:reazzon/src/pages/filter_page.dart';
+import 'package:reazzon/src/services/user_repository.dart';
 
 class AccountHomePage extends StatefulWidget {
   @override
@@ -18,8 +18,8 @@ class _AccountHomePageState extends State<AccountHomePage> {
     return Scaffold(
       body: StreamBuilder<List<AccountHomeEntity>>(
           stream: (filteredList == null)
-              ? AccountHomeBloc().users()
-              : AccountHomeBloc().filterUsers(filteredList),
+              ? userRepository.users()
+              : userRepository.filterUsers(filteredList),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return Padding(

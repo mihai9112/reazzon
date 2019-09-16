@@ -1,15 +1,10 @@
-import 'dart:async';
+import 'package:reazzon/src/blocs/bloc_provider.dart';
 
-import 'package:reazzon/src/chat/base_bloc/base_bloc.dart';
-
-class AccountPageBloc extends BLOCBase {
+class AccountPageBloc extends BlocBase {
   String loggedUserId;
 
   AccountPageBloc({this.loggedUserId});
 
   @override
-  initialState() => null;
-
-  @override
-  Stream mapEventToState(event) => null;
+  void dispose() {}
 }

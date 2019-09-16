@@ -5,36 +5,44 @@ import 'package:reazzon/src/blocs/bloc_provider.dart';
 
 import 'package:rxdart/rxdart.dart';
 
-abstract class BLOCEvents extends Equatable {}
+abstract class BlocEvents extends Equatable {}
 
-abstract class BLOCStates extends Equatable {}
+abstract class BlocStates extends Equatable {}
 
-abstract class BLOCBase<BLOCEvents, BLOCStates> extends BlocBase {
-  BehaviorSubject<BLOCEvents> _eventStreamController =
-      BehaviorSubject<BLOCEvents>();
-  BehaviorSubject<BLOCStates> _stateStreamController =
-      BehaviorSubject<BLOCStates>();
+abstract class BlocEventStateBase<BlocEvents, BlocStates> extends BlocBase {
+  PublishSubject<BlocEvents> _eventController = PublishSubject<BlocEvents>();
+  BehaviorSubject<BlocStates> _stateController = BehaviorSubject<BlocStates>();
 
-  // states stream getter
-  Stream<BLOCStates> get stream => _stateStreamController.stream;
+  /// To be invoked to emit an event
+  Function(BlocEvents) get dispatch => _eventController.sink.add;
 
-  BLOCBase() {
-    _stateStreamController.add(initialState());
-    _eventStreamController.listen((event) {
-      mapEventToState(event)
-          .listen((state) => _stateStreamController.add(state));
+  /// Current/New state
+  Stream<BlocStates> get stream => _stateController.stream;
+
+  /// External processing of the event
+  Stream<BlocStates> mapEventToState(BlocEvents event, BlocStates currentState);
+
+  /// initialState
+  BlocStates initialState();
+
+  // Constructor
+  BlocEventStateBase() {
+    // initialState is added initially without any dispatch
+    _stateController.sink.add(initialState());
+
+    // For each received event, we invoke the [eventHandler or mapEventToState] and
+    // emit any resulting newState
+    _eventController.listen((BlocEvents event) {
+      BlocStates currentState = _stateController.value ?? initialState;
+      mapEventToState(event, currentState).forEach((BlocStates newState) {
+        _stateController.sink.add(newState);
+      });
     });
   }
 
-  void dispatch(BLOCEvents event) => _eventStreamController.add(event);
-
-  BLOCStates initialState();
-
-  Stream<BLOCStates> mapEventToState(BLOCEvents event);
-
   @override
   void dispose() {
-    _eventStreamController.close();
-    _stateStreamController.close();
+    _eventController.close();
+    _stateController.close();
   }
 }

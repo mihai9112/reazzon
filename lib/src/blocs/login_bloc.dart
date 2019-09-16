@@ -1,12 +1,9 @@
 import 'dart:async';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:reazzon/src/blocs/bloc_provider.dart';
 import 'package:reazzon/src/domain/validators.dart';
-import 'package:reazzon/src/helpers/user.dart';
 import 'package:reazzon/src/models/user.dart';
 import 'package:reazzon/src/services/authentication_repository.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginBloc with Validators implements BlocBase {
   final _emailController = BehaviorSubject<String>();
@@ -44,7 +41,7 @@ class LoginBloc with Validators implements BlocBase {
       var user = await authenticationRepository.signIn(
           _emailController.value, _passwordController.value);
 
-      UserHelper.storeUserId(user.uid);
+      User.storeUserId(user.uid);
       _inUser(new User(user));
       result = true;
     } catch (e) {
@@ -58,7 +55,7 @@ class LoginBloc with Validators implements BlocBase {
     var result = false;
 
     await authenticationRepository.signInWithGoogle().then((user) {
-      UserHelper.storeUserId(user.uid);
+      User.storeUserId(user.uid);
       _inUser(new User(user));
       result = true;
     }).catchError((onError) {
@@ -72,7 +69,7 @@ class LoginBloc with Validators implements BlocBase {
     var result = false;
 
     await authenticationRepository.signInWithFacebook().then((user) {
-      UserHelper.storeUserId(user.uid);
+      User.storeUserId(user.uid);
       _inUser(new User(user));
       result = true;
     }).catchError((onError) {
@@ -101,7 +98,7 @@ class LoginBloc with Validators implements BlocBase {
   }
 
   Future<void> signOut() async {
-    UserHelper.deleteUserId();
+    User.deleteUserId();
     return await authenticationRepository.signOut();
   }
 
