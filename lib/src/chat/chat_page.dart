@@ -57,6 +57,9 @@ class _ChatPageState extends State<ChatPage> {
                       loggedUserID: loggedUserId,
                     ));
 
+                    (messageBloc.messageRepo as FireBaseMessageRepository)
+                        .registerNotification(loggedUserId);
+
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => MessagePage(data, messageBloc)));
                   },

@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
 import 'package:flutter/material.dart';
 import 'package:reazzon/src/chat/message_bloc/message_entity.dart';
 
@@ -57,5 +59,33 @@ class FireBaseMessageRepository extends MessageRepository {
     }).catchError((onError) {
       return {'success': false, 'error': onError};
     }).asStream();
+  }
+
+  void registerNotification(String currentUserId) {
+    final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
+    _firebaseMessaging.requestNotificationPermissions();
+
+    _firebaseMessaging.configure(onMessage: (Map<String, dynamic> message) {
+      print('onMessage: $message');
+//      showNotification(message['notification']);
+      return;
+    }, onResume: (Map<String, dynamic> message) {
+      print('onResume: $message');
+      return;
+    }, onLaunch: (Map<String, dynamic> message) {
+      print('onLaunch: $message');
+      return;
+    });
+
+    _firebaseMessaging.getToken().then((token) {
+      print('token: $token');
+      Firestore.instance
+          .collection('users')
+          .document(currentUserId)
+          .updateData({'pushToken': token});
+    }).catchError((err) {
+      print('Error $err');
+    });
   }
 }
