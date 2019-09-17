@@ -28,6 +28,7 @@ dependencies:
   queries: ^0.1.10
   equatable: ^0.5.1
   shared_preferences: ^0.5.3+4
+  firebase_messaging: ^5.1.5
 
 
 dev_dependencies:
