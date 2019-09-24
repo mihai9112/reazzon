@@ -6,14 +6,20 @@ import 'package:reazzon/src/blocs/application_bloc.dart';
 import 'package:reazzon/src/blocs/bloc_provider.dart';
 import 'package:reazzon/src/blocs/login_bloc.dart';
 import 'package:reazzon/src/chat/chat_page.dart';
+import 'package:reazzon/src/helpers/spinner.dart';
 import 'package:reazzon/src/pages/account_home_page.dart';
+import 'package:reazzon/src/settings/setting_bloc.dart';
+import 'package:reazzon/src/settings/setting_page.dart';
+import 'package:reazzon/src/settings/setting_repository.dart';
 
 import 'home_page.dart';
 
 class AccountPage extends StatefulWidget {
   final String loggedUserId;
 
-  AccountPage({this.loggedUserId});
+  AccountPage({this.loggedUserId}) {
+    print('\n\n\nOn Account Page ${this.loggedUserId}');
+  }
 
   @override
   State<StatefulWidget> createState() => _AccountPageState();
@@ -22,6 +28,7 @@ class AccountPage extends StatefulWidget {
 class _AccountPageState extends State<AccountPage> {
   LoginBloc _loginBloc;
   AccountPageBloc _accountPageBloc;
+  SettingsBloc _settingsBloc;
 
   static const int DEFAULT_INDEX = 2;
   Widget _selectedWidget;
@@ -43,11 +50,16 @@ class _AccountPageState extends State<AccountPage> {
           child: Text('Notifications Page'),
         ),
       ),
-      Center(
-        child: Container(
-          decoration: BoxDecoration(color: Colors.white),
-          child: Text('Person Page'),
-        ),
+      BlocProvider<SettingsBloc>(
+        bloc: _settingsBloc,
+        child: StreamBuilder<SettingUserModel>(
+            stream: _settingsBloc.currentUser,
+            builder: (context, userSnapshot) {
+              if (userSnapshot.hasData && userSnapshot.data != null) {
+                return SettingPage(userSnapshot.data);
+              } else
+                return Center(child: Spinner());
+            }),
       ),
     ];
   }
@@ -77,12 +89,18 @@ class _AccountPageState extends State<AccountPage> {
 
   @override
   void initState() {
-    _selectedWidget = _widgets()[DEFAULT_INDEX];
     _currentIndex = DEFAULT_INDEX;
 
     _accountPageBloc = AccountPageBloc(loggedUserId: this.widget.loggedUserId);
+    _accountPageBloc.registerNotification(this.widget.loggedUserId);
 
     _loginBloc = new LoginBloc();
+
+    _settingsBloc =
+        SettingsBloc(FireBaseSettingRepository(this.widget.loggedUserId));
+
+    _selectedWidget = _widgets()[DEFAULT_INDEX];
+
     super.initState();
   }
 

@@ -3,6 +3,7 @@ import 'package:reazzon/src/chat/message_bloc/message_bloc.dart';
 import 'package:reazzon/src/chat/message_bloc/message_events.dart';
 import 'package:reazzon/src/chat/message_bloc/message_state.dart';
 import 'package:reazzon/src/chat/message_bloc/message_entity.dart';
+import 'package:reazzon/src/chat/repository/message_repository.dart';
 import 'package:reazzon/src/helpers/spinner.dart';
 
 import 'package:reazzon/src/chat/chat_bloc/chat_entity.dart';
@@ -17,7 +18,7 @@ class MessagePage extends StatefulWidget {
   _MessagePageState createState() => _MessagePageState();
 }
 
-class _MessagePageState extends State<MessagePage> {
+class _MessagePageState extends State<MessagePage> with WidgetsBindingObserver {
   MessageBloc messageBloc;
   TextEditingController messageController;
 
@@ -26,7 +27,38 @@ class _MessagePageState extends State<MessagePage> {
     messageBloc = this.widget.messageBloc;
     messageController = TextEditingController();
 
+    (messageBloc.messageRepo as FireBaseMessageRepository).addChattingWith(
+        messageBloc.messageRepo.loggedUserId, this.widget.data.userId);
+
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        (messageBloc.messageRepo as FireBaseMessageRepository).addChattingWith(
+            messageBloc.messageRepo.loggedUserId, this.widget.data.userId);
+        print('Resumed');
+        break;
+      case AppLifecycleState.inactive:
+        break;
+      case AppLifecycleState.paused:
+        (messageBloc.messageRepo as FireBaseMessageRepository)
+            .removeChattingWith(messageBloc.messageRepo.loggedUserId);
+        print('Paused');
+        break;
+      case AppLifecycleState.suspending:
+        break;
+    }
+  }
+
+  @override
+  void dispose() {
+    (messageBloc.messageRepo as FireBaseMessageRepository)
+        .removeChattingWith(messageBloc.messageRepo.loggedUserId);
+    super.dispose();
   }
 
   @override

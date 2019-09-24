@@ -2,5 +2,5 @@
 <resources>
     <string name="app_name">Reazzon</string>
     <string name="fb_login_protocol_scheme">${login_protocal}</string>
-    <string name="facebook_app_id">${app_id}</string>
+    <string name="facebook_app_id">311829839546029</string>
 </resources>

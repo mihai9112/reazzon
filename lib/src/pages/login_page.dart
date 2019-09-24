@@ -449,7 +449,9 @@ class _LoginPageState extends State<LoginPage> {
 
               if (onData.hasUserName()) {
                 var accountRoute = MaterialPageRoute(
-                    builder: (BuildContext context) => AccountPage());
+                    builder: (BuildContext context) => AccountPage(
+                          loggedUserId: onData.userId,
+                        ));
 
                 Navigator.of(context).pushAndRemoveUntil(
                     accountRoute, (Route<dynamic> route) => false);

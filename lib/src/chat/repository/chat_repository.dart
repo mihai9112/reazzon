@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:reazzon/src/chat/chat_bloc/chat_entity.dart';
 
 abstract class ChatRepository {

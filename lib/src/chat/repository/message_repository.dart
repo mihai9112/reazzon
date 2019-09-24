@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:reazzon/src/chat/message_bloc/message_entity.dart';
 
 abstract class MessageRepository {
@@ -61,31 +64,17 @@ class FireBaseMessageRepository extends MessageRepository {
     }).asStream();
   }
 
-  void registerNotification(String currentUserId) {
-    final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  void addChattingWith(String currentUserId, String chattingWith) {
+    Firestore.instance
+        .collection('Users')
+        .document(currentUserId)
+        .updateData({'chattingWith': chattingWith});
+  }
 
-    _firebaseMessaging.requestNotificationPermissions();
-
-    _firebaseMessaging.configure(onMessage: (Map<String, dynamic> message) {
-      print('onMessage: $message');
-//      showNotification(message['notification']);
-      return;
-    }, onResume: (Map<String, dynamic> message) {
-      print('onResume: $message');
-      return;
-    }, onLaunch: (Map<String, dynamic> message) {
-      print('onLaunch: $message');
-      return;
-    });
-
-    _firebaseMessaging.getToken().then((token) {
-      print('token: $token');
-      Firestore.instance
-          .collection('users')
-          .document(currentUserId)
-          .updateData({'pushToken': token});
-    }).catchError((err) {
-      print('Error $err');
-    });
+  void removeChattingWith(String currentUserId) {
+    Firestore.instance
+        .collection('Users')
+        .document(currentUserId)
+        .updateData({'chattingWith': FieldValue.delete()});
   }
 }

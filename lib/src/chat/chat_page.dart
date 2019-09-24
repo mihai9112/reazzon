@@ -23,6 +23,7 @@ class _ChatPageState extends State<ChatPage> {
   @override
   void didChangeDependencies() {
     fireBaseRepo = FireBaseChatRepository();
+
     chatBloc = ChatBloc(chatRepository: fireBaseRepo);
 
     super.didChangeDependencies();
@@ -56,9 +57,6 @@ class _ChatPageState extends State<ChatPage> {
                         messageRepository: FireBaseMessageRepository(
                       loggedUserID: loggedUserId,
                     ));
-
-                    (messageBloc.messageRepo as FireBaseMessageRepository)
-                        .registerNotification(loggedUserId);
 
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => MessagePage(data, messageBloc)));

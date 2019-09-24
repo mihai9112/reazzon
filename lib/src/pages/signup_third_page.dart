@@ -173,7 +173,8 @@ Widget completeRegistrationButton(
                   signUpBloc.outUser.listen((s) {
                     appBloc.appState.setUser(s);
                     var accountRoute = MaterialPageRoute(
-                        builder: (BuildContext context) => AccountPage());
+                        builder: (BuildContext context) => AccountPage(
+                            loggedUserId: appBloc.appState.user.userId));
                     Navigator.of(context).pushAndRemoveUntil(
                         accountRoute, ModalRoute.withName('/account'));
                   });

@@ -5,6 +5,10 @@ import 'package:reazzon/src/chat/chat_page.dart';
 import 'package:reazzon/src/pages/account_page.dart';
 import 'package:reazzon/src/pages/home_%20router.dart';
 import 'package:reazzon/src/pages/signup_page.dart';
+import 'package:reazzon/src/pages/signup_third_page.dart';
+import 'package:reazzon/src/settings/setting_bloc.dart';
+
+import 'package:reazzon/src/settings/setting_page.dart';
 
 class Application extends StatelessWidget {
   @override
@@ -18,9 +22,10 @@ class Application extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
         home: HomeRouter(),
+
+//        home: ThirdSignUpPage(),
         routes: {
           '/chat': (BuildContext context) => ChatPage(),
-          '/account': (BuildContext context) => AccountPage(),
           '/register': (BuildContext context) => SignUpPage(),
         },
       ),
