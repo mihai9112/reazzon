@@ -29,11 +29,8 @@ dependencies:
   equatable: ^0.5.1
   shared_preferences: ^0.5.3+4
   firebase_messaging: ^5.1.5
-<<<<<<< HEAD
   flutter_local_notifications: ^0.8.3
   firebase_storage: ^3.0.6
-=======
->>>>>>> da26c03e1b9db44cfe3d0f75afcc536e36cb8c63
 
 
 dev_dependencies:
