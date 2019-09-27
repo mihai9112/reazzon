@@ -294,11 +294,13 @@ class _SettingPageState extends State<SettingPage> {
         break;
       case EMAIL:
         key = 'EMAIL';
-        _child = _ModalBuilder(
-          initialData: value,
-          onSubmit: settingBloc.changeEmail,
-          input: settingBloc.inEmail,
-          output: settingBloc.outEmail,
+        _child = _ModalBuilderVerification(
+          child: _ModalBuilder(
+            initialData: value,
+            onSubmit: settingBloc.changeEmail,
+            input: settingBloc.inEmail,
+            output: settingBloc.outEmail,
+          ),
         );
         break;
     }
@@ -371,10 +373,15 @@ class _SettingPageState extends State<SettingPage> {
                   showDialog(
                       context: context,
                       builder: (context) => _dialogBuilder(
+                            // todo
                             title: 'PASSWORD',
-                            child: Container(
-                              color: Colors.orangeAccent,
-                              height: 200,
+                            child: _ModalBuilderVerification(
+                              child: _ModalBuilder(
+                                initialData: '***',
+                                onSubmit: settingBloc.changeEmail,
+                                input: settingBloc.inEmail,
+                                output: settingBloc.outEmail,
+                              ),
                             ),
                           ));
                 },
@@ -596,6 +603,64 @@ class __ModalBuilderState extends State<_ModalBuilder> {
                 )
               : Container(),
         ),
+      ],
+    );
+  }
+}
+
+class _ModalBuilderVerification extends StatefulWidget {
+  final Widget child;
+
+  _ModalBuilderVerification({
+    this.child,
+  });
+  @override
+  __ModalBuilderVerificationState createState() =>
+      __ModalBuilderVerificationState();
+}
+
+class __ModalBuilderVerificationState extends State<_ModalBuilderVerification> {
+  bool verified = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Container(
+          color: Colors.red,
+          child: Material(
+            child: TextField(
+              style: TextStyle(fontSize: 15.0),
+              obscureText: true,
+              decoration: InputDecoration(
+                hintText: 'Password',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(4),
+                  borderSide: BorderSide(
+                    color: (verified) ? Colors.blue : Color(0XFFAAAAAA),
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(4),
+                  borderSide: BorderSide(
+                    color: (verified) ? Colors.blue : Color(0XFFAAAAAA),
+                  ),
+                ),
+                contentPadding: EdgeInsets.all(16),
+                suffixIcon: Icon(Icons.check,
+                    color: (verified) ? Colors.blue : Colors.grey),
+              ),
+              onSubmitted: (value) {
+                print(value);
+                setState(() {
+                  verified = true;
+                });
+              },
+            ),
+          ),
+        ),
+        SizedBox(height: 24),
+        (verified) ? this.widget.child : Container(),
       ],
     );
   }

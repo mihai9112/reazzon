@@ -13,12 +13,11 @@ abstract class SettingRepository {
 
   Future<bool> changeEmail(String newEmail);
   Future<String> changePassword();
-
   Future<bool> changeFirstName(String newFirstName);
   Future<bool> changeLastName(String newLastName);
   Future<bool> changeUserName(String newUserName);
-
   Future<List<Reazzon>> changeReazzons();
+  Stream<SettingUserModel> getUserDetails();
 }
 
 class FireBaseSettingRepository extends SettingRepository {
@@ -28,6 +27,7 @@ class FireBaseSettingRepository extends SettingRepository {
 
   FireBaseSettingRepository(this.userId);
 
+  // todo
   Future<String> changeProfilePicture(File file) async {
     StorageReference reference = FirebaseStorage.instance.ref().child(userId);
 
@@ -60,6 +60,7 @@ class FireBaseSettingRepository extends SettingRepository {
     }
   }
 
+  // todo
   Future<bool> changeEmail(String newEmail) async {
     print('Repo Change Email $newEmail');
     Firestore().runTransaction((Transaction tx) async {
@@ -67,6 +68,7 @@ class FireBaseSettingRepository extends SettingRepository {
     });
   }
 
+  // todo
   Future<String> changePassword() => null;
 
   Future<bool> changeFirstName(String newFirstName) async {
@@ -127,12 +129,15 @@ class FireBaseSettingRepository extends SettingRepository {
     });
   }
 
+  // todo
   Future<List<Reazzon>> changeReazzons() => null;
 
-  Stream<SettingUserModel> getUserDetails() {
-    return Firestore.instance.collection('Users').snapshots().map((snapshot) {
+  Stream<SettingUserModel> getUserDetails() async* {
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+
+    yield* Firestore.instance.collection('Users').snapshots().map((snapshot) {
       return snapshot.documents
-          .map((doc) => SettingUserModel.fromDoc(doc, 'Ujwl'))
+          .map((doc) => SettingUserModel.fromDoc(doc, user.email))
           .toList()
           .first;
     });

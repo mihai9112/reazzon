@@ -1,9 +1,7 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:reazzon/src/blocs/bloc_provider.dart';
 import 'package:reazzon/src/domain/validators.dart';
-import 'package:reazzon/src/models/reazzon.dart';
 import 'package:reazzon/src/settings/setting_repository.dart';
 import 'package:rxdart/rxdart.dart';
 
