@@ -18,7 +18,7 @@ class AccountPage extends StatefulWidget {
   final String loggedUserId;
 
   AccountPage({this.loggedUserId}) {
-    print('\n\n\nOn Account Page ${this.loggedUserId}');
+    print('onAccount Page $loggedUserId');
   }
 
   @override
@@ -50,16 +50,8 @@ class _AccountPageState extends State<AccountPage> {
           child: Text('Notifications Page'),
         ),
       ),
-      BlocProvider<SettingsBloc>(
-        bloc: _settingsBloc,
-        child: StreamBuilder<SettingUserModel>(
-            stream: _settingsBloc.currentUser,
-            builder: (context, userSnapshot) {
-              if (userSnapshot.hasData && userSnapshot.data != null) {
-                return SettingPage(userSnapshot.data);
-              } else
-                return Center(child: Spinner());
-            }),
+      SettingPage(
+        loggedUserId: this.widget.loggedUserId,
       ),
     ];
   }
@@ -96,6 +88,7 @@ class _AccountPageState extends State<AccountPage> {
 
     _loginBloc = new LoginBloc();
 
+    print(this.widget.loggedUserId);
     _settingsBloc =
         SettingsBloc(FireBaseSettingRepository(this.widget.loggedUserId));
 

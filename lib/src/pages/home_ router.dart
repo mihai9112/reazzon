@@ -16,7 +16,9 @@ class HomeRouter extends StatelessWidget {
             return FutureBuilder<String>(
               future: User.retrieveUserId(),
               builder: (context, snapshot) {
-                return AccountPage(loggedUserId: snapshot.data);
+                if (snapshot.hasData)
+                  return AccountPage(loggedUserId: snapshot.data);
+                return loadPage();
               },
             );
           } else {

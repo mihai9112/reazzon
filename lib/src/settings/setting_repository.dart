@@ -12,7 +12,7 @@ abstract class SettingRepository {
   Future<String> changeProfilePicture(File file);
 
   Future<bool> changeEmail(String newEmail);
-  Future<String> changePassword();
+  Future<bool> changePassword(String newPassword);
   Future<bool> changeFirstName(String newFirstName);
   Future<bool> changeLastName(String newLastName);
   Future<bool> changeUserName(String newUserName);
@@ -25,7 +25,9 @@ class FireBaseSettingRepository extends SettingRepository {
   final CollectionReference _userCollection =
       Firestore.instance.collection('Users');
 
-  FireBaseSettingRepository(this.userId);
+  FireBaseSettingRepository(this.userId) {
+    print('OnFirebase Setting Repository $userId');
+  }
 
   // todo
   Future<String> changeProfilePicture(File file) async {
@@ -60,18 +62,47 @@ class FireBaseSettingRepository extends SettingRepository {
     }
   }
 
-  // todo
-  Future<bool> changeEmail(String newEmail) async {
-    print('Repo Change Email $newEmail');
-    Firestore().runTransaction((Transaction tx) async {
-      return {'added': true};
-    });
+  Future<bool> passwordVerification(String password) async {
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    return FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: user.email, password: password)
+        .then((_) => true)
+        .catchError((err) => false);
   }
 
-  // todo
-  Future<String> changePassword() => null;
+  Future<bool> changeEmail(String newEmail) async {
+    return Firestore()
+        .runTransaction((Transaction tx) async {
+          FirebaseUser user = await FirebaseAuth.instance.currentUser();
+
+          user.updateEmail(newEmail).then((_) {
+            return {'changed': true};
+          }).catchError((err) {
+            return Future.error(err.toString());
+          });
+        })
+        .then((_) => true)
+        .catchError((_) => false);
+  }
+
+  Future<bool> changePassword(String newPassword) async {
+    return Firestore()
+        .runTransaction((Transaction tx) async {
+          FirebaseUser user = await FirebaseAuth.instance.currentUser();
+
+          user.updatePassword(newPassword).then((_) {
+            return {'changed': true};
+          }).catchError((err) {
+            return Future.error(err.toString());
+          });
+        })
+        .then((_) => true)
+        .catchError((_) => false);
+  }
 
   Future<bool> changeFirstName(String newFirstName) async {
+    print('\n\n\n\n\n$userId');
+
     final TransactionHandler createTransaction = (Transaction tx) async {
       final DocumentSnapshot ds =
           await tx.get(_userCollection.document(userId));
@@ -135,8 +166,12 @@ class FireBaseSettingRepository extends SettingRepository {
   Stream<SettingUserModel> getUserDetails() async* {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
 
+    print('\n\n\n\n\n');
+    print(user);
+
     yield* Firestore.instance.collection('Users').snapshots().map((snapshot) {
       return snapshot.documents
+          .where((doc) => doc.documentID == userId)
           .map((doc) => SettingUserModel.fromDoc(doc, user.email))
           .toList()
           .first;

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:reazzon/src/blocs/bloc_provider.dart';
 import 'package:reazzon/src/domain/validators.dart';
@@ -152,12 +153,33 @@ class SettingsBloc extends BlocBase with Validators {
       _emailController.stream.transform(validateEmail);
   Function(String) get inEmail => _emailController.sink.add;
 
+  // -- password --
+  final _passwordController = BehaviorSubject<String>();
+  Stream<String> get outPassword =>
+      _passwordController.stream.transform(validatePassword);
+  Function(String) get inPassword => _passwordController.sink.add;
+
+  final _confirmPasswordController = BehaviorSubject<String>();
+  Stream<String> get outConfirmPassword => _confirmPasswordController.stream
+          .transform(validatePassword)
+          .doOnData((String c) {
+        if (0 != _passwordController.value.compareTo(c)) {
+          _confirmPasswordController.addError("Password didn\'t match");
+        }
+      });
+  Function(String) get inConfirmPassword => _confirmPasswordController.sink.add;
+
+  Stream<bool> get resetPasswordValid => Observable.combineLatest2(
+      outPassword, outConfirmPassword, (e, p) => true);
+
   @override
   void dispose() {
     _firstNameController.close();
     _lastNameController.close();
     _userNameController.close();
     _emailController.close();
+    _passwordController.close();
+    _confirmPasswordController.close();
   }
 
   Future<bool> changeFirstName() async {
@@ -174,5 +196,19 @@ class SettingsBloc extends BlocBase with Validators {
 
   Future<bool> changeEmail() async {
     return await settingRepository.changeEmail(_emailController.value);
+  }
+
+  Future<bool> changePassword() async {
+    if (_passwordController.value == _confirmPasswordController.value)
+      return await settingRepository.changePassword(_passwordController.value);
+    else {
+      _confirmPasswordController
+          .addError(Future.error('Password didn\'t match'));
+      return false;
+    }
+  }
+
+  Future<String> changeProfilePicture(File file) async {
+    return await settingRepository.changeProfilePicture(file);
   }
 }
