@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,8 @@ import 'package:reazzon/src/models/reazzon.dart';
 import 'package:reazzon/src/settings/setting_bloc.dart';
 import 'package:reazzon/src/settings/setting_repository.dart';
 import 'package:rxdart/rxdart.dart';
+
+import 'package:image_picker/image_picker.dart';
 
 class SettingPage extends StatefulWidget {
   final String loggedUserId;
@@ -38,6 +41,19 @@ class _SettingPageState extends State<SettingPage> {
   void dispose() {
     settingBloc?.dispose();
     super.dispose();
+  }
+
+  Future getImage(ImageSource source) async {
+    File _image = await ImagePicker.pickImage(
+        source: source, maxWidth: 100, maxHeight: 100);
+
+    settingBloc.changeProfilePicture(_image).then((_) {
+      setState(() {
+        Navigator.of(context).pop();
+      });
+    }).catchError((_) {
+      Navigator.of(context).pop();
+    });
   }
 
   @override
@@ -88,7 +104,7 @@ class _SettingPageState extends State<SettingPage> {
                                   child: Container(
                                     color: Colors.grey,
                                     child: Image.network(
-                                      'https://rukminim1.flixcart.com/image/352/352/poster/m/j/f/cute-new-born-baby-non-tearable-synthetic-sheet-poster-pb008-original-imae7qvrnsygcwg6.jpeg',
+                                      user.imageURL,
                                       height: 92,
                                       width: 92,
                                       fit: BoxFit.cover,
@@ -153,8 +169,8 @@ class _SettingPageState extends State<SettingPage> {
                                                       child:
                                                           Text('Take a photo'),
                                                       onPressed: () {
-                                                        print(
-                                                            'Take a photo clicked');
+                                                        getImage(
+                                                            ImageSource.camera);
                                                       },
                                                     ),
                                                   ),
@@ -170,8 +186,8 @@ class _SettingPageState extends State<SettingPage> {
                                                       child: Text(
                                                           'Choose from gallery'),
                                                       onPressed: () {
-                                                        print(
-                                                            'Choose from gallery clicked');
+                                                        getImage(ImageSource
+                                                            .gallery);
                                                       },
                                                     ),
                                                   ),
@@ -242,6 +258,8 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   Widget _reazzonsBuilder(List<String> reazzons) {
+//    settingBloc.setSelectedReazzons(reazzons);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Material(
@@ -255,7 +273,7 @@ class _SettingPageState extends State<SettingPage> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text('Reazzons',
+                  Text('REAZZONS',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.blue,
@@ -278,7 +296,22 @@ class _SettingPageState extends State<SettingPage> {
                   size: 18,
                   color: Colors.grey,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) => _dialogBuilder(
+                            title: 'REAZZON',
+                            child: _ReazzonModalBuilder(
+                              onSubmit: settingBloc.changeReazzons,
+                              inAvailableReazzons:
+                                  settingBloc.inAvailableReazzon,
+                              messageOut: settingBloc.outReazzonMessage,
+                              outAvailableReazzons:
+                                  settingBloc.outAvailableReazzons,
+                              settingBloc: settingBloc,
+                            ),
+                          ));
+                },
               ),
             ],
           ),
@@ -897,6 +930,145 @@ class __ModalBuilderVerificationState extends State<_ModalBuilderVerification> {
         ),
         SizedBox(height: 24),
         (verified) ? this.widget.child : Container(),
+      ],
+    );
+  }
+}
+
+class _ReazzonModalBuilder extends StatefulWidget {
+  final Stream<String> messageOut;
+  final Stream<List<Reazzon>> outAvailableReazzons;
+  final Function(List<Reazzon>) inAvailableReazzons;
+  final Function onSubmit;
+  final SettingsBloc settingBloc;
+
+  _ReazzonModalBuilder({
+    this.messageOut,
+    this.settingBloc,
+    this.outAvailableReazzons,
+    this.inAvailableReazzons,
+    this.onSubmit,
+  });
+
+  @override
+  __ReazzonModalBuilderState createState() => __ReazzonModalBuilderState();
+}
+
+class __ReazzonModalBuilderState extends State<_ReazzonModalBuilder> {
+  bool isLoading;
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: <Widget>[
+        Column(
+          children: <Widget>[
+            StreamBuilder<String>(
+                stream: this.widget.messageOut,
+                initialData: 'Select at least 1 reazzon',
+                builder: (context, snapshot) {
+                  return Text(snapshot.data,
+                      style: TextStyle(color: Colors.red));
+                }),
+            SizedBox(height: 6),
+            StreamBuilder<List<Reazzon>>(
+                stream: this.widget.outAvailableReazzons,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData && snapshot.data != null)
+                    return Container(
+                      height: MediaQuery.of(context).size.height * 0.45,
+                      child: GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 3.0,
+                          crossAxisSpacing: 6,
+                          mainAxisSpacing: 6,
+                        ),
+                        itemBuilder: (BuildContext context, int index) {
+                          return GestureDetector(
+                            child: Card(
+                              elevation: 5.0,
+                              child: Container(
+                                alignment: Alignment.center,
+                                child: new Text(
+                                  snapshot.data[index].value,
+                                  textAlign: TextAlign.center,
+                                  style: new TextStyle(
+                                      fontWeight:
+                                          (snapshot.data[index].isSelected)
+                                              ? FontWeight.bold
+                                              : FontWeight.normal),
+                                ),
+                              ),
+                            ),
+                            onTap: () {
+                              if (this.widget.settingBloc.canAddReazzon &&
+                                  !snapshot.data[index].isSelected)
+                                snapshot.data[index].setSelection();
+                              else if (snapshot.data[index].isSelected)
+                                snapshot.data[index].setSelection();
+
+                              this.widget.inAvailableReazzons(snapshot.data);
+                            },
+                          );
+                        },
+                        itemCount: snapshot.data.length,
+                      ),
+                    );
+                  else
+                    return Container(
+                      height: MediaQuery.of(context).size.height * 0.45,
+                      child: Center(child: Spinner()),
+                    );
+                }),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                FlatButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    'CANCEL',
+                    style: TextStyle(
+                      color: Colors.blue,
+                    ),
+                  ),
+                ),
+                FlatButton(
+                  onPressed: () async {
+                    setState(() {
+                      isLoading = true;
+                    });
+                    this.widget.onSubmit().then((success) {
+                      setState(() {
+                        isLoading = false;
+                      });
+                      if (success) Navigator.of(context).pop();
+                    });
+                  },
+                  child: Text(
+                    'UPDATE',
+                    style: TextStyle(color: Colors.blue),
+                  ),
+                ),
+              ],
+            )
+          ],
+        ),
+        (isLoading != null && isLoading)
+            ? Positioned(
+                top: 0,
+                right: 0,
+                left: 0,
+                bottom: 0,
+                child: Container(
+                    color: Colors.white, child: Center(child: Spinner())))
+            : Container(),
       ],
     );
   }

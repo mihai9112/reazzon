@@ -16,7 +16,7 @@ abstract class SettingRepository {
   Future<bool> changeFirstName(String newFirstName);
   Future<bool> changeLastName(String newLastName);
   Future<bool> changeUserName(String newUserName);
-  Future<List<Reazzon>> changeReazzons();
+  Future<bool> changeReazzons(List<String> reazzons);
   Stream<SettingUserModel> getUserDetails();
 }
 
@@ -29,7 +29,6 @@ class FireBaseSettingRepository extends SettingRepository {
     print('OnFirebase Setting Repository $userId');
   }
 
-  // todo
   Future<String> changeProfilePicture(File file) async {
     StorageReference reference = FirebaseStorage.instance.ref().child(userId);
 
@@ -48,7 +47,7 @@ class FireBaseSettingRepository extends SettingRepository {
           await Firestore.instance
               .collection('Users')
               .document(userId)
-              .updateData({'photoUrl': downloadUrl});
+              .updateData({'imageURL': downloadUrl});
 
           return downloadUrl;
         } catch (err) {
@@ -161,7 +160,24 @@ class FireBaseSettingRepository extends SettingRepository {
   }
 
   // todo
-  Future<List<Reazzon>> changeReazzons() => null;
+  Future<bool> changeReazzons(List<String> reazzons) {
+    final TransactionHandler createTransaction = (Transaction tx) async {
+      final DocumentSnapshot ds =
+          await tx.get(_userCollection.document(userId));
+
+      await tx.update(ds.reference, {'reazzons': reazzons});
+
+      return {'added': true};
+    };
+
+    return Firestore.instance
+        .runTransaction(createTransaction)
+        .then((_) => true)
+        .catchError((onError) {
+      print(onError);
+      return false;
+    });
+  }
 
   Stream<SettingUserModel> getUserDetails() async* {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
