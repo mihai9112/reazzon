@@ -7,6 +7,9 @@ import 'package:reazzon/src/blocs/bloc_provider.dart';
 import 'package:reazzon/src/blocs/login_bloc.dart';
 import 'package:reazzon/src/chat/chat_page.dart';
 import 'package:reazzon/src/helpers/spinner.dart';
+import 'package:reazzon/src/notifications/notification_bloc.dart';
+import 'package:reazzon/src/notifications/notification_page.dart';
+import 'package:reazzon/src/notifications/notification_repository.dart';
 import 'package:reazzon/src/pages/account_home_page.dart';
 import 'package:reazzon/src/settings/setting_bloc.dart';
 import 'package:reazzon/src/settings/setting_page.dart';
@@ -28,7 +31,7 @@ class AccountPage extends StatefulWidget {
 class _AccountPageState extends State<AccountPage> {
   LoginBloc _loginBloc;
   AccountPageBloc _accountPageBloc;
-  SettingsBloc _settingsBloc;
+  NotificationBloc _notificationBloc;
 
   static const int DEFAULT_INDEX = 2;
   Widget _selectedWidget;
@@ -44,12 +47,7 @@ class _AccountPageState extends State<AccountPage> {
         ),
       ),
       AccountHomePage(),
-      Center(
-        child: Container(
-          decoration: BoxDecoration(color: Colors.white),
-          child: Text('Notifications Page'),
-        ),
-      ),
+      NotificationPage(_notificationBloc),
       SettingPage(
         loggedUserId: this.widget.loggedUserId,
       ),
@@ -88,10 +86,10 @@ class _AccountPageState extends State<AccountPage> {
 
     _loginBloc = new LoginBloc();
 
-    print(this.widget.loggedUserId);
-    _settingsBloc =
-        SettingsBloc(FireBaseSettingRepository(this.widget.loggedUserId));
+    _notificationBloc = NotificationBloc(
+        FirebaseNotificationRepository(this.widget.loggedUserId));
 
+    print(this.widget.loggedUserId);
     _selectedWidget = _widgets()[DEFAULT_INDEX];
 
     super.initState();
