@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,10 +8,15 @@ import 'package:reazzon/src/helpers/fieldFocus.dart';
 import 'package:reazzon/src/helpers/spinner.dart';
 import 'package:reazzon/src/models/reazzon.dart';
 import 'package:reazzon/src/settings/setting_bloc.dart';
+import 'package:reazzon/src/settings/setting_repository.dart';
+import 'package:rxdart/rxdart.dart';
+
+import 'package:image_picker/image_picker.dart';
 
 class SettingPage extends StatefulWidget {
-  final SettingUserModel user;
-  SettingPage(this.user);
+  final String loggedUserId;
+
+  SettingPage({this.loggedUserId});
   @override
   _SettingPageState createState() => _SettingPageState();
 }
@@ -25,7 +31,8 @@ class _SettingPageState extends State<SettingPage> {
 
   @override
   void initState() {
-    settingBloc = BlocProvider.of<SettingsBloc>(context);
+    settingBloc =
+        SettingsBloc(FireBaseSettingRepository(this.widget.loggedUserId));
 
     super.initState();
   }
@@ -36,185 +43,223 @@ class _SettingPageState extends State<SettingPage> {
     super.dispose();
   }
 
+  Future getImage(ImageSource source) async {
+    File _image = await ImagePicker.pickImage(
+        source: source, maxWidth: 100, maxHeight: 100);
+
+    settingBloc.changeProfilePicture(_image).then((_) {
+      setState(() {
+        Navigator.of(context).pop();
+      });
+    }).catchError((_) {
+      Navigator.of(context).pop();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0XFFEEEEEE),
-      body: ListView(
-        children: <Widget>[
-          // top section
-          Material(
-            elevation: 8,
-            shadowColor: Colors.blueAccent,
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 36, horizontal: 16),
-              color: Colors.blueAccent,
-              child: Row(
+    return BlocProvider<SettingsBloc>(
+      bloc: settingBloc,
+      child: StreamBuilder<SettingUserModel>(
+        stream: settingBloc.currentUser,
+        builder: (context, userSnapshot) {
+          if (userSnapshot.hasData && userSnapshot.data != null) {
+            SettingUserModel user = userSnapshot.data;
+
+            return Scaffold(
+              backgroundColor: Color(0XFFEEEEEE),
+              body: ListView(
                 children: <Widget>[
-                  Stack(
-                    children: <Widget>[
-                      Container(
-                        height: 104,
-                        width: 102,
-                      ),
-                      Container(
-                        height: 100,
-                        width: 100,
-                        decoration: BoxDecoration(
-                          border:
-                              Border.all(color: Color(0XFFDDDDDD), width: 4),
-                          borderRadius: BorderRadius.circular(96),
-                          color: Colors.blue,
-                        ),
-                      ),
-                      Positioned(
-                        top: 4,
-                        left: 4,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(96),
-                          child: Container(
-                            color: Colors.grey,
-                            child: Image.network(
-                              'https://rukminim1.flixcart.com/image/352/352/poster/m/j/f/cute-new-born-baby-non-tearable-synthetic-sheet-poster-pb008-original-imae7qvrnsygcwg6.jpeg',
-                              height: 92,
-                              width: 92,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(16),
-                              boxShadow: [
-                                BoxShadow(
-                                  blurRadius: 2,
-                                  offset: Offset(0.5, 1.5),
-                                  spreadRadius: 2,
-                                  color: Colors.black12,
-                                )
-                              ]),
-                          child: GestureDetector(
-                            onTap: () {
-                              print('Edit photo');
-                              showModalBottomSheet(
-                                  context: context,
-                                  backgroundColor: Colors.transparent,
-                                  builder: (context) {
-                                    return Container(
-                                      padding: EdgeInsets.all(16),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(16),
-                                            topRight: Radius.circular(16)),
-                                      ),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          Container(
-                                            width: 80,
-                                            height: 7,
-                                            decoration: BoxDecoration(
-                                                color: Color(0XFFeeedee),
-                                                borderRadius:
-                                                    BorderRadius.circular(5)),
-                                          ),
-                                          SizedBox(height: 20),
-                                          Container(
-                                            width: double.infinity,
-                                            child: OutlineButton(
-                                              padding: EdgeInsets.all(16),
-                                              borderSide: BorderSide(
-                                                  color: Colors.black45),
-                                              child: Text('Take a photo'),
-                                              onPressed: () {
-                                                print('Take a photo clicked');
-                                              },
-                                            ),
-                                          ),
-                                          SizedBox(height: 16),
-                                          Container(
-                                            width: double.infinity,
-                                            child: OutlineButton(
-                                              borderSide: BorderSide(
-                                                  color: Colors.black45),
-                                              padding: EdgeInsets.all(16),
-                                              child:
-                                                  Text('Choose from gallery'),
-                                              onPressed: () {
-                                                print(
-                                                    'Choose from gallery clicked');
-                                              },
-                                            ),
-                                          ),
-                                          SizedBox(height: 8),
-                                        ],
-                                      ),
-                                    );
-                                  });
-                            },
-                            behavior: HitTestBehavior.translucent,
-                            child: Padding(
-                              padding: EdgeInsets.all(8),
-                              child: Icon(
-                                Icons.photo_camera,
-                                size: 16,
+                  // top section
+                  Material(
+                    elevation: 8,
+                    shadowColor: Colors.blueAccent,
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 36, horizontal: 16),
+                      color: Colors.blueAccent,
+                      child: Row(
+                        children: <Widget>[
+                          Stack(
+                            children: <Widget>[
+                              Container(
+                                height: 104,
+                                width: 102,
                               ),
-                            ),
+                              Container(
+                                height: 100,
+                                width: 100,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Color(0XFFDDDDDD), width: 4),
+                                  borderRadius: BorderRadius.circular(96),
+                                  color: Colors.blue,
+                                ),
+                              ),
+                              Positioned(
+                                top: 4,
+                                left: 4,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(96),
+                                  child: Container(
+                                    color: Colors.grey,
+                                    child: Image.network(
+                                      user.imageURL,
+                                      height: 92,
+                                      width: 92,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                bottom: 0,
+                                right: 0,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(16),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          blurRadius: 2,
+                                          offset: Offset(0.5, 1.5),
+                                          spreadRadius: 2,
+                                          color: Colors.black12,
+                                        )
+                                      ]),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      print('Edit photo');
+                                      showModalBottomSheet(
+                                          context: context,
+                                          backgroundColor: Colors.transparent,
+                                          builder: (context) {
+                                            return Container(
+                                              padding: EdgeInsets.all(16),
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius: BorderRadius.only(
+                                                    topLeft:
+                                                        Radius.circular(16),
+                                                    topRight:
+                                                        Radius.circular(16)),
+                                              ),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: <Widget>[
+                                                  Container(
+                                                    width: 80,
+                                                    height: 7,
+                                                    decoration: BoxDecoration(
+                                                        color:
+                                                            Color(0XFFeeedee),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(5)),
+                                                  ),
+                                                  SizedBox(height: 20),
+                                                  Container(
+                                                    width: double.infinity,
+                                                    child: OutlineButton(
+                                                      padding:
+                                                          EdgeInsets.all(16),
+                                                      borderSide: BorderSide(
+                                                          color:
+                                                              Colors.black45),
+                                                      child:
+                                                          Text('Take a photo'),
+                                                      onPressed: () {
+                                                        getImage(
+                                                            ImageSource.camera);
+                                                      },
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: 16),
+                                                  Container(
+                                                    width: double.infinity,
+                                                    child: OutlineButton(
+                                                      borderSide: BorderSide(
+                                                          color:
+                                                              Colors.black45),
+                                                      padding:
+                                                          EdgeInsets.all(16),
+                                                      child: Text(
+                                                          'Choose from gallery'),
+                                                      onPressed: () {
+                                                        getImage(ImageSource
+                                                            .gallery);
+                                                      },
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: 8),
+                                                ],
+                                              ),
+                                            );
+                                          });
+                                    },
+                                    behavior: HitTestBehavior.translucent,
+                                    child: Padding(
+                                      padding: EdgeInsets.all(8),
+                                      child: Icon(
+                                        Icons.photo_camera,
+                                        size: 16,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
+                          SizedBox(width: 12),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                user.firstName + ' ' + user.lastName,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                ),
+                              ),
+                              Text(
+                                user.userName,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.white70,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                  SizedBox(width: 12),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        this.widget.user.firstName +
-                            ' ' +
-                            this.widget.user.lastName,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontSize: 20,
-                        ),
-                      ),
-                      Text(
-                        this.widget.user.userName,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          color: Colors.white70,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
-                  ),
+                  SizedBox(height: 18),
+                  _itemBuilder(userSnapshot.data.email, EMAIL),
+                  _itemPasswordBuilder(),
+                  SizedBox(height: 16),
+                  _itemBuilder(user.firstName, FIRST_NAME),
+                  _itemBuilder(user.lastName, LAST_NAME),
+                  _itemBuilder(user.userName, USER_NAME),
+                  SizedBox(height: 16),
+                  _reazzonsBuilder(user.reazzons),
+                  SizedBox(height: 16),
                 ],
               ),
-            ),
-          ),
-          SizedBox(height: 18),
-          _itemBuilder(this.widget.user.email, EMAIL),
-          _itemPasswordBuilder(),
-          SizedBox(height: 16),
-          _itemBuilder(this.widget.user.firstName, FIRST_NAME),
-          _itemBuilder(this.widget.user.lastName, LAST_NAME),
-          _itemBuilder(this.widget.user.userName, USER_NAME),
-          SizedBox(height: 16),
-          _reazzonsBuilder(this.widget.user.reazzons),
-          SizedBox(height: 16),
-        ],
+            );
+          } else {
+            return Container(child: Center(child: Spinner()));
+          }
+        },
       ),
     );
   }
 
   Widget _reazzonsBuilder(List<String> reazzons) {
+//    settingBloc.setSelectedReazzons(reazzons);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Material(
@@ -228,7 +273,7 @@ class _SettingPageState extends State<SettingPage> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text('Reazzons',
+                  Text('REAZZONS',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.blue,
@@ -251,7 +296,22 @@ class _SettingPageState extends State<SettingPage> {
                   size: 18,
                   color: Colors.grey,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) => _dialogBuilder(
+                            title: 'REAZZON',
+                            child: _ReazzonModalBuilder(
+                              onSubmit: settingBloc.changeReazzons,
+                              inAvailableReazzons:
+                                  settingBloc.inAvailableReazzon,
+                              messageOut: settingBloc.outReazzonMessage,
+                              outAvailableReazzons:
+                                  settingBloc.outAvailableReazzons,
+                              settingBloc: settingBloc,
+                            ),
+                          ));
+                },
               ),
             ],
           ),
@@ -294,11 +354,17 @@ class _SettingPageState extends State<SettingPage> {
         break;
       case EMAIL:
         key = 'EMAIL';
-        _child = _ModalBuilder(
-          initialData: value,
-          onSubmit: settingBloc.changeEmail,
-          input: settingBloc.inEmail,
-          output: settingBloc.outEmail,
+
+        _child = BlocProvider<SettingsBloc>(
+          bloc: settingBloc,
+          child: _ModalBuilderVerification(
+            child: _ModalBuilder(
+              initialData: value,
+              onSubmit: settingBloc.changeEmail,
+              input: settingBloc.inEmail,
+              output: settingBloc.outEmail,
+            ),
+          ),
         );
         break;
     }
@@ -369,14 +435,23 @@ class _SettingPageState extends State<SettingPage> {
                 ),
                 onPressed: () {
                   showDialog(
-                      context: context,
-                      builder: (context) => _dialogBuilder(
-                            title: 'PASSWORD',
-                            child: Container(
-                              color: Colors.orangeAccent,
-                              height: 200,
-                            ),
-                          ));
+                    context: context,
+                    builder: (context) => _dialogBuilder(
+                      title: 'PASSWORD',
+                      child: BlocProvider<SettingsBloc>(
+                        bloc: settingBloc,
+                        child: _ModalBuilderVerification(
+                          child: _PasswordModalBuilder(
+                            input: settingBloc.inPassword,
+                            inputConfirm: settingBloc.inConfirmPassword,
+                            output: settingBloc.outPassword,
+                            outputConfirm: settingBloc.outConfirmPassword,
+                            onSubmit: settingBloc.changePassword,
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
                 },
               ),
             ],
@@ -541,45 +616,48 @@ class __ModalBuilderState extends State<_ModalBuilder> {
                       ),
                     ),
                     SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        FlatButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Text(
-                            'CANCEL',
-                            style: TextStyle(
-                              color: Colors.blue,
-                            ),
-                          ),
-                        ),
-                        FlatButton(
-                          onPressed: snapshot.hasError
-                              ? null
-                              : () async {
-                                  setState(() {
-                                    isLoading = true;
-                                  });
-                                  bool _success = await widget.onSubmit();
-                                  setState(() {
-                                    isLoading = false;
-                                    if (_success) {
-                                      Navigator.of(context).pop();
-                                    }
-                                  });
+                    (this.widget.onSubmit != null)
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              FlatButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
                                 },
-                          child: Text(
-                            'UPDATE',
-                            style: TextStyle(
-                                color: snapshot.hasError
-                                    ? Colors.grey
-                                    : Colors.blue),
-                          ),
-                        ),
-                      ],
-                    ),
+                                child: Text(
+                                  'CANCEL',
+                                  style: TextStyle(
+                                    color: Colors.blue,
+                                  ),
+                                ),
+                              ),
+                              FlatButton(
+                                onPressed: snapshot.hasError
+                                    ? null
+                                    : () async {
+                                        setState(() {
+                                          isLoading = true;
+                                        });
+                                        widget.onSubmit().then((val) {
+                                          setState(() {
+                                            isLoading = false;
+                                            if (val) {
+                                              Navigator.of(context).pop();
+                                            }
+                                          });
+                                        });
+                                      },
+                                child: Text(
+                                  'UPDATE',
+                                  style: TextStyle(
+                                      color: snapshot.hasError
+                                          ? Colors.grey
+                                          : Colors.blue),
+                                ),
+                              ),
+                            ],
+                          )
+                        : Container(),
                   ],
                 );
               }),
@@ -596,6 +674,401 @@ class __ModalBuilderState extends State<_ModalBuilder> {
                 )
               : Container(),
         ),
+      ],
+    );
+  }
+}
+
+class _PasswordModalBuilder extends StatefulWidget {
+  final Stream<String> output;
+  final Function(String) input;
+  final Stream<String> outputConfirm;
+  final Function(String) inputConfirm;
+  final Function onSubmit;
+
+  _PasswordModalBuilder({
+    this.output,
+    this.input,
+    this.outputConfirm,
+    this.inputConfirm,
+    this.onSubmit,
+  });
+
+  @override
+  __PasswordModalBuilderState createState() => __PasswordModalBuilderState();
+}
+
+class __PasswordModalBuilderState extends State<_PasswordModalBuilder> {
+  bool isLoading = false;
+
+  SettingsBloc settingBloc;
+
+  @override
+  void initState() {
+    settingBloc = BlocProvider.of<SettingsBloc>(context);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: <Widget>[
+        Container(
+          child: Column(
+            children: <Widget>[
+              StreamBuilder(
+                  stream: widget.output,
+                  builder: (context, snapshot) {
+                    return Material(
+                      child: TextField(
+                        obscureText: true,
+                        style: TextStyle(fontSize: 15.0),
+                        decoration: InputDecoration(
+                          hintText: 'Password',
+                          errorStyle: TextStyle(fontSize: 12.0),
+                          errorText: snapshot.error,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(4),
+                            borderSide: BorderSide(
+                              color: Color(0XFFAAAAAA),
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(4),
+                            borderSide: BorderSide(
+                              color: Color(0XFFCCCCCC),
+                            ),
+                          ),
+                          contentPadding: EdgeInsets.all(16),
+                        ),
+                        onChanged: widget.input,
+                      ),
+                    );
+                  }),
+              SizedBox(height: 8),
+              StreamBuilder(
+                  stream: widget.outputConfirm,
+                  builder: (context, snapshot) {
+                    return Material(
+                      child: TextField(
+                        obscureText: true,
+                        style: TextStyle(fontSize: 15.0),
+                        decoration: InputDecoration(
+                          hintText: 'Confirm Password',
+                          errorStyle: TextStyle(fontSize: 12.0),
+                          errorText: snapshot.error,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(4),
+                            borderSide: BorderSide(
+                              color: Color(0XFFAAAAAA),
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(4),
+                            borderSide: BorderSide(
+                              color: Color(0XFFCCCCCC),
+                            ),
+                          ),
+                          contentPadding: EdgeInsets.all(16),
+                        ),
+                        onChanged: widget.inputConfirm,
+                      ),
+                    );
+                  }),
+              SizedBox(height: 8),
+              SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  FlatButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      'CANCEL',
+                      style: TextStyle(
+                        color: Colors.blue,
+                      ),
+                    ),
+                  ),
+                  StreamBuilder<bool>(
+                      stream: settingBloc.resetPasswordValid,
+                      builder: (context, snapshot) {
+                        return FlatButton(
+                          onPressed: (snapshot.hasData && snapshot.data == true)
+                              ? () async {
+                                  setState(() {
+                                    isLoading = true;
+                                  });
+                                  widget.onSubmit().then((val) {
+                                    setState(() {
+                                      isLoading = false;
+                                      if (val) {
+                                        Navigator.of(context).pop();
+                                      }
+                                    });
+                                  });
+                                }
+                              : null,
+                          child: Text(
+                            'UPDATE',
+                            style: TextStyle(
+                                color: snapshot.hasError
+                                    ? Colors.grey
+                                    : Colors.blue),
+                          ),
+                        );
+                      }),
+                ],
+              )
+            ],
+          ),
+        ),
+        Positioned(
+          top: 0,
+          bottom: 0,
+          right: 0,
+          left: 0,
+          child: (isLoading != null && isLoading == true)
+              ? Container(
+                  color: Colors.white,
+                  child: Center(child: Spinner()),
+                )
+              : Container(),
+        ),
+      ],
+    );
+  }
+}
+
+class _ModalBuilderVerification extends StatefulWidget {
+  final Widget child;
+
+  _ModalBuilderVerification({
+    this.child,
+  });
+  @override
+  __ModalBuilderVerificationState createState() =>
+      __ModalBuilderVerificationState();
+}
+
+class __ModalBuilderVerificationState extends State<_ModalBuilderVerification> {
+  bool verified = false;
+  bool passwordFailed;
+  SettingsBloc settingBloc;
+
+  @override
+  void initState() {
+    settingBloc = BlocProvider.of<SettingsBloc>(context);
+    super.initState();
+  }
+
+  Color _borderColor() {
+    if (verified) return Colors.blue;
+    if (!verified && passwordFailed != null && passwordFailed)
+      return Colors.red;
+    return Color(0XFFAAAAAA);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Container(
+          color: Colors.red,
+          child: Material(
+            child: TextField(
+              style: TextStyle(fontSize: 15.0),
+              obscureText: true,
+              decoration: InputDecoration(
+                hintText: 'Password',
+                errorText: (passwordFailed != null && passwordFailed)
+                    ? 'Email and Password didn\'t match'
+                    : null,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(4),
+                  borderSide: BorderSide(
+                    color: _borderColor(),
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(4),
+                  borderSide: BorderSide(
+                    color: _borderColor(),
+                  ),
+                ),
+                contentPadding: EdgeInsets.all(16),
+                suffixIcon: Icon(Icons.check,
+                    color: (verified) ? Colors.blue : Colors.grey),
+              ),
+              onChanged: (_) {
+                setState(() {
+                  passwordFailed = false;
+                });
+              },
+              onSubmitted: (value) async {
+                setState(() {
+                  passwordFailed = false;
+                });
+
+                ((settingBloc.settingRepository) as FireBaseSettingRepository)
+                    .passwordVerification(value)
+                    .then((value) {
+                  setState(() {
+                    passwordFailed = !value;
+                    verified = value;
+                  });
+                }).catchError((_) {
+                  setState(() {
+                    verified = false;
+                    passwordFailed = true;
+                  });
+                });
+              },
+            ),
+          ),
+        ),
+        SizedBox(height: 24),
+        (verified) ? this.widget.child : Container(),
+      ],
+    );
+  }
+}
+
+class _ReazzonModalBuilder extends StatefulWidget {
+  final Stream<String> messageOut;
+  final Stream<List<Reazzon>> outAvailableReazzons;
+  final Function(List<Reazzon>) inAvailableReazzons;
+  final Function onSubmit;
+  final SettingsBloc settingBloc;
+
+  _ReazzonModalBuilder({
+    this.messageOut,
+    this.settingBloc,
+    this.outAvailableReazzons,
+    this.inAvailableReazzons,
+    this.onSubmit,
+  });
+
+  @override
+  __ReazzonModalBuilderState createState() => __ReazzonModalBuilderState();
+}
+
+class __ReazzonModalBuilderState extends State<_ReazzonModalBuilder> {
+  bool isLoading;
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: <Widget>[
+        Column(
+          children: <Widget>[
+            StreamBuilder<String>(
+                stream: this.widget.messageOut,
+                initialData: 'Select at least 1 reazzon',
+                builder: (context, snapshot) {
+                  return Text(snapshot.data,
+                      style: TextStyle(color: Colors.red));
+                }),
+            SizedBox(height: 6),
+            StreamBuilder<List<Reazzon>>(
+                stream: this.widget.outAvailableReazzons,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData && snapshot.data != null)
+                    return Container(
+                      height: MediaQuery.of(context).size.height * 0.45,
+                      child: GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 3.0,
+                          crossAxisSpacing: 6,
+                          mainAxisSpacing: 6,
+                        ),
+                        itemBuilder: (BuildContext context, int index) {
+                          return GestureDetector(
+                            child: Card(
+                              elevation: 5.0,
+                              child: Container(
+                                alignment: Alignment.center,
+                                child: new Text(
+                                  snapshot.data[index].value,
+                                  textAlign: TextAlign.center,
+                                  style: new TextStyle(
+                                      fontWeight:
+                                          (snapshot.data[index].isSelected)
+                                              ? FontWeight.bold
+                                              : FontWeight.normal),
+                                ),
+                              ),
+                            ),
+                            onTap: () {
+                              if (this.widget.settingBloc.canAddReazzon &&
+                                  !snapshot.data[index].isSelected)
+                                snapshot.data[index].setSelection();
+                              else if (snapshot.data[index].isSelected)
+                                snapshot.data[index].setSelection();
+
+                              this.widget.inAvailableReazzons(snapshot.data);
+                            },
+                          );
+                        },
+                        itemCount: snapshot.data.length,
+                      ),
+                    );
+                  else
+                    return Container(
+                      height: MediaQuery.of(context).size.height * 0.45,
+                      child: Center(child: Spinner()),
+                    );
+                }),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                FlatButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    'CANCEL',
+                    style: TextStyle(
+                      color: Colors.blue,
+                    ),
+                  ),
+                ),
+                FlatButton(
+                  onPressed: () async {
+                    setState(() {
+                      isLoading = true;
+                    });
+                    this.widget.onSubmit().then((success) {
+                      setState(() {
+                        isLoading = false;
+                      });
+                      if (success) Navigator.of(context).pop();
+                    });
+                  },
+                  child: Text(
+                    'UPDATE',
+                    style: TextStyle(color: Colors.blue),
+                  ),
+                ),
+              ],
+            )
+          ],
+        ),
+        (isLoading != null && isLoading)
+            ? Positioned(
+                top: 0,
+                right: 0,
+                left: 0,
+                bottom: 0,
+                child: Container(
+                    color: Colors.white, child: Center(child: Spinner())))
+            : Container(),
       ],
     );
   }
