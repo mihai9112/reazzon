@@ -33,7 +33,7 @@ class FilterDialogState extends State<FilterDialog> {
           icon: new Icon(Icons.close),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text('Event Name TBD'),
+        title: Text('Filter Users'),
         actions: <Widget>[
           FlatButton(
             child: Text('SAVE',

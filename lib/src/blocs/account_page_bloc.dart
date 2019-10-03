@@ -14,8 +14,6 @@ class AccountPageBloc extends BlocBase {
   void registerNotification(String currentUserId) {
     final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
-    print('Account Bloc: Notification Registered $currentUserId');
-
     _firebaseMessaging.requestNotificationPermissions();
 
     _firebaseMessaging.configure(onMessage: (Map<String, dynamic> message) {

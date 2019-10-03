@@ -46,7 +46,6 @@ class NotificationBloc
           .map((notifications) => LoadedNotificationsState(notifications));
     }
     if (event is OpenChatEvent) {
-      print('Notification Bloc open chat ${event.userName}');
       notificationRepository.setNotificationRead(event.notificationId);
       openMessage(event.context, event.userId, event.userName);
     }

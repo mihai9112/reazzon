@@ -19,7 +19,6 @@ class FirebaseNotificationRepository extends NotificationRepository {
 
   @override
   Stream<List<NotificationModel>> getNotifications() {
-    print('Get Notification called');
     return notificationsCollection
         .document(loggedUserId)
         .collection(loggedUserId)
@@ -33,7 +32,6 @@ class FirebaseNotificationRepository extends NotificationRepository {
 
   @override
   Future<bool> setNotificationRead(int notificationId) {
-    print('Update $notificationId and id $loggedUserId');
     final TransactionHandler updateTransaction = (Transaction tx) async {
       final DocumentSnapshot ds = await tx.get(notificationsCollection
           .document('$loggedUserId/$loggedUserId/$notificationId'));

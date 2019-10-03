@@ -37,52 +37,61 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 0, horizontal: 12.0),
-      child: StreamBuilder(
-        stream: chatBloc.stream,
-        builder: (context, AsyncSnapshot snapshot) {
-          if (snapshot.hasData && snapshot.data is ChatsLoaded) {
-            ChatsLoaded loadedChats = (snapshot.data as ChatsLoaded);
-            return ListView.separated(
-              itemCount: loadedChats.chatEntities.length,
-              itemBuilder: (BuildContext context, int index) {
-                ChatEntity data = loadedChats.chatEntities[index];
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0.0,
+        title: Text("Chat", style: TextStyle(color: Colors.blueAccent)),
+        centerTitle: true,
+      ),
+      body: Container(
+        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 12.0),
+        child: StreamBuilder(
+          stream: chatBloc.stream,
+          builder: (context, AsyncSnapshot snapshot) {
+            if (snapshot.hasData && snapshot.data is ChatsLoaded) {
+              ChatsLoaded loadedChats = (snapshot.data as ChatsLoaded);
+              return ListView.separated(
+                itemCount: loadedChats.chatEntities.length,
+                itemBuilder: (BuildContext context, int index) {
+                  ChatEntity data = loadedChats.chatEntities[index];
 
-                return InkWell(
-                  onTap: () async {
-                    String loggedUserId = await User.retrieveUserId();
+                  return InkWell(
+                    onTap: () async {
+                      String loggedUserId = await User.retrieveUserId();
 
-                    MessageBloc messageBloc = MessageBloc(
-                        messageRepository: FireBaseMessageRepository(
-                      loggedUserID: loggedUserId,
-                    ));
+                      MessageBloc messageBloc = MessageBloc(
+                          messageRepository: FireBaseMessageRepository(
+                        loggedUserID: loggedUserId,
+                      ));
 
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => MessagePage(data, messageBloc)));
-                  },
-                  child: ChatItem(
-                    chatItem: data,
-                  ),
-                );
-              },
-              separatorBuilder: (BuildContext context, int index) {
-                return Align(
-                  alignment: Alignment.bottomRight,
-                  child: Container(
-                    height: 1,
-                    margin: EdgeInsets.symmetric(vertical: 2),
-                    color: Color(0XFFE0E0E0),
-                    width: MediaQuery.of(context).size.width - 72 - 16,
-                  ),
-                );
-              },
-            );
-          } else if (snapshot.hasData && snapshot.data is ChatsNotLoaded) {
-            chatBloc.dispatch(LoadChatList());
-          }
-          return Center(child: Spinner());
-        },
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) =>
+                              MessagePage(data, messageBloc)));
+                    },
+                    child: ChatItem(
+                      chatItem: data,
+                    ),
+                  );
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return Align(
+                    alignment: Alignment.bottomRight,
+                    child: Container(
+                      height: 1,
+                      margin: EdgeInsets.symmetric(vertical: 2),
+                      color: Color(0XFFE0E0E0),
+                      width: MediaQuery.of(context).size.width - 72 - 16,
+                    ),
+                  );
+                },
+              );
+            } else if (snapshot.hasData && snapshot.data is ChatsNotLoaded) {
+              chatBloc.dispatch(LoadChatList());
+            }
+            return Center(child: Spinner());
+          },
+        ),
       ),
     );
   }

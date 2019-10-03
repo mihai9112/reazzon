@@ -25,9 +25,7 @@ class FireBaseSettingRepository extends SettingRepository {
   final CollectionReference _userCollection =
       Firestore.instance.collection('Users');
 
-  FireBaseSettingRepository(this.userId) {
-    print('OnFirebase Setting Repository $userId');
-  }
+  FireBaseSettingRepository(this.userId);
 
   Future<String> changeProfilePicture(File file) async {
     StorageReference reference = FirebaseStorage.instance.ref().child(userId);
@@ -100,8 +98,6 @@ class FireBaseSettingRepository extends SettingRepository {
   }
 
   Future<bool> changeFirstName(String newFirstName) async {
-    print('\n\n\n\n\n$userId');
-
     final TransactionHandler createTransaction = (Transaction tx) async {
       final DocumentSnapshot ds =
           await tx.get(_userCollection.document(userId));
@@ -140,7 +136,6 @@ class FireBaseSettingRepository extends SettingRepository {
   }
 
   Future<bool> changeUserName(String newUserName) async {
-    print('Repo Change User Name $newUserName');
     final TransactionHandler createTransaction = (Transaction tx) async {
       final DocumentSnapshot ds =
           await tx.get(_userCollection.document(userId));
@@ -181,9 +176,6 @@ class FireBaseSettingRepository extends SettingRepository {
 
   Stream<SettingUserModel> getUserDetails() async* {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
-
-    print('\n\n\n\n\n');
-    print(user);
 
     yield* Firestore.instance.collection('Users').snapshots().map((snapshot) {
       return snapshot.documents

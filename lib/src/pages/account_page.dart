@@ -20,9 +20,7 @@ import 'home_page.dart';
 class AccountPage extends StatefulWidget {
   final String loggedUserId;
 
-  AccountPage({this.loggedUserId}) {
-    print('onAccount Page $loggedUserId');
-  }
+  AccountPage({this.loggedUserId});
 
   @override
   State<StatefulWidget> createState() => _AccountPageState();

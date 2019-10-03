@@ -87,9 +87,12 @@ class UserRepository implements IUserRepository {
   Stream<List<AccountHomeEntity>> users() async* {
     final usersCollection = Firestore.instance.collection('Users');
 
+    String ownId = await User.retrieveUserId();
+
     yield* usersCollection.snapshots().map((snapshot) {
       return snapshot.documents
           .map((doc) => AccountHomeEntity.fromSnapshot(doc))
+          .skipWhile((accountEntity) => accountEntity.userId == ownId)
           .toList();
     });
   }
@@ -116,12 +119,14 @@ class UserRepository implements IUserRepository {
 class AccountHomeEntity {
   String fullName;
   String imgURL;
+  String userId;
   List<String> reazzons;
 
   AccountHomeEntity({
     this.fullName,
     this.imgURL,
     this.reazzons,
+    this.userId,
   });
 
   static AccountHomeEntity fromSnapshot(DocumentSnapshot snap) {
@@ -133,6 +138,7 @@ class AccountHomeEntity {
 
     return AccountHomeEntity(
       fullName: snap.data['firstName'] + ' ' + snap.data['lastName'],
+      userId: snap.data['userId'],
       imgURL: snap.data['imgURL'] as String ??
           'https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/reference_guide/baby_development_your_3_month_old_ref_guide/650x350_baby_development_your_3_month_old_ref_guide.jpg',
       reazzons: _list,

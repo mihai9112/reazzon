@@ -129,7 +129,6 @@ class _SettingPageState extends State<SettingPage> {
                                       ]),
                                   child: GestureDetector(
                                     onTap: () {
-                                      print('Edit photo');
                                       showModalBottomSheet(
                                           context: context,
                                           backgroundColor: Colors.transparent,
@@ -441,6 +440,7 @@ class _SettingPageState extends State<SettingPage> {
                       child: BlocProvider<SettingsBloc>(
                         bloc: settingBloc,
                         child: _ModalBuilderVerification(
+                          hintText: 'Current password',
                           child: _PasswordModalBuilder(
                             input: settingBloc.inPassword,
                             inputConfirm: settingBloc.inConfirmPassword,
@@ -460,74 +460,6 @@ class _SettingPageState extends State<SettingPage> {
       ),
     );
   }
-
-//  -- modal --
-
-  /*
-  Widget _passwordModalBuilder() {
-    return Container(
-      child: StreamBuilder(
-          stream: output,
-          builder: (context, snapshot) {
-            return Column(
-              children: <Widget>[
-                Material(
-                  child: TextField(
-                    style: TextStyle(fontSize: 15.0),
-                    decoration: InputDecoration(
-                      hintText: initialData,
-                      hintStyle: TextStyle(color: Colors.black87),
-                      errorStyle: TextStyle(fontSize: 12.0),
-                      errorText: snapshot.error,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(4),
-                        borderSide: BorderSide(
-                          color: Color(0XFFAAAAAA),
-                        ),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(4),
-                        borderSide: BorderSide(
-                          color: Color(0XFFCCCCCC),
-                        ),
-                      ),
-                      contentPadding: EdgeInsets.all(16),
-                    ),
-                    onChanged: input,
-                  ),
-                ),
-                SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    FlatButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(
-                        'CANCEL',
-                        style: TextStyle(
-                          color: Colors.blue,
-                        ),
-                      ),
-                    ),
-                    FlatButton(
-                      onPressed: snapshot.hasError ? null : () => settingBloc.changePassword(),
-                      child: Text(
-                        'UPDATE',
-                        style: TextStyle(
-                            color:
-                            snapshot.hasError ? Colors.grey : Colors.blue),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            );
-          }),
-    );
-  }
-  */
 
   // -- dialog --
   Dialog _dialogBuilder({
@@ -724,7 +656,7 @@ class __PasswordModalBuilderState extends State<_PasswordModalBuilder> {
                         obscureText: true,
                         style: TextStyle(fontSize: 15.0),
                         decoration: InputDecoration(
-                          hintText: 'Password',
+                          hintText: 'New password',
                           errorStyle: TextStyle(fontSize: 12.0),
                           errorText: snapshot.error,
                           border: OutlineInputBorder(
@@ -754,7 +686,7 @@ class __PasswordModalBuilderState extends State<_PasswordModalBuilder> {
                         obscureText: true,
                         style: TextStyle(fontSize: 15.0),
                         decoration: InputDecoration(
-                          hintText: 'Confirm Password',
+                          hintText: 'Confirm new password',
                           errorStyle: TextStyle(fontSize: 12.0),
                           errorText: snapshot.error,
                           border: OutlineInputBorder(
@@ -843,9 +775,11 @@ class __PasswordModalBuilderState extends State<_PasswordModalBuilder> {
 
 class _ModalBuilderVerification extends StatefulWidget {
   final Widget child;
+  final String hintText;
 
   _ModalBuilderVerification({
     this.child,
+    this.hintText = 'Password',
   });
   @override
   __ModalBuilderVerificationState createState() =>
@@ -881,7 +815,7 @@ class __ModalBuilderVerificationState extends State<_ModalBuilderVerification> {
               style: TextStyle(fontSize: 15.0),
               obscureText: true,
               decoration: InputDecoration(
-                hintText: 'Password',
+                hintText: this.widget.hintText,
                 errorText: (passwordFailed != null && passwordFailed)
                     ? 'Email and Password didn\'t match'
                     : null,
