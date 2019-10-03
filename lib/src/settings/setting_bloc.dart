@@ -16,16 +16,16 @@ class SettingUserModel {
   String imageURL;
 
   SettingUserModel.fromDoc(doc, e) {
-    List list = doc['reazzons'];
+    List list = doc['reazzons'] ?? [];
     List<String> _list = [];
     list.forEach((item) {
       _list.add(item.toString());
     });
 
     this.email = e;
-    this.userName = doc['userName'];
-    this.firstName = doc['firstName'];
-    this.lastName = doc['lastName'];
+    this.userName = doc['userName'] ?? '';
+    this.firstName = doc['firstName'] ?? '';
+    this.lastName = doc['lastName'] ?? '';
     this.imageURL = doc['imageURL'] ??
         'https://rukminim1.flixcart.com/image/352/352/poster/m/j/f/cute-new-born-baby-non-tearable-synthetic-sheet-poster-pb008-original-imae7qvrnsygcwg6.jpeg';
     this.reazzons = _list;
@@ -114,6 +114,23 @@ class SettingsBloc extends BlocBase with Validators {
         canAddReazzon = true;
       }
     });
+  }
+
+  initializeReazzon(List<Reazzon> reazzons) {
+    List<Reazzon> _list = Reazzon.allReazzons();
+
+    reazzons.forEach((reazzon) {
+      reazzons.forEach((r) {
+        if (r == reazzon) {
+          if (canAddReazzon && !reazzon.isSelected) {
+            reazzon.setSelection();
+//            _list.where((_l) => _l == r).first.setSelection();
+          }
+        }
+      });
+    });
+
+    inAvailableReazzon(_list);
   }
 
   @override

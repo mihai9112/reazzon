@@ -100,9 +100,12 @@ class UserRepository implements IUserRepository {
   Stream<List<AccountHomeEntity>> filterUsers(List<String> reazzons) async* {
     final usersCollection = Firestore.instance.collection('Users');
 
+    String ownId = await User.retrieveUserId();
+
     yield* usersCollection.snapshots().map((snapshot) {
       return snapshot.documents
           .map((doc) => AccountHomeEntity.fromSnapshot(doc))
+          .skipWhile((accountEntity) => accountEntity.userId == ownId)
           .where((accountHomeEntity) {
         for (String reazzon in reazzons) {
           if (accountHomeEntity.reazzons.contains(reazzon)) {
@@ -112,6 +115,38 @@ class UserRepository implements IUserRepository {
 
         return false;
       }).toList();
+    });
+  }
+
+  Future<bool> sendRequest(String toUserId) async {
+    String myUserId = await User.retrieveUserId();
+
+    String at = DateTime.now().millisecondsSinceEpoch.toString();
+
+    var documentReference = Firestore.instance
+        .collection('notifications')
+        .document(toUserId)
+        .collection(toUserId)
+        .document(myUserId);
+
+    String userName = (await Firestore.instance
+            .collection('Users')
+            .document(myUserId)
+            .snapshots()
+            .first)['userName'] ??
+        '[NULL]';
+
+    return Firestore.instance.runTransaction((transaction) async {
+      await transaction.set(documentReference, {
+        'requestFromId': myUserId,
+        'requestFrom': userName,
+        'requestAt': at,
+        'request': true
+      });
+    }).then((onValue) {
+      return true;
+    }).catchError((onError) {
+      return {'success': false, 'error': onError};
     });
   }
 }
@@ -130,16 +165,20 @@ class AccountHomeEntity {
   });
 
   static AccountHomeEntity fromSnapshot(DocumentSnapshot snap) {
-    List list = snap.data['reazzons'];
+    List list = [];
     List<String> _list = [];
-    list.forEach((item) {
-      _list.add(item.toString());
-    });
+
+    if (snap.data['reazzons'] != null) {
+      list = snap.data['reazzons'];
+      list.forEach((item) {
+        _list.add(item.toString());
+      });
+    }
 
     return AccountHomeEntity(
-      fullName: snap.data['firstName'] + ' ' + snap.data['lastName'],
+      fullName: snap.data['userName'] ?? '[NULL]',
       userId: snap.data['userId'],
-      imgURL: snap.data['imgURL'] as String ??
+      imgURL: snap.data['imageURL'] as String ??
           'https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/reference_guide/baby_development_your_3_month_old_ref_guide/650x350_baby_development_your_3_month_old_ref_guide.jpg',
       reazzons: _list,
     );

@@ -138,13 +138,6 @@ class _MessagePageState extends State<MessagePage> with WidgetsBindingObserver {
                 ),
                 child: Row(
                   children: <Widget>[
-                    InkWell(
-                      onTap: () {},
-                      child: Icon(
-                        Icons.add,
-                        color: Colors.blue,
-                      ),
-                    ),
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),

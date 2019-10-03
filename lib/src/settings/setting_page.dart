@@ -58,17 +58,23 @@ class _SettingPageState extends State<SettingPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<SettingsBloc>(
-      bloc: settingBloc,
-      child: StreamBuilder<SettingUserModel>(
-        stream: settingBloc.currentUser,
-        builder: (context, userSnapshot) {
-          if (userSnapshot.hasData && userSnapshot.data != null) {
-            SettingUserModel user = userSnapshot.data;
+    return Scaffold(
+      backgroundColor: Color(0XFFEEEEEE),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0.0,
+        title: Text("Setting", style: TextStyle(color: Colors.blueAccent)),
+        centerTitle: true,
+      ),
+      body: BlocProvider<SettingsBloc>(
+        bloc: settingBloc,
+        child: StreamBuilder<SettingUserModel>(
+          stream: settingBloc.currentUser,
+          builder: (context, userSnapshot) {
+            if (userSnapshot.hasData && userSnapshot.data != null) {
+              SettingUserModel user = userSnapshot.data;
 
-            return Scaffold(
-              backgroundColor: Color(0XFFEEEEEE),
-              body: ListView(
+              return ListView(
                 children: <Widget>[
                   // top section
                   Material(
@@ -246,18 +252,18 @@ class _SettingPageState extends State<SettingPage> {
                   _reazzonsBuilder(user.reazzons),
                   SizedBox(height: 16),
                 ],
-              ),
-            );
-          } else {
-            return Container(child: Center(child: Spinner()));
-          }
-        },
+              );
+            } else {
+              return Container(child: Center(child: Spinner()));
+            }
+          },
+        ),
       ),
     );
   }
 
   Widget _reazzonsBuilder(List<String> reazzons) {
-//    settingBloc.setSelectedReazzons(reazzons);
+    settingBloc.initializeReazzon(reazzons.map((r) => Reazzon(r)).toList());
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -876,6 +882,8 @@ class _ReazzonModalBuilder extends StatefulWidget {
   final Function onSubmit;
   final SettingsBloc settingBloc;
 
+  List<Reazzon> initialReazzons = [Reazzon('#Grief')];
+
   _ReazzonModalBuilder({
     this.messageOut,
     this.settingBloc,
@@ -912,7 +920,7 @@ class __ReazzonModalBuilderState extends State<_ReazzonModalBuilder> {
             StreamBuilder<List<Reazzon>>(
                 stream: this.widget.outAvailableReazzons,
                 builder: (context, snapshot) {
-                  if (snapshot.hasData && snapshot.data != null)
+                  if (snapshot.hasData && snapshot.data != null) {
                     return Container(
                       height: MediaQuery.of(context).size.height * 0.45,
                       child: GridView.builder(
@@ -953,7 +961,7 @@ class __ReazzonModalBuilderState extends State<_ReazzonModalBuilder> {
                         itemCount: snapshot.data.length,
                       ),
                     );
-                  else
+                  } else
                     return Container(
                       height: MediaQuery.of(context).size.height * 0.45,
                       child: Center(child: Spinner()),

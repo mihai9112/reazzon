@@ -49,5 +49,11 @@ class NotificationBloc
       notificationRepository.setNotificationRead(event.notificationId);
       openMessage(event.context, event.userId, event.userName);
     }
+    if (event is AcceptRequestEvent) {
+      notificationRepository.requestHandler(event.userId, true);
+    }
+    if (event is RejectRequestEvent) {
+      notificationRepository.requestHandler(event.userId, false);
+    }
   }
 }

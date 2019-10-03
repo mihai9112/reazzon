@@ -34,7 +34,7 @@ class _AccountPageState extends State<AccountPage> {
   NotificationBloc _notificationBloc;
   ChatBloc _chatBloc;
 
-  static const int DEFAULT_INDEX = 2;
+  static const int DEFAULT_INDEX = 1;
   Widget _selectedWidget;
   int _currentIndex;
 

@@ -51,61 +51,167 @@ class _NotificationPageState extends State<NotificationPage> {
                       (snapshot.data as LoadedNotificationsState)
                           .notifications[index];
 
-                  return InkWell(
-                    onTap: () {
-                      this.widget.notificationBloc.dispatch(
-                            OpenChatEvent(
-                              userId: notification.fromId,
-                              userName: notification.from,
-                              context: context,
-                              notificationId: notification.at,
+                  return Container(
+                    child: (notification.isRequest != null &&
+                            notification.isRequest == true)
+                        ? Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 10),
+                            margin:
+                                EdgeInsets.only(top: 16, right: 16, left: 16),
+                            decoration: BoxDecoration(
+                              color: (notification.requestAccepted == null)
+                                  ? Colors.lightBlue[700]
+                                  : (notification.requestAccepted)
+                                      ? Colors.green
+                                      : Colors.redAccent,
+                              borderRadius: BorderRadius.circular(8),
                             ),
-                          );
-                    },
-                    child: Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                      margin: EdgeInsets.only(top: 16, right: 16, left: 16),
-                      decoration: BoxDecoration(
-                        color:
-                            (notification.isRead) ? Colors.grey : Colors.blue,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
-                        children: <Widget>[
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Image.network(
-                              notification.imageURL ??
-                                  'http://i.pravatar.cc/300',
-                              height: 48,
-                              width: 48,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          SizedBox(width: 9),
-                          Expanded(
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                Text('Message from ${notification.from}',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                    )),
-                                SizedBox(height: 2),
-                                Text(notification.content,
-                                    style: TextStyle(color: Colors.white)),
+                                Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(
+                                              'Request from ${notification.requestFromUserName}',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 16,
+                                                color: Colors.white,
+                                              )),
+                                          SizedBox(height: 4),
+                                          (notification.requestAccepted == null)
+                                              ? Container()
+                                              : Text(
+                                                  '${(notification.requestAccepted != null) ? (notification.requestAccepted) ? 'Accepted' : 'Rejected' : ''}',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 16,
+                                                    color: Colors.white,
+                                                  ))
+                                        ],
+                                      ),
+                                    ),
+                                    Text(readTimestamp(notification.requestAt),
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 10)),
+                                  ],
+                                ),
+                                SizedBox(height: 4),
+                                (notification.requestAccepted != null)
+                                    ? Container()
+                                    : Row(
+                                        children: <Widget>[
+                                          OutlineButton(
+                                            borderSide:
+                                                BorderSide(color: Colors.white),
+                                            child: Text(
+                                              'Accept',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 16,
+                                                color: Colors.lightGreenAccent,
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              this
+                                                  .widget
+                                                  .notificationBloc
+                                                  .dispatch(AcceptRequestEvent(
+                                                      notification
+                                                          .requestFromId));
+                                            },
+                                          ),
+                                          SizedBox(width: 12),
+                                          OutlineButton(
+                                            borderSide:
+                                                BorderSide(color: Colors.white),
+                                            child: Text(
+                                              'Reject',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 16,
+                                                color: Colors.red[600],
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              this
+                                                  .widget
+                                                  .notificationBloc
+                                                  .dispatch(RejectRequestEvent(
+                                                      notification
+                                                          .requestFromId));
+                                            },
+                                          ),
+                                        ],
+                                      ),
                               ],
                             ),
-                          ),
-                          Text(readTimestamp(notification.at),
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 10)),
-                        ],
-                      ),
-                    ),
+                          )
+                        : InkWell(
+                            onTap: () {
+                              this.widget.notificationBloc.dispatch(
+                                    OpenChatEvent(
+                                      userId: notification.fromId,
+                                      userName: notification.from,
+                                      context: context,
+                                      notificationId: notification.at,
+                                    ),
+                                  );
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 10),
+                              margin:
+                                  EdgeInsets.only(top: 16, right: 16, left: 16),
+                              decoration: BoxDecoration(
+                                color: (notification.isRead)
+                                    ? Colors.grey
+                                    : Colors.lightBlue[700],
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Row(
+                                children: <Widget>[
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: Image.network(
+                                      notification.imageURL ??
+                                          'http://i.pravatar.cc/300',
+                                      height: 48,
+                                      width: 48,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  SizedBox(width: 9),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Text(
+                                            'Message from ${notification.from}',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 16,
+                                              color: Colors.white,
+                                            )),
+                                        SizedBox(height: 2),
+                                        Text(notification.content,
+                                            style:
+                                                TextStyle(color: Colors.white)),
+                                      ],
+                                    ),
+                                  ),
+                                  Text(readTimestamp(notification.at),
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 10)),
+                                ],
+                              ),
+                            )),
                   );
                 },
               );

@@ -22,29 +22,43 @@ class _AccountHomePageState extends State<AccountHomePage> {
               : userRepository.filterUsers(filteredList),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: ListView.separated(
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return InkWell(
-                      onTap: () async {},
-                      child: _AccountHomePageItem(snapshot.data[index]),
-                    );
-                  },
-                  separatorBuilder: (BuildContext context, int index) {
-                    return Align(
-                      alignment: Alignment.bottomRight,
-                      child: Container(
-                        height: 1,
-                        margin: EdgeInsets.symmetric(vertical: 2),
-                        color: Color(0XFFE0E0E0),
-                        width: MediaQuery.of(context).size.width - 72 - 16,
-                      ),
-                    );
-                  },
-                ),
-              );
+              if (snapshot.data.length > 0)
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: ListView.separated(
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return _AccountHomePageItem(snapshot.data[index],
+                          onTapped: () {
+                        userRepository
+                            .sendRequest(snapshot.data[index].userId)
+                            .then((success) {
+                          Scaffold.of(context).showSnackBar(SnackBar(
+                              backgroundColor:
+                                  (success) ? Colors.green : Colors.red,
+                              content: Container(
+                                width: MediaQuery.of(context).size.width,
+                                child: Text(
+                                    (success) ? 'Request Sent' : 'Try Again',
+                                    style: TextStyle(color: Colors.white)),
+                              )));
+                        });
+                      });
+                    },
+                    separatorBuilder: (BuildContext context, int index) {
+                      return Align(
+                        alignment: Alignment.bottomRight,
+                        child: Container(
+                          height: 1,
+                          margin: EdgeInsets.symmetric(vertical: 2),
+                          color: Color(0XFFE0E0E0),
+                          width: MediaQuery.of(context).size.width - 72 - 16,
+                        ),
+                      );
+                    },
+                  ),
+                );
+              return Center(child: Text('Empty'));
             }
 
             return Center(child: Spinner());
@@ -84,8 +98,9 @@ class _AccountHomePageState extends State<AccountHomePage> {
 
 class _AccountHomePageItem extends StatelessWidget {
   final AccountHomeEntity accountHomeEntity;
+  final Function onTapped;
 
-  _AccountHomePageItem(this.accountHomeEntity);
+  _AccountHomePageItem(this.accountHomeEntity, {this.onTapped});
   @override
   Widget build(BuildContext context) {
     double _size = 54;
@@ -133,6 +148,13 @@ class _AccountHomePageItem extends StatelessWidget {
                     )
                   ],
                 ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(8),
+              child: IconButton(
+                icon: Icon(Icons.add_comment),
+                onPressed: this.onTapped,
               ),
             ),
           ],

@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:reazzon/src/chat/chat_bloc/chat_bloc.dart';
 import 'package:reazzon/src/chat/chat_bloc/chat_events.dart';
@@ -22,6 +25,11 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -30,53 +38,59 @@ class _ChatPageState extends State<ChatPage> {
         title: Text("Chat", style: TextStyle(color: Colors.blueAccent)),
         centerTitle: true,
       ),
-      body: Container(
-        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 12.0),
-        child: StreamBuilder(
-          stream: this.widget.chatBloc.stream,
-          builder: (context, AsyncSnapshot snapshot) {
-            if (snapshot.hasData && snapshot.data is ChatsLoaded) {
-              ChatsLoaded loadedChats = (snapshot.data as ChatsLoaded);
-              return ListView.separated(
-                itemCount: loadedChats.chatEntities.length,
-                itemBuilder: (BuildContext context, int index) {
-                  ChatEntity data = loadedChats.chatEntities[index];
+      body: RefreshIndicator(
+        onRefresh: () {
+          this.widget.chatBloc.dispatch(LoadChatList());
+          return Future.delayed(Duration(milliseconds: 0));
+        },
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 0, horizontal: 12.0),
+          child: StreamBuilder(
+            stream: this.widget.chatBloc.stream,
+            builder: (context, AsyncSnapshot snapshot) {
+              if (snapshot.hasData && snapshot.data is ChatsLoaded) {
+                ChatsLoaded loadedChats = (snapshot.data as ChatsLoaded);
+                return ListView.separated(
+                  itemCount: loadedChats.chatEntities.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    ChatEntity data = loadedChats.chatEntities[index];
 
-                  return InkWell(
-                    onTap: () async {
-                      String loggedUserId = await User.retrieveUserId();
+                    return InkWell(
+                      onTap: () async {
+                        String loggedUserId = await User.retrieveUserId();
 
-                      MessageBloc messageBloc = MessageBloc(
-                          messageRepository: FireBaseMessageRepository(
-                        loggedUserID: loggedUserId,
-                      ));
+                        MessageBloc messageBloc = MessageBloc(
+                            messageRepository: FireBaseMessageRepository(
+                          loggedUserID: loggedUserId,
+                        ));
 
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) =>
-                              MessagePage(data, messageBloc)));
-                    },
-                    child: ChatItem(
-                      chatItem: data,
-                    ),
-                  );
-                },
-                separatorBuilder: (BuildContext context, int index) {
-                  return Align(
-                    alignment: Alignment.bottomRight,
-                    child: Container(
-                      height: 1,
-                      margin: EdgeInsets.symmetric(vertical: 2),
-                      color: Color(0XFFE0E0E0),
-                      width: MediaQuery.of(context).size.width - 72 - 16,
-                    ),
-                  );
-                },
-              );
-            } else if (snapshot.hasData && snapshot.data is ChatsNotLoaded) {
-              this.widget.chatBloc.dispatch(LoadChatList());
-            }
-            return Center(child: Spinner());
-          },
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) =>
+                                MessagePage(data, messageBloc)));
+                      },
+                      child: ChatItem(
+                        chatItem: data,
+                      ),
+                    );
+                  },
+                  separatorBuilder: (BuildContext context, int index) {
+                    return Align(
+                      alignment: Alignment.bottomRight,
+                      child: Container(
+                        height: 1,
+                        margin: EdgeInsets.symmetric(vertical: 2),
+                        color: Color(0XFFE0E0E0),
+                        width: MediaQuery.of(context).size.width - 72 - 16,
+                      ),
+                    );
+                  },
+                );
+              } else if (snapshot.hasData && snapshot.data is ChatsNotLoaded) {
+                this.widget.chatBloc.dispatch(LoadChatList());
+              }
+              return Center(child: Spinner());
+            },
+          ),
         ),
       ),
     );

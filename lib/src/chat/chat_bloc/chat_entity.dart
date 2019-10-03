@@ -46,9 +46,9 @@ class ChatEntity {
 
   static ChatEntity fromSnapshot(DocumentSnapshot snap) {
     return ChatEntity(
-      userName: snap.data['userName'] as String,
+      userName: snap.data['userName'] as String ?? '[NULL]',
       userId: snap.data['userId'] as String,
-      imgURL: snap.data['imgURL'] as String ??
+      imgURL: snap.data['imageURL'] as String ??
           'https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/reference_guide/baby_development_your_3_month_old_ref_guide/650x350_baby_development_your_3_month_old_ref_guide.jpg',
       unreadMessageCount: snap.data['unreadMessageCount'] as int ?? 12,
       latestMessage: snap.data['latestMessage'] as String ?? 'Hello',

@@ -64,11 +64,23 @@ class FireBaseMessageRepository extends MessageRepository {
     }).asStream();
   }
 
-  void addChattingWith(String currentUserId, String chattingWith) {
-    Firestore.instance
-        .collection('Users')
-        .document(currentUserId)
-        .updateData({'chattingWith': chattingWith});
+  void addChattingWith(String currentUserId, String chattingWith) async {
+    final TransactionHandler createTransaction = (Transaction tx) async {
+      final DocumentSnapshot ds = await tx
+          .get(Firestore.instance.collection('Users').document(currentUserId));
+
+      await tx.update(ds.reference, {'chattingWith': chattingWith});
+
+      return {'added': true};
+    };
+
+    await Firestore.instance
+        .runTransaction(createTransaction)
+        .then((_) => true)
+        .catchError((onError) {
+      print(onError);
+      return false;
+    });
   }
 
   void removeChattingWith(String currentUserId) {

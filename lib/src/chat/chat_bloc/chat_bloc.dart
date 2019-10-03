@@ -24,7 +24,7 @@ class ChatBloc extends BlocEventStateBase<ChatsEvent, ChatsState> {
       ChatsEvent event, ChatsState currentState) async* {
     if (event is LoadChatList) {
       yield* _chatRepository
-          .chatEntities()
+          .chattedWithEntities()
           .map((chatEntity) => ChatsLoaded(chatEntity));
     }
 
