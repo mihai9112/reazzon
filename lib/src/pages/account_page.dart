@@ -41,12 +41,6 @@ class _AccountPageState extends State<AccountPage> {
   List<Widget> _widgets() {
     return [
       ChatPage(_chatBloc),
-      Center(
-        child: Container(
-          decoration: BoxDecoration(color: Colors.white),
-          child: Text('People Page'),
-        ),
-      ),
       AccountHomePage(),
       NotificationPage(_notificationBloc),
       SettingPage(
@@ -58,10 +52,6 @@ class _AccountPageState extends State<AccountPage> {
   var _bottomNavigationBarItems = [
     BottomNavigationBarItem(
       icon: Icon(Icons.message),
-      title: new Text(''),
-    ),
-    BottomNavigationBarItem(
-      icon: Icon(Icons.people),
       title: new Text(''),
     ),
     BottomNavigationBarItem(
