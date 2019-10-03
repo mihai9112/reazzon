@@ -12,29 +12,15 @@ import 'package:reazzon/src/models/user.dart';
 import 'message_page.dart';
 
 class ChatPage extends StatefulWidget {
+  final ChatBloc chatBloc;
+
+  ChatPage(this.chatBloc);
+
   @override
   _ChatPageState createState() => _ChatPageState();
 }
 
 class _ChatPageState extends State<ChatPage> {
-  ChatBloc chatBloc;
-  FireBaseChatRepository fireBaseRepo;
-
-  @override
-  void didChangeDependencies() {
-    fireBaseRepo = FireBaseChatRepository();
-
-    chatBloc = ChatBloc(chatRepository: fireBaseRepo);
-
-    super.didChangeDependencies();
-  }
-
-  @override
-  void dispose() {
-    this.chatBloc.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,7 +33,7 @@ class _ChatPageState extends State<ChatPage> {
       body: Container(
         padding: EdgeInsets.symmetric(vertical: 0, horizontal: 12.0),
         child: StreamBuilder(
-          stream: chatBloc.stream,
+          stream: this.widget.chatBloc.stream,
           builder: (context, AsyncSnapshot snapshot) {
             if (snapshot.hasData && snapshot.data is ChatsLoaded) {
               ChatsLoaded loadedChats = (snapshot.data as ChatsLoaded);
@@ -87,7 +73,7 @@ class _ChatPageState extends State<ChatPage> {
                 },
               );
             } else if (snapshot.hasData && snapshot.data is ChatsNotLoaded) {
-              chatBloc.dispatch(LoadChatList());
+              this.widget.chatBloc.dispatch(LoadChatList());
             }
             return Center(child: Spinner());
           },

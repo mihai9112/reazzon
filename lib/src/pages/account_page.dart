@@ -5,7 +5,9 @@ import 'package:reazzon/src/blocs/account_page_bloc.dart';
 import 'package:reazzon/src/blocs/application_bloc.dart';
 import 'package:reazzon/src/blocs/bloc_provider.dart';
 import 'package:reazzon/src/blocs/login_bloc.dart';
+import 'package:reazzon/src/chat/chat_bloc/chat_bloc.dart';
 import 'package:reazzon/src/chat/chat_page.dart';
+import 'package:reazzon/src/chat/repository/chat_repository.dart';
 import 'package:reazzon/src/helpers/spinner.dart';
 import 'package:reazzon/src/notifications/notification_bloc.dart';
 import 'package:reazzon/src/notifications/notification_page.dart';
@@ -30,6 +32,7 @@ class _AccountPageState extends State<AccountPage> {
   LoginBloc _loginBloc;
   AccountPageBloc _accountPageBloc;
   NotificationBloc _notificationBloc;
+  ChatBloc _chatBloc;
 
   static const int DEFAULT_INDEX = 2;
   Widget _selectedWidget;
@@ -37,7 +40,7 @@ class _AccountPageState extends State<AccountPage> {
 
   List<Widget> _widgets() {
     return [
-      ChatPage(),
+      ChatPage(_chatBloc),
       Center(
         child: Container(
           decoration: BoxDecoration(color: Colors.white),
@@ -87,7 +90,8 @@ class _AccountPageState extends State<AccountPage> {
     _notificationBloc = NotificationBloc(
         FirebaseNotificationRepository(this.widget.loggedUserId));
 
-    print(this.widget.loggedUserId);
+    _chatBloc = ChatBloc(chatRepository: FireBaseChatRepository());
+
     _selectedWidget = _widgets()[DEFAULT_INDEX];
 
     super.initState();

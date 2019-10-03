@@ -22,10 +22,7 @@ class Application extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
         home: HomeRouter(),
-
-//        home: ThirdSignUpPage(),
         routes: {
-          '/chat': (BuildContext context) => ChatPage(),
           '/register': (BuildContext context) => SignUpPage(),
         },
       ),
