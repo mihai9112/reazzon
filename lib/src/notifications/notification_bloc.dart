@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:reazzon/src/blocs/bloc_provider.dart';
 import 'package:reazzon/src/chat/base_bloc/base_bloc.dart';
 import 'package:reazzon/src/chat/chat_bloc/chat_entity.dart';
 import 'package:reazzon/src/chat/message_bloc/message_bloc.dart';

@@ -1,15 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:reazzon/src/blocs/bloc_provider.dart';
-import 'package:reazzon/src/helpers/fieldFocus.dart';
 import 'package:reazzon/src/helpers/spinner.dart';
 import 'package:reazzon/src/models/reazzon.dart';
 import 'package:reazzon/src/settings/setting_bloc.dart';
 import 'package:reazzon/src/settings/setting_repository.dart';
-import 'package:rxdart/rxdart.dart';
 
 import 'package:image_picker/image_picker.dart';
 
@@ -882,7 +879,7 @@ class _ReazzonModalBuilder extends StatefulWidget {
   final Function onSubmit;
   final SettingsBloc settingBloc;
 
-  List<Reazzon> initialReazzons = [Reazzon('#Grief')];
+  final List<Reazzon> initialReazzons = [Reazzon('#Grief')];
 
   _ReazzonModalBuilder({
     this.messageOut,

@@ -1,21 +1,16 @@
 import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:reazzon/src/blocs/account_page_bloc.dart';
-import 'package:reazzon/src/blocs/application_bloc.dart';
 import 'package:reazzon/src/blocs/bloc_provider.dart';
 import 'package:reazzon/src/blocs/login_bloc.dart';
 import 'package:reazzon/src/chat/chat_bloc/chat_bloc.dart';
 import 'package:reazzon/src/chat/chat_page.dart';
 import 'package:reazzon/src/chat/repository/chat_repository.dart';
-import 'package:reazzon/src/helpers/spinner.dart';
 import 'package:reazzon/src/notifications/notification_bloc.dart';
 import 'package:reazzon/src/notifications/notification_page.dart';
 import 'package:reazzon/src/notifications/notification_repository.dart';
 import 'package:reazzon/src/pages/account_home_page.dart';
-import 'package:reazzon/src/settings/setting_bloc.dart';
 import 'package:reazzon/src/settings/setting_page.dart';
-import 'package:reazzon/src/settings/setting_repository.dart';
 
 import 'home_page.dart';
 
