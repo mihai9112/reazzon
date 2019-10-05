@@ -2,14 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:reazzon/src/chat/chat_bloc/chat_bloc.dart';
+import 'package:reazzon/src/chat/chat_bloc/chat_entity.dart';
 import 'package:reazzon/src/chat/chat_bloc/chat_events.dart';
 import 'package:reazzon/src/chat/chat_bloc/chat_state.dart';
-import 'package:reazzon/src/chat/chat_bloc/chat_entity.dart';
 import 'package:reazzon/src/chat/message_bloc/message_bloc.dart';
 import 'package:reazzon/src/chat/repository/message_repository.dart';
 import 'package:reazzon/src/helpers/spinner.dart';
-
 import 'package:reazzon/src/models/user.dart';
+
 import 'message_page.dart';
 
 class ChatPage extends StatefulWidget {

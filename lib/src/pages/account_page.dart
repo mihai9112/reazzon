@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:reazzon/src/blocs/account_page_bloc.dart';
 import 'package:reazzon/src/blocs/bloc_provider.dart';
@@ -11,8 +12,6 @@ import 'package:reazzon/src/notifications/notification_page.dart';
 import 'package:reazzon/src/notifications/notification_repository.dart';
 import 'package:reazzon/src/pages/account_home_page.dart';
 import 'package:reazzon/src/settings/setting_page.dart';
-
-import 'home_page.dart';
 
 class AccountPage extends StatefulWidget {
   final String loggedUserId;
@@ -68,7 +67,7 @@ class _AccountPageState extends State<AccountPage> {
   void initState() {
     _currentIndex = DEFAULT_INDEX;
 
-    _accountPageBloc = AccountPageBloc(loggedUserId: this.widget.loggedUserId);
+    _accountPageBloc = AccountPageBloc();
     _accountPageBloc.registerNotification(this.widget.loggedUserId);
 
     _loginBloc = new LoginBloc();

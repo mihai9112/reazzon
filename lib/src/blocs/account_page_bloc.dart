@@ -7,10 +7,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:reazzon/src/blocs/bloc_provider.dart';
 
 class AccountPageBloc extends BlocBase {
-  String loggedUserId;
-
-  AccountPageBloc({this.loggedUserId});
-
   void registerNotification(String currentUserId) {
     final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 

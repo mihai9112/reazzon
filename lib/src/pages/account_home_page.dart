@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:reazzon/src/helpers/spinner.dart';
-
 import 'package:reazzon/src/helpers/filter_icon.dart';
+import 'package:reazzon/src/helpers/spinner.dart';
 import 'package:reazzon/src/pages/filter_page.dart';
 import 'package:reazzon/src/services/user_repository.dart';
 
@@ -92,6 +91,7 @@ class _AccountHomePageState extends State<AccountHomePage> {
         ],
       ),
     );
+    ;
   }
 }
 

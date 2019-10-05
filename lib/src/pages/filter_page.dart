@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:reazzon/src/blocs/bloc_provider.dart';
 import 'package:reazzon/src/blocs/filter_bloc.dart';

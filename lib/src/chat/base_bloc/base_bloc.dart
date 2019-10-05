@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:equatable/equatable.dart';
 import 'package:reazzon/src/blocs/bloc_provider.dart';
-
 import 'package:rxdart/rxdart.dart';
 
 abstract class BlocEvents extends Equatable {}

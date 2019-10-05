@@ -118,17 +118,6 @@ class SettingsBloc extends BlocBase with Validators {
 
   initializeReazzon(List<Reazzon> reazzons) {
     List<Reazzon> _list = Reazzon.allReazzons();
-//
-//    reazzons.forEach((reazzon) {
-//      reazzons.forEach((r) {
-//        if (r == reazzon) {
-//          if (canAddReazzon && !reazzon.isSelected) {
-//            reazzon.setSelection();
-////            _list.where((_l) => _l == r).first.setSelection();
-//          }
-//        }
-//      });
-//    });
 
     reazzons.forEach((reazzon) {
       for (int i = 0; i < _list.length; i++) {

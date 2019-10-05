@@ -7,6 +7,7 @@ import 'package:reazzon/src/blocs/login_bloc.dart';
 import 'package:reazzon/src/helpers/fieldFocus.dart';
 import 'package:flutter/widgets.dart';
 import 'package:reazzon/src/helpers/spinner.dart';
+import 'package:reazzon/src/models/user.dart';
 import 'package:reazzon/src/pages/account_page.dart';
 import 'package:reazzon/src/pages/forgotten_password_page.dart';
 import 'package:reazzon/src/pages/signup_second_page.dart';

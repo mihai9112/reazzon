@@ -1,10 +1,9 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:reazzon/src/chat/base_bloc/base_bloc.dart';
 import 'package:reazzon/src/chat/message_bloc/message_entity.dart';
 import 'package:reazzon/src/chat/repository/message_repository.dart';
-
-import 'package:flutter/material.dart';
 
 import 'message_events.dart';
 import 'message_state.dart';
