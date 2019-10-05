@@ -1,4 +1,3 @@
-import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:reazzon/src/blocs/bloc_provider.dart';

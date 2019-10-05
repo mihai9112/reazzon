@@ -92,7 +92,6 @@ class _AccountHomePageState extends State<AccountHomePage> {
         ],
       ),
     );
-    ;
   }
 }
 
