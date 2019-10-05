@@ -45,6 +45,7 @@ class _AccountPageState extends State<AccountPage> {
       NotificationPage(_notificationBloc),
       SettingPage(
         loggedUserId: this.widget.loggedUserId,
+        loginBloc: _loginBloc,
       ),
     ];
   }
@@ -99,7 +100,6 @@ class _AccountPageState extends State<AccountPage> {
     return WillPopScope(
       onWillPop: () => Future.value(false),
       child: Scaffold(
-        drawer: _drawer(),
         body: BlocProvider<AccountPageBloc>(
           bloc: _accountPageBloc,
           child: _selectedWidget,
@@ -120,33 +120,4 @@ class _AccountPageState extends State<AccountPage> {
       ),
     );
   }
-
-  Drawer _drawer() => Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            UserAccountsDrawerHeader(
-              accountName: new Text('TEST'),
-              accountEmail: new Text('test@gmail.com'),
-              currentAccountPicture: new CircleAvatar(
-                backgroundImage: new NetworkImage("http://i.pravatar.cc/300"),
-              ),
-              decoration: BoxDecoration(color: Colors.blueAccent),
-            ),
-            ListTile(
-              title: Text('Sign out'),
-              onTap: () {
-                _loginBloc.signOut().then((_) {
-                  var homeRoute = MaterialPageRoute(
-                      builder: (BuildContext context) => HomePage());
-                  Navigator.of(context)
-                      .pushAndRemoveUntil(homeRoute, ModalRoute.withName('/'));
-                }).catchError((onError) {
-                  print(onError);
-                });
-              },
-            )
-          ],
-        ),
-      );
 }

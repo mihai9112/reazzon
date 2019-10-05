@@ -154,12 +154,13 @@ class _MessagePageState extends State<MessagePage> with WidgetsBindingObserver {
                     ),
                     InkWell(
                       onTap: () {
-                        messageBloc.sendMessage(MessageEntity(
-                          from: this.messageBloc.messageRepo.loggedUserId,
-                          to: this.widget.data.userId,
-                          content: this.messageController.text,
-                          time: DateTime.now(),
-                        ));
+                        if (this.messageController.text.trim().length > 0)
+                          messageBloc.sendMessage(MessageEntity(
+                            from: this.messageBloc.messageRepo.loggedUserId,
+                            to: this.widget.data.userId,
+                            content: this.messageController.text,
+                            time: DateTime.now(),
+                          ));
 
                         this.messageController.text = '';
                       },

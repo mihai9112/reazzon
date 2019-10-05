@@ -57,7 +57,7 @@ class NotificationModel {
 
   static NotificationModel fromSnapshot(DocumentSnapshot snap) {
     return NotificationModel(
-      content: snap.data['content'] as String,
+      content: snap.data['content'] as String ?? '',
       from: snap.data['from'] ?? '',
       fromId: snap.data['fromId'] ?? '',
       imageURL: snap.data['imageURL'] ?? '',

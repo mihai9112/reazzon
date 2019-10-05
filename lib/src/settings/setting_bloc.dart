@@ -118,16 +118,24 @@ class SettingsBloc extends BlocBase with Validators {
 
   initializeReazzon(List<Reazzon> reazzons) {
     List<Reazzon> _list = Reazzon.allReazzons();
+//
+//    reazzons.forEach((reazzon) {
+//      reazzons.forEach((r) {
+//        if (r == reazzon) {
+//          if (canAddReazzon && !reazzon.isSelected) {
+//            reazzon.setSelection();
+////            _list.where((_l) => _l == r).first.setSelection();
+//          }
+//        }
+//      });
+//    });
 
     reazzons.forEach((reazzon) {
-      reazzons.forEach((r) {
-        if (r == reazzon) {
-          if (canAddReazzon && !reazzon.isSelected) {
-            reazzon.setSelection();
-//            _list.where((_l) => _l == r).first.setSelection();
-          }
+      for (int i = 0; i < _list.length; i++) {
+        if (reazzon.value.compareTo(_list[i].value) == 0) {
+          _list[i].setSelection();
         }
-      });
+      }
     });
 
     inAvailableReazzon(_list);
@@ -185,5 +193,9 @@ class SettingsBloc extends BlocBase with Validators {
 
     return await settingRepository
         .changeReazzons(selected.map((r) => r.value).toList());
+  }
+
+  void removeToken() async {
+    settingRepository.removePushToken();
   }
 }

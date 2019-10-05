@@ -89,10 +89,12 @@ class UserRepository implements IUserRepository {
 
     String ownId = await User.retrieveUserId();
 
+    print(ownId);
+
     yield* usersCollection.snapshots().map((snapshot) {
       return snapshot.documents
           .map((doc) => AccountHomeEntity.fromSnapshot(doc))
-          .skipWhile((accountEntity) => accountEntity.userId == ownId)
+          .where((accountEntity) => accountEntity.userId != ownId)
           .toList();
     });
   }
@@ -105,7 +107,7 @@ class UserRepository implements IUserRepository {
     yield* usersCollection.snapshots().map((snapshot) {
       return snapshot.documents
           .map((doc) => AccountHomeEntity.fromSnapshot(doc))
-          .skipWhile((accountEntity) => accountEntity.userId == ownId)
+          .where((accountEntity) => accountEntity.userId != ownId)
           .where((accountHomeEntity) {
         for (String reazzon in reazzons) {
           if (accountHomeEntity.reazzons.contains(reazzon)) {

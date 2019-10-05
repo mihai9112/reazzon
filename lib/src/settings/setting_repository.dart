@@ -18,6 +18,8 @@ abstract class SettingRepository {
   Future<bool> changeUserName(String newUserName);
   Future<bool> changeReazzons(List<String> reazzons);
   Stream<SettingUserModel> getUserDetails();
+
+  void removePushToken();
 }
 
 class FireBaseSettingRepository extends SettingRepository {
@@ -184,5 +186,14 @@ class FireBaseSettingRepository extends SettingRepository {
           .toList()
           .first;
     });
+  }
+
+  @override
+  void removePushToken() {
+    Firestore.instance
+        .collection('Users')
+        .document(userId)
+        .updateData({'pushToken': FieldValue.delete()});
+    return null;
   }
 }

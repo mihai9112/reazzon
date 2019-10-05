@@ -4,9 +4,11 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:reazzon/src/blocs/bloc_provider.dart';
+import 'package:reazzon/src/blocs/login_bloc.dart';
 import 'package:reazzon/src/helpers/fieldFocus.dart';
 import 'package:reazzon/src/helpers/spinner.dart';
 import 'package:reazzon/src/models/reazzon.dart';
+import 'package:reazzon/src/pages/home_page.dart';
 import 'package:reazzon/src/settings/setting_bloc.dart';
 import 'package:reazzon/src/settings/setting_repository.dart';
 import 'package:rxdart/rxdart.dart';
@@ -15,8 +17,12 @@ import 'package:image_picker/image_picker.dart';
 
 class SettingPage extends StatefulWidget {
   final String loggedUserId;
+  final LoginBloc loginBloc;
 
-  SettingPage({this.loggedUserId});
+  SettingPage({
+    this.loggedUserId,
+    this.loginBloc,
+  });
   @override
   _SettingPageState createState() => _SettingPageState();
 }
@@ -251,6 +257,29 @@ class _SettingPageState extends State<SettingPage> {
                   SizedBox(height: 16),
                   _reazzonsBuilder(user.reazzons),
                   SizedBox(height: 16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: InkWell(
+                      onTap: () {
+                        _signOut();
+                      },
+                      child: Material(
+                        elevation: 2,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 12.0, horizontal: 16),
+                          child: Text(
+                            'Sign Out',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 16),
                 ],
               );
             } else {
@@ -262,9 +291,19 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  Widget _reazzonsBuilder(List<String> reazzons) {
-    settingBloc.initializeReazzon(reazzons.map((r) => Reazzon(r)).toList());
+  _signOut() async {
+    settingBloc.removeToken();
+    this.widget.loginBloc.signOut().then((_) {
+      var homeRoute =
+          MaterialPageRoute(builder: (BuildContext context) => HomePage());
+      Navigator.of(context)
+          .pushAndRemoveUntil(homeRoute, ModalRoute.withName('/'));
+    }).catchError((onError) {
+      print(onError);
+    });
+  }
 
+  Widget _reazzonsBuilder(List<String> reazzons) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Material(
@@ -314,6 +353,8 @@ class _SettingPageState extends State<SettingPage> {
                               outAvailableReazzons:
                                   settingBloc.outAvailableReazzons,
                               settingBloc: settingBloc,
+                              initialData:
+                                  reazzons.map((r) => Reazzon(r)).toList(),
                             ),
                           ));
                 },
@@ -517,6 +558,13 @@ class _ModalBuilder extends StatefulWidget {
 
 class __ModalBuilderState extends State<_ModalBuilder> {
   bool isLoading = false;
+  TextEditingController controller = TextEditingController();
+
+  @override
+  void initState() {
+    controller.text = this.widget.initialData;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -530,9 +578,9 @@ class __ModalBuilderState extends State<_ModalBuilder> {
                   children: <Widget>[
                     Material(
                       child: TextField(
+                        controller: controller,
                         style: TextStyle(fontSize: 15.0),
                         decoration: InputDecoration(
-                          hintText: widget.initialData,
                           hintStyle: TextStyle(color: Colors.black87),
                           errorStyle: TextStyle(fontSize: 12.0),
                           errorText: snapshot.error,
@@ -881,8 +929,7 @@ class _ReazzonModalBuilder extends StatefulWidget {
   final Function(List<Reazzon>) inAvailableReazzons;
   final Function onSubmit;
   final SettingsBloc settingBloc;
-
-  List<Reazzon> initialReazzons = [Reazzon('#Grief')];
+  final List<Reazzon> initialData;
 
   _ReazzonModalBuilder({
     this.messageOut,
@@ -890,6 +937,7 @@ class _ReazzonModalBuilder extends StatefulWidget {
     this.outAvailableReazzons,
     this.inAvailableReazzons,
     this.onSubmit,
+    this.initialData,
   });
 
   @override
@@ -900,6 +948,7 @@ class __ReazzonModalBuilderState extends State<_ReazzonModalBuilder> {
   bool isLoading;
   @override
   void initState() {
+    this.widget.settingBloc.initializeReazzon(this.widget.initialData);
     super.initState();
   }
 
