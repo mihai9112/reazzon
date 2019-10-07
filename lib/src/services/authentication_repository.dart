@@ -49,7 +49,7 @@ class AuthenticationRepository implements IAuthenticationRepository {
 
   @override
   Future<FirebaseUser> signInWithFacebook() async {
-    final facebookUser = await _facebookLogin.logInWithReadPermissions(['email']);
+    final facebookUser = await _facebookLogin.logIn(['email']);
 
     switch (facebookUser.status) {
       case FacebookLoginStatus.loggedIn :
