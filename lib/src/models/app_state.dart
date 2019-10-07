@@ -6,18 +6,16 @@ class AppState {
 
   User _user;
   User get user => _user;
-  
-  Function(User) get setUser =>  _userController.sink.add;
 
-  AppState()
-  {
-    _userController.listen((onData){
+  Function(User) get setUser => _userController.add;
+
+  AppState() {
+    _userController.listen((onData) {
       _user = onData;
     });
   }
 
-  void dispose()
-  {
+  void dispose() {
     _userController.close();
   }
 }
