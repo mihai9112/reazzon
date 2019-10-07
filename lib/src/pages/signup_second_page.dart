@@ -344,6 +344,8 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
             return Spinner();
           }
         }
+
+        return continueButton(signUpBloc, appBloc);
       },
     );
   }

@@ -95,30 +95,6 @@ class _ChatPageState extends State<ChatPage> {
   }
 }
 
-ThemeData _getTheme(int i) {
-  if (i == 1) {
-    return ThemeData.dark().copyWith(
-      textTheme: TextTheme(
-        title: TextStyle(
-          fontFamily: 'reazzon',
-          fontSize: 16,
-          color: Color(0XFFCCCCCC),
-        ),
-      ),
-    );
-  } else {
-    return ThemeData.light().copyWith(
-      textTheme: TextTheme(
-        title: TextStyle(
-          fontFamily: 'reazzon',
-          fontSize: 16,
-          color: Color(0XFF575B5E),
-        ),
-      ),
-    );
-  }
-}
-
 class ChatItem extends StatelessWidget {
   final ChatEntity chatItem;
 

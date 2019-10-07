@@ -164,6 +164,8 @@ class _ForgottenPasswordPageState extends State<ForgottenPasswordPage> {
             return Spinner();
           }
         }
+
+        return submitButton(loginBloc);
       },
     );
   }
