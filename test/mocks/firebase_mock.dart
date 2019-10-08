@@ -6,8 +6,12 @@ import 'package:mockito/mockito.dart';
 class FirebaseAuthMock extends Mock implements FirebaseAuth{}
 class GoogleSignInMock extends Mock implements GoogleSignIn{}
 class FacebookSignInMock extends Mock implements FacebookLogin{}
-class AuthCredentialMock extends Mock implements AuthCredential{}
 class GoogleSignInAccountMock extends Mock implements GoogleSignInAccount{}
+
+class FacebookAccessTokenMock extends Mock implements FacebookAccessToken{
+  @override 
+  String get token => 'mock_facebook_token';
+}
 
 class GoogleSignInAuthenticationMock extends Mock implements GoogleSignInAuthentication{
   @override
@@ -27,9 +31,14 @@ class FirebaseUserMock extends Mock implements FirebaseUser{
   String get photoUrl => 'http://www.adityag.me';
 }
 
+class AuthResultMock extends Mock implements AuthResult {
+  @override
+  FirebaseUser get user => FirebaseUserMock();
+}
+
 class FacebookLoginResultMock extends Mock implements FacebookLoginResult {
   @override
   FacebookLoginStatus get status => FacebookLoginStatus.loggedIn;
   @override
-  FacebookAccessToken get accessToken => FacebookAccessToken.fromMap({ 'token': 'mock_access_token' });
+  FacebookAccessToken get accessToken => FacebookAccessTokenMock();
 }
