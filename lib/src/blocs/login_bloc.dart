@@ -2,15 +2,19 @@ import 'dart:async';
 import 'package:reazzon/src/blocs/bloc_provider.dart';
 import 'package:reazzon/src/domain/validators.dart';
 import 'package:reazzon/src/models/user.dart';
-import 'package:reazzon/src/services/authentication_repository.dart';
+import 'package:reazzon/src/repositories/authentication_repository.dart';
 import 'package:rxdart/rxdart.dart';
 
 class LoginBloc with Validators implements BlocBase {
+  final AuthenticationRepository _authenticationRepository;
   final _emailController = BehaviorSubject<String>();
   final _passwordController = BehaviorSubject<String>();
   final _messagesController = BehaviorSubject<String>();
   final _userController = BehaviorSubject<User>();
   final _successForgottenMessagesController = BehaviorSubject<String>();
+
+  LoginBloc(this._authenticationRepository)
+    : assert(_authenticationRepository != null);
 
   // Add data to stream
   Stream<String> get email => _emailController.stream.transform(validateEmail);
@@ -38,7 +42,7 @@ class LoginBloc with Validators implements BlocBase {
     var result = false;
 
     try {
-      var user = await authenticationRepository.signIn(
+      var user = await _authenticationRepository.signInWithCredentials(
           _emailController.value, _passwordController.value);
 
       User.storeUserId(user.uid);
@@ -54,7 +58,7 @@ class LoginBloc with Validators implements BlocBase {
   Future<bool> registerWithGoogle() async {
     var result = false;
 
-    await authenticationRepository.signInWithGoogle().then((user) {
+    await _authenticationRepository.signInWithGoogle().then((user) {
       User.storeUserId(user.uid);
       _inUser(new User(user));
       result = true;
@@ -68,7 +72,7 @@ class LoginBloc with Validators implements BlocBase {
   Future<bool> registerWithFacebook() async {
     var result = false;
 
-    await authenticationRepository.signInWithFacebook().then((user) {
+    await _authenticationRepository.signInWithFacebook().then((user) {
       User.storeUserId(user.uid);
       _inUser(new User(user));
       result = true;
@@ -82,7 +86,7 @@ class LoginBloc with Validators implements BlocBase {
   Future<bool> forgottenPassword() async {
     var result = false;
 
-    await authenticationRepository
+    await _authenticationRepository
         .forgottenPassword(_emailController.value)
         .then((_) {
       _inSuccessForgottenMessages(
@@ -99,7 +103,7 @@ class LoginBloc with Validators implements BlocBase {
 
   Future<void> signOut() async {
     User.deleteUserId();
-    return await authenticationRepository.signOut();
+    return await _authenticationRepository.signOut();
   }
 
   @override

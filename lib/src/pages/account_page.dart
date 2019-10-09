@@ -70,7 +70,7 @@ class _AccountPageState extends State<AccountPage> {
     _accountPageBloc = AccountPageBloc();
     _accountPageBloc.registerNotification(this.widget.loggedUserId);
 
-    _loginBloc = new LoginBloc();
+    _loginBloc = BlocProvider.of<LoginBloc>(context);
 
     _notificationBloc = NotificationBloc(
         FirebaseNotificationRepository(this.widget.loggedUserId));

@@ -1,18 +1,18 @@
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:reazzon/src/repositories/user_repository.dart';
+import 'package:reazzon/src/repositories/authentication_repository.dart';
+import 'package:matcher/matcher.dart';
 
 import '../mocks/firebase_mock.dart';
 
 void main() {
-  group('UserRepository', () {
+  group('AuthenticationRepository', () {
     FirebaseAuthMock firebaseAuthMock = FirebaseAuthMock();
     GoogleSignInMock googleSignInMock = GoogleSignInMock();
     FacebookSignInMock facebookSignInMock = FacebookSignInMock();
 
-    UserRepository userRepository = UserRepository(
+    AuthenticationRepository userRepository = AuthenticationRepository(
       firebaseAuth: firebaseAuthMock,
       googleSignin: googleSignInMock,
       facebookSignIn: facebookSignInMock
@@ -25,6 +25,10 @@ void main() {
     final FirebaseUserMock firebaseUserMock = FirebaseUserMock();
     final FacebookLoginResultMock facebookLoginResultMock = 
       FacebookLoginResultMock();
+    final FacebookLoginResultErrorMock facebookLoginResultErrorMock =
+      FacebookLoginResultErrorMock();
+    final FacebookLoginResultCancelledByUserMock facebookLoginResultCancelledByUserMock = 
+      FacebookLoginResultCancelledByUserMock();
     final AuthResultMock authResultMock = AuthResultMock();
 
     test('signInWithGoogle returns a Firebase user', () async {
@@ -83,6 +87,20 @@ void main() {
 
       final returnedUser =  await userRepository.signInWithFacebook();
       expect(returnedUser.email, firebaseUserMock.email);
+    });
+
+    test('signinWithFacebook returns FacebookLoginStatus of Error', () async {
+      when(facebookSignInMock.logIn(['email']))
+        .thenAnswer((_) => Future<FacebookLoginResultErrorMock>.value(facebookLoginResultErrorMock));
+
+      expect(() async => await userRepository.signInWithFacebook(), throwsA(TypeMatcher<StateError>()));
+    });
+
+    test('signInWithFacebook returns FacebookLoginStatus of CancelledByUser', () async {
+      when(facebookSignInMock.logIn(['email']))
+        .thenAnswer((_) => Future<FacebookLoginResultCancelledByUserMock>.value(facebookLoginResultCancelledByUserMock));
+
+      expect(() async => await userRepository.signInWithFacebook(), throwsA(TypeMatcher<StateError>()));
     });
   });
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:reazzon/src/blocs/bloc_provider.dart';
 import 'package:reazzon/src/blocs/login_bloc.dart';
 import 'package:reazzon/src/helpers/fieldFocus.dart';
 import 'package:reazzon/src/helpers/spinner.dart';
@@ -17,7 +18,7 @@ class _ForgottenPasswordPageState extends State<ForgottenPasswordPage> {
   @override
   void initState(){
     super.initState();
-    _loginBloc = new LoginBloc();
+    _loginBloc = BlocProvider.of<LoginBloc>(context);
   }
 
   @override

@@ -3,11 +3,12 @@ import 'package:reazzon/src/blocs/bloc_provider.dart';
 import 'package:reazzon/src/domain/validators.dart';
 import 'package:reazzon/src/models/reazzon.dart';
 import 'package:reazzon/src/models/user.dart';
-import 'package:reazzon/src/services/authentication_repository.dart';
+import 'package:reazzon/src/repositories/authentication_repository.dart';
 import 'package:reazzon/src/services/user_repository.dart';
 import 'package:rxdart/rxdart.dart';
 
 class SignUpBloc with Validators implements BlocBase {
+  final AuthenticationRepository _authenticationRepository;
   final _emailController = BehaviorSubject<String>();
   final _passwordController = BehaviorSubject<String>();
   final _confirmPasswordController = BehaviorSubject<String>();
@@ -68,7 +69,8 @@ class SignUpBloc with Validators implements BlocBase {
   Function(User) get _inUser => _userController.sink.add;
   Stream<User> get outUser => _userController.stream;
 
-  SignUpBloc() {
+  SignUpBloc(this._authenticationRepository)
+    :assert(_authenticationRepository != null) {
     _availableReazzonsController.stream.listen((onData) {
       if (onData.where((reazzon) => reazzon.isSelected == true).length > 3) {
         _inReazzonMessage("No more then 3 reazzon to be selected");
@@ -87,8 +89,8 @@ class SignUpBloc with Validators implements BlocBase {
     var result = false;
     User reazzonUser;
 
-    await authenticationRepository
-        .signUp(_emailController.value, _passwordController.value)
+    await _authenticationRepository
+        .signUpWithCredentials(_emailController.value, _passwordController.value)
         .then((onValue) {
       reazzonUser = new User(onValue);
       User.storeUserId(reazzonUser.userId);

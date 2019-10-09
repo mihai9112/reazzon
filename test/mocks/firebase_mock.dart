@@ -42,3 +42,15 @@ class FacebookLoginResultMock extends Mock implements FacebookLoginResult {
   @override
   FacebookAccessToken get accessToken => FacebookAccessTokenMock();
 }
+
+class FacebookLoginResultErrorMock extends Mock implements FacebookLoginResult {
+  @override
+  FacebookLoginStatus get status => FacebookLoginStatus.error;
+  @override
+  String get errorMessage => 'error message';
+}
+
+class FacebookLoginResultCancelledByUserMock extends Mock implements FacebookLoginResult {
+  @override
+  FacebookLoginStatus get status => FacebookLoginStatus.cancelledByUser;
+}

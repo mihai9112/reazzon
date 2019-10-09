@@ -16,7 +16,7 @@ class _ThirdSignUpPageState extends State<ThirdSignUpPage> {
   @override
   void initState() {
     super.initState();
-    _signUpBloc = new SignUpBloc();
+    _signUpBloc = BlocProvider.of<SignUpBloc>(context);
     _signUpBloc.loadReazzons();
   }
 

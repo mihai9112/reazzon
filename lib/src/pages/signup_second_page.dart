@@ -20,7 +20,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
   void initState()
   {
     super.initState();
-    _signUpBloc = new SignUpBloc();
+    _signUpBloc = BlocProvider.of<SignUpBloc>(context);
   }
 
   @override
