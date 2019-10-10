@@ -1,4 +1,48 @@
 import 'package:flutter/material.dart';
-import 'package:reazzon/application.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:reazzon/src/authentication/authentication.dart';
+import 'package:reazzon/src/pages/home_page.dart';
+import 'package:reazzon/src/repositories/authentication_repository.dart';
 
-void main() => runApp(new Application());
+import 'src/pages/account_page.dart';
+
+void main() async {
+  final AuthenticationRepository _authenticationRepository =
+    AuthenticationRepository();
+
+  runApp(MultiBlocProvider(
+    providers: [
+      BlocProvider<AuthenticationBloc>(
+        builder: (context) => AuthenticationBloc(
+          authenticationRepository: _authenticationRepository
+        )..dispatch(AppStarted()),
+      )
+    ],
+    child: Reazzon(),
+  ));
+}
+
+class Reazzon extends StatelessWidget {
+
+  final ThemeData theme = ThemeData(
+    primarySwatch: Colors.blue,
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Reazzon',
+      theme: theme,
+      debugShowCheckedModeBanner: false,
+      home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+        builder: (context, state) {
+          if(state is AppStarted){
+            return HomePage();
+          }
+          return AccountPage();
+        },
+      ),
+    );
+  }
+
+}

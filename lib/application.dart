@@ -5,6 +5,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:reazzon/src/blocs/application_bloc.dart';
 import 'package:reazzon/src/blocs/bloc_provider.dart';
 import 'package:reazzon/src/blocs/login_bloc.dart';
+import 'package:reazzon/src/blocs/signup_bloc.dart';
 import 'package:reazzon/src/pages/home_%20router.dart';
 import 'package:reazzon/src/pages/signup_page.dart';
 import 'package:reazzon/src/repositories/authentication_repository.dart';
@@ -22,24 +23,28 @@ class Application extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
+    AuthenticationRepository _authenticationRepository = AuthenticationRepository(
+          facebookSignIn: _facebookLogin, 
+          firebaseAuth: _firebaseAuth, 
+          googleSignin: _googleSignIn);
+          
     return BlocProvider<ApplicationBloc>(
       bloc: ApplicationBloc(),
       child: BlocProvider<LoginBloc>(
-        bloc: LoginBloc(AuthenticationRepository(
-          facebookSignIn: _facebookLogin, 
-          firebaseAuth: _firebaseAuth, 
-          googleSignin: _googleSignIn)),
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'Reazzon',
-          theme: ThemeData(
-            primarySwatch: Colors.blue,
-          ),
-          home: HomeRouter(),
-          routes: {
-            '/register': (BuildContext context) => SignUpPage(),
+        bloc: LoginBloc(_authenticationRepository),
+        child: BlocProvider<SignUpBloc>(
+          bloc: SignUpBloc(_authenticationRepository),
+          child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Reazzon',
+            theme: ThemeData(
+              primarySwatch: Colors.blue,
+            ),
+            home: HomeRouter(),
+            routes: {
+              '/register': (BuildContext context) => SignUpPage(),
           },
-        )
+        ))
       )
     );
   }
