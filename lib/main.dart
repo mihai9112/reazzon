@@ -18,11 +18,11 @@ void main() async {
         )..dispatch(AppStarted()),
       )
     ],
-    child: Reazzon(),
+    child: ReazzonMainWidget(),
   ));
 }
 
-class Reazzon extends StatelessWidget {
+class ReazzonMainWidget extends StatelessWidget {
 
   final ThemeData theme = ThemeData(
     primarySwatch: Colors.blue,
@@ -36,7 +36,7 @@ class Reazzon extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
         builder: (context, state) {
-          if(state is AppStarted){
+          if(state is Unauthenticated || state is Uninitialized){
             return HomePage();
           }
           return AccountPage();
