@@ -1,7 +1,10 @@
-import 'package:reazzon/src/blocs/bloc_provider.dart';
-import 'package:reazzon/src/models/app_state.dart';
 
-class ApplicationBloc implements BlocBase {
+import 'dart:async';
+
+import 'package:reazzon/src/models/app_state.dart';
+import 'package:bloc/bloc.dart';
+
+class ApplicationBloc extends Bloc {
   AppState _appState;
 
   AppState get appState => _appState;
@@ -11,5 +14,12 @@ class ApplicationBloc implements BlocBase {
   }
 
   @override
-  void dispose() {}
+  // TODO: implement initialState
+  get initialState => null;
+
+  @override
+  Stream mapEventToState(event) {
+    // TODO: implement mapEventToState
+    return null;
+  }
 }

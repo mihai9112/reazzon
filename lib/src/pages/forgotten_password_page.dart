@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:reazzon/src/blocs/bloc_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reazzon/src/blocs/login_bloc.dart';
 import 'package:reazzon/src/helpers/fieldFocus.dart';
 import 'package:reazzon/src/helpers/spinner.dart';

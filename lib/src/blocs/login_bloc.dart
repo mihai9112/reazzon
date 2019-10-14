@@ -1,11 +1,12 @@
 import 'dart:async';
+import 'package:reazzon/src/authentication/authentication.dart';
 import 'package:reazzon/src/authentication/authentication_repository.dart';
-import 'package:reazzon/src/blocs/bloc_provider.dart';
 import 'package:reazzon/src/domain/validators.dart';
 import 'package:reazzon/src/models/user.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:bloc/bloc.dart';
 
-class LoginBloc with Validators implements BlocBase {
+class LoginBloc extends Bloc<AuthenticationEvent, AuthenticationState> with Validators  {
   final AuthenticationRepository _authenticationRepository;
   final _emailController = BehaviorSubject<String>();
   final _passwordController = BehaviorSubject<String>();
@@ -113,5 +114,16 @@ class LoginBloc with Validators implements BlocBase {
     _messagesController.close();
     _userController.close();
     _successForgottenMessagesController.close();
+    super.dispose();
+  }
+
+  @override
+  // TODO: implement initialState
+  AuthenticationState get initialState => null;
+
+  @override
+  Stream<AuthenticationState> mapEventToState(AuthenticationEvent event) {
+    // TODO: implement mapEventToState
+    return null;
   }
 }

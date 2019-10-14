@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reazzon/src/blocs/account_page_bloc.dart';
-import 'package:reazzon/src/blocs/bloc_provider.dart';
 import 'package:reazzon/src/blocs/login_bloc.dart';
 import 'package:reazzon/src/chat/chat_bloc/chat_bloc.dart';
 import 'package:reazzon/src/chat/chat_page.dart';
@@ -95,7 +95,6 @@ class _AccountPageState extends State<AccountPage> {
       onWillPop: () => Future.value(false),
       child: Scaffold(
         body: BlocProvider<AccountPageBloc>(
-          bloc: _accountPageBloc,
           child: _selectedWidget,
         ),
         bottomNavigationBar: BottomNavigationBar(

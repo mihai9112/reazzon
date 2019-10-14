@@ -13,7 +13,7 @@ void main() {
 
   setUp(() {
     _authenticationRepositoryMock = AuthenticationRepositoryMock();
-    _authenticationBloc = AuthenticationBloc(authenticationRepository: _authenticationRepositoryMock);
+    _authenticationBloc = AuthenticationBloc(_authenticationRepositoryMock);
   });
 
   group('AppStarted', () {

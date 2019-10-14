@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
 
 import 'authentication.dart';
 import 'authentication_event.dart';
@@ -11,7 +10,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 
   AuthenticationRepository _authenticationRepository;
 
-  AuthenticationBloc({@required AuthenticationRepository authenticationRepository})
+  AuthenticationBloc(AuthenticationRepository authenticationRepository)
       : assert(authenticationRepository != null),
         _authenticationRepository = authenticationRepository;
 
