@@ -36,7 +36,7 @@ class ReazzonMainWidget extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
         builder: (context, state) {
-          if(state is Unauthenticated || state is Uninitialized){
+          if(state is Unauthenticated){
             return HomePage();
           }
           return AccountPage();
@@ -44,5 +44,4 @@ class ReazzonMainWidget extends StatelessWidget {
       ),
     );
   }
-
 }

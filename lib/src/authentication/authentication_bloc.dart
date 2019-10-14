@@ -9,7 +9,7 @@ import 'authentication_event.dart';
 
 class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
 
-  final AuthenticationRepository _authenticationRepository;
+  AuthenticationRepository _authenticationRepository;
 
   AuthenticationBloc({@required AuthenticationRepository authenticationRepository})
       : assert(authenticationRepository != null),
@@ -21,11 +21,11 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
   @override
   Stream<AuthenticationState> mapEventToState(AuthenticationEvent event) async* {
     if(event is AppStarted) {
-      yield* mapAppStartedToState();
+      yield* _mapAppStartedToState();
     }
   }
 
-  Stream<AuthenticationState> mapAppStartedToState() async* {
+  Stream<AuthenticationState> _mapAppStartedToState() async* {
     try {
       final isSignedIn = await _authenticationRepository.isSignedIn();
       if(isSignedIn){
@@ -35,6 +35,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
     }
     catch(_, stacktrace) {
       print(stacktrace);
+      yield Unauthenticated();
     }
   }
 }

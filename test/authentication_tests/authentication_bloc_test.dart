@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:reazzon/src/authentication/authentication.dart';
 
-import '../mocks/authentication_repository_mock.dart';
+import 'authentication_mock.dart';
 
 void main() {
 
