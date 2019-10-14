@@ -13,6 +13,9 @@ import 'authentication_mock.dart';
 
 
 void main() async {
+  AuthenticationRepositoryMock _authenticationRepositoryMock;
+  AuthenticationBlocMock _authenticationBlocMock;
+
   Widget makeTestableWidget({AuthenticationBloc bloc}) {
     
     return BlocProvider(
@@ -21,10 +24,13 @@ void main() async {
     );
   }
 
+  setUp((){
+    _authenticationRepositoryMock = AuthenticationRepositoryMock();
+    _authenticationBlocMock = AuthenticationBlocMock(authenticationRepository: _authenticationRepositoryMock);
+  });
+
   testWidgets('Returns HomePage when Unauthenticated', (WidgetTester tester) async {
     //Arrange
-    final _authenticationRepositoryMock = AuthenticationRepositoryMock();
-    final _authenticationBlocMock = AuthenticationBlocMock(authenticationRepository: _authenticationRepositoryMock);
     when(_authenticationRepositoryMock.isSignedIn())
         .thenAnswer((_) => Future.value(false));
     when(_authenticationBlocMock.currentState)
@@ -39,8 +45,6 @@ void main() async {
 
   testWidgets('Return AccountPage when Authenticated', (WidgetTester tester) async {
     //Arrange
-    final _authenticationRepositoryMock = AuthenticationRepositoryMock();
-    final _authenticationBlocMock = AuthenticationBlocMock(authenticationRepository: _authenticationRepositoryMock);
     when(_authenticationRepositoryMock.isSignedIn())
         .thenAnswer((_) => Future.value(true));
     when(_authenticationBlocMock.currentState)
