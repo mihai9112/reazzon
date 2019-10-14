@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reazzon/src/authentication/authentication.dart';
 import 'package:reazzon/src/pages/home_page.dart';
-import 'package:reazzon/src/repositories/authentication_repository.dart';
 
+import 'src/authentication/authentication_repository.dart';
 import 'src/pages/account_page.dart';
 
 void main() async {

@@ -1,9 +1,9 @@
 import 'dart:async';
+import 'package:reazzon/src/authentication/authentication_repository.dart';
 import 'package:reazzon/src/blocs/bloc_provider.dart';
 import 'package:reazzon/src/domain/validators.dart';
 import 'package:reazzon/src/models/reazzon.dart';
 import 'package:reazzon/src/models/user.dart';
-import 'package:reazzon/src/repositories/authentication_repository.dart';
 import 'package:reazzon/src/services/user_repository.dart';
 import 'package:rxdart/rxdart.dart';
 

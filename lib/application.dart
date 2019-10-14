@@ -8,7 +8,8 @@ import 'package:reazzon/src/blocs/login_bloc.dart';
 import 'package:reazzon/src/blocs/signup_bloc.dart';
 import 'package:reazzon/src/pages/home_%20router.dart';
 import 'package:reazzon/src/pages/signup_page.dart';
-import 'package:reazzon/src/repositories/authentication_repository.dart';
+
+import 'src/authentication/authentication_repository.dart';
 
 class Application extends StatelessWidget {
 
