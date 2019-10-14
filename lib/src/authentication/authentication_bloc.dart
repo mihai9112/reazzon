@@ -34,7 +34,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
       yield Unauthenticated();
     }
     catch(_, stacktrace) {
-      print(stacktrace);
+      //TODO: log stacktrace;
       yield Unauthenticated();
     }
   }

@@ -11,13 +11,11 @@ import 'package:reazzon/src/pages/home_page.dart';
 
 import 'authentication_mock.dart';
 
-
 void main() async {
   AuthenticationRepositoryMock _authenticationRepositoryMock;
   AuthenticationBlocMock _authenticationBlocMock;
 
   Widget makeTestableWidget({AuthenticationBloc bloc}) {
-    
     return BlocProvider(
       builder: (context) => bloc,
       child: ReazzonMainWidget()
