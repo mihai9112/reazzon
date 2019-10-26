@@ -98,5 +98,4 @@ void main() async {
     //Assert
     expect(find.byType(AccountPage), findsOneWidget);
   });
-  
 }

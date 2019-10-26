@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:reazzon/src/blocs/bloc_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reazzon/src/blocs/filter_bloc.dart';
 import 'package:reazzon/src/models/reazzon.dart';
 
@@ -49,19 +49,16 @@ class FilterDialogState extends State<FilterDialog> {
           ),
         ],
       ),
-      body: BlocProvider<FilterBloc>(
-        bloc: this.filterBloc,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 16),
-          child: Card(
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              padding: const EdgeInsets.all(8.0),
-              child: Item(),
-            ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 16),
+        child: Card(
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            padding: const EdgeInsets.all(8.0),
+            child: Item(),
           ),
         ),
-      ),
+      )
     );
   }
 }
