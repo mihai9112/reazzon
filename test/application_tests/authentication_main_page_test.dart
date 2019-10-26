@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -13,6 +14,7 @@ import 'package:reazzon/src/pages/home_page.dart';
 import 'package:reazzon/src/settings/setting_bloc.dart';
 
 import '../account_tests/account_mock.dart';
+import '../authentication_tests/authentication_firebase_mock.dart';
 import '../authentication_tests/authentication_mock.dart';
 import '../chat_tests/chat_mock.dart';
 import '../notification_tests/notification_mock.dart';
@@ -90,7 +92,7 @@ void main() async {
     when(_authenticationRepositoryMock.isSignedIn())
         .thenAnswer((_) => Future.value(true));
     when(_authenticationBlocMock.currentState)
-        .thenAnswer((_) => Authenticated("testUser"));
+        .thenAnswer((_) => Authenticated(FirebaseUserMock()));
 
     //Act
     await tester.pumpWidget(makeTestableWidget());

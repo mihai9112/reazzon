@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import 'authentication.dart';
 import 'authentication_event.dart';
@@ -22,6 +23,11 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
     if(event is AppStarted) {
       yield* _mapAppStartedToState();
     }
+
+    if(event is InitializedGoogleSignIn){
+      yield* _mapGoogleSigningInToState();
+    }
+    yield Uninitialized();
   }
 
   Stream<AuthenticationState> _mapAppStartedToState() async* {
@@ -33,6 +39,20 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
       yield Unauthenticated();
     }
     catch(_, stacktrace) {
+      //TODO: log stacktrace;
+      yield Unauthenticated();
+    }
+  }
+
+  Stream<AuthenticationState> _mapGoogleSigningInToState() async* {
+    try {
+      final firebaseUser = await _authenticationRepository.signInWithGoogle();
+      if(firebaseUser != null){
+        yield Authenticated(firebaseUser);
+      }
+      yield Unauthenticated();
+    } 
+    catch (_, stacktrace) {
       //TODO: log stacktrace;
       yield Unauthenticated();
     }

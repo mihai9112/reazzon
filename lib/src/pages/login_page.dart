@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:reazzon/src/authentication/authentication.dart';
 import 'package:reazzon/src/blocs/application_bloc.dart';
 import 'package:reazzon/src/blocs/login_bloc.dart';
 import 'package:reazzon/src/helpers/fieldFocus.dart';
@@ -289,64 +290,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       Expanded(
-                        child: Container(
-                          margin: EdgeInsets.only(left: 8.0),
-                          alignment: Alignment.center,
-                          child: Row(
-                            children: <Widget>[
-                              Expanded(
-                                child: FlatButton(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30.0),
-                                  ),
-                                  color: Color(0Xffdb3236),
-                                  onPressed: () {},
-                                  child: Container(
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Expanded(
-                                          child: FlatButton(
-                                            onPressed: () {
-                                              setState(() {
-                                                _isLoginSuccessful = _loginBloc
-                                                    .registerWithGoogle();
-                                              });
-                                            },
-                                            padding: EdgeInsets.only(
-                                              top: 20.0,
-                                              bottom: 20.0,
-                                            ),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
-                                              children: <Widget>[
-                                                Icon(
-                                                  googleIcon,
-                                                  color: Colors.white,
-                                                  size: 15.0,
-                                                ),
-                                                Text(
-                                                  "GOOGLE",
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        child: buildGoogleButtonWidget()
                       ),
                     ],
                   ),
@@ -454,9 +398,6 @@ class _LoginPageState extends State<LoginPage> {
 
                 Navigator.of(context).pushAndRemoveUntil(
                     accountRoute, (Route<dynamic> route) => false);
-//              if (true) {
-//                Navigator.of(context).pushNamedAndRemoveUntil(
-//                    '/chat', ModalRoute.withName('/xy'));
               } else {
                 var secondSignUpRoute = MaterialPageRoute(
                     builder: (BuildContext context) => SecondSignUpPage());
@@ -476,6 +417,46 @@ class _LoginPageState extends State<LoginPage> {
 
         return Spinner();
       },
+    );
+  }
+
+
+  buildGoogleButtonWidget()
+  {
+    return Container(
+      margin: EdgeInsets.only(left: 8.0),
+      alignment: Alignment.center,
+      child: FlatButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+        padding: EdgeInsets.only(
+          top: 15.0,
+          bottom: 15.0,
+        ),
+        color: Color(0Xffdb3236),
+        onPressed: () => BlocProvider.of<AuthenticationBloc>(context)
+          .dispatch(InitializedGoogleSignIn()),
+        child: Row(
+          mainAxisAlignment:
+              MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Icon(
+              googleIcon,
+              color: Colors.white,
+              size: 25.0,
+            ),
+            Text(
+              "GOOGLE",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: Colors.white,
+                  fontWeight:
+                      FontWeight.bold),
+            ),
+          ],
+        )
+      ),
     );
   }
 }

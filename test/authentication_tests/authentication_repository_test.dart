@@ -11,7 +11,7 @@ void main() {
     GoogleSignInMock googleSignInMock = GoogleSignInMock();
     FacebookSignInMock facebookSignInMock = FacebookSignInMock();
 
-    AuthenticationRepository userRepository = AuthenticationRepository(
+    AuthenticationRepository authenticationRepository = AuthenticationRepository(
       firebaseAuth: firebaseAuthMock,
       googleSignin: googleSignInMock,
       facebookSignIn: facebookSignInMock
@@ -41,7 +41,7 @@ void main() {
         .thenAnswer((_) => Future<FirebaseUserMock>.value(firebaseUserMock));
 
       //call the method and expect the Firebase user as return
-      expect(await userRepository.signInWithGoogle(), firebaseUserMock);
+      expect(await authenticationRepository.signInWithGoogle(), firebaseUserMock);
       verify(googleSignInMock.signIn()).called(1);
       verify(googleSignInAccountMock.authentication).called(1);
     });
@@ -49,23 +49,23 @@ void main() {
     test('getCurrentUser return current user', () async {
       when(firebaseAuthMock.currentUser())
         .thenAnswer((_) => Future<FirebaseUserMock>.value(firebaseUserMock));
-      expect(await userRepository.getUser(), "johndoe@mail.com");
+      expect(await authenticationRepository.getUser(), firebaseUserMock);
     });
 
     test('isSignedIn return true only when FirebaseAuth has a user', () async {
       when(firebaseAuthMock.currentUser())
           .thenAnswer((_) => Future<FirebaseUserMock>.value(firebaseUserMock));
-      expect(await userRepository.isSignedIn(), true);
+      expect(await authenticationRepository.isSignedIn(), true);
       when(firebaseAuthMock.currentUser())
           .thenAnswer((_) => Future<FirebaseUserMock>.value(null));
-      expect(await userRepository.isSignedIn(), false);
+      expect(await authenticationRepository.isSignedIn(), false);
     });
 
     test('signInWithCredentials returns a Firebase user', () async {
       when(firebaseAuthMock.signInWithEmailAndPassword(email: "johndoe@mail.com", password: "testpassword"))
         .thenAnswer((_) => Future<AuthResultMock>.value(authResultMock));
 
-      final returnedUser = await userRepository.signInWithCredentials("johndoe@mail.com", "testpassword");
+      final returnedUser = await authenticationRepository.signInWithCredentials("johndoe@mail.com", "testpassword");
       expect(returnedUser.email, firebaseUserMock.email);
     });
 
@@ -73,7 +73,7 @@ void main() {
       when(firebaseAuthMock.createUserWithEmailAndPassword(email: "johndoe@mail.com", password: "testpassword"))
         .thenAnswer((_) => Future<AuthResultMock>.value(authResultMock));
 
-      final returnedUser =  await userRepository.signUpWithCredentials("johndoe@mail.com", "testpassword");
+      final returnedUser =  await authenticationRepository.signUpWithCredentials("johndoe@mail.com", "testpassword");
       expect(returnedUser.email, firebaseUserMock.email);
     });
 
@@ -84,7 +84,7 @@ void main() {
       when(firebaseAuthMock.signInWithCredential(any))
         .thenAnswer((_) => Future<AuthResultMock>.value(authResultMock));
 
-      final returnedUser =  await userRepository.signInWithFacebook();
+      final returnedUser =  await authenticationRepository.signInWithFacebook();
       expect(returnedUser.email, firebaseUserMock.email);
     });
 
@@ -92,14 +92,14 @@ void main() {
       when(facebookSignInMock.logIn(['email']))
         .thenAnswer((_) => Future<FacebookLoginResultErrorMock>.value(facebookLoginResultErrorMock));
 
-      expect(() async => await userRepository.signInWithFacebook(), throwsA(TypeMatcher<StateError>()));
+      expect(() async => await authenticationRepository.signInWithFacebook(), throwsA(TypeMatcher<StateError>()));
     });
 
     test('signInWithFacebook returns FacebookLoginStatus of CancelledByUser', () async {
       when(facebookSignInMock.logIn(['email']))
         .thenAnswer((_) => Future<FacebookLoginResultCancelledByUserMock>.value(facebookLoginResultCancelledByUserMock));
 
-      expect(() async => await userRepository.signInWithFacebook(), throwsA(TypeMatcher<StateError>()));
+      expect(() async => await authenticationRepository.signInWithFacebook(), throwsA(TypeMatcher<StateError>()));
     });
   });
 }

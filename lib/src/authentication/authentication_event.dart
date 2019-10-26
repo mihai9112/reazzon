@@ -16,6 +16,11 @@ class LoggedIn extends AuthenticationEvent {
   String toString() => 'LoggedIn';
 }
 
+class InitializedGoogleSignIn extends AuthenticationEvent {
+  @override
+  String toString() => 'InitializedGoogleSignIn';
+}
+
 class LoggedOut extends AuthenticationEvent {
   @override
   String toString() => 'LoggedOut';

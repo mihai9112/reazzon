@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mockito/mockito.dart';
 import 'package:reazzon/src/authentication/authentication.dart';
 import 'package:reazzon/src/authentication/authentication_repository.dart';
@@ -12,7 +13,7 @@ class AuthenticationBlocMock extends Mock implements AuthenticationBloc {
   AuthenticationBlocMock({this.authenticationRepository});
 
   Future<bool> isSignedIn() async => await authenticationRepository.isSignedIn();
-  Future<String> getUser() async => await authenticationRepository.getUser(); 
+  Future<FirebaseUser> getUser() async => await authenticationRepository.getUser(); 
 }
 
 class LoginBlocMock extends Mock implements LoginBloc {
