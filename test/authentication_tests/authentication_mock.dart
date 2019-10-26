@@ -11,7 +11,8 @@ class AuthenticationBlocMock extends Mock implements AuthenticationBloc {
   
   AuthenticationBlocMock({this.authenticationRepository});
 
-  Future<bool> isSignedIn() async => await authenticationRepository.isSignedIn(); 
+  Future<bool> isSignedIn() async => await authenticationRepository.isSignedIn();
+  Future<String> getUser() async => await authenticationRepository.getUser(); 
 }
 
 class LoginBlocMock extends Mock implements LoginBloc {

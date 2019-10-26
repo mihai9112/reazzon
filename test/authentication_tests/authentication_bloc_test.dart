@@ -11,6 +11,8 @@ void main() {
   AuthenticationBloc _authenticationBloc;
   AuthenticationRepositoryMock _authenticationRepositoryMock;
 
+  final mockEmail = "test@test.com";
+
   setUp(() {
     _authenticationRepositoryMock = AuthenticationRepositoryMock();
     _authenticationBloc = AuthenticationBloc(_authenticationRepositoryMock);
@@ -38,11 +40,13 @@ void main() {
       //Arrange
       final expectedStates = [
         Uninitialized(),
-        Authenticated("test")
+        Authenticated(mockEmail)
       ];
 
       when(_authenticationRepositoryMock.isSignedIn())
         .thenAnswer((_) => Future.value(true));
+      when(_authenticationRepositoryMock.getUser())
+        .thenAnswer((_) => Future.value(mockEmail));
         
       //Act
       _authenticationBloc.dispatch(AppStarted());
