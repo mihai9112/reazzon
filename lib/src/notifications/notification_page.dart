@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:reazzon/src/helpers/spinner.dart';
 import 'package:reazzon/src/notifications/notification_bloc.dart';
@@ -25,31 +26,18 @@ class _NotificationPageState extends State<NotificationPage> {
         title: Text("Notification", style: TextStyle(color: Colors.blueAccent)),
         centerTitle: true,
       ),
-      body: StreamBuilder<NotificationStates>(
-        stream: this.widget.notificationBloc.stream,
-        initialData: UnNotificationState(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            if (snapshot.data is LoadedNotificationsState) {
-              if ((snapshot.data as LoadedNotificationsState)
-                      .notifications
-                      .length <=
-                  0) {
+      body: BlocBuilder<NotificationBloc, NotificationStates>(
+        builder: (context, state) {
+            if (state is LoadedNotificationsState) {
+              if (state.notifications.length <= 0) {
                 return Container(child: Center(child: Text('Empty')));
               }
               return ListView.builder(
-                itemCount: (snapshot.data as LoadedNotificationsState)
-                    .notifications
-                    .length,
+                itemCount: state.notifications.length,
                 itemBuilder: (context, i) {
-                  int index = (snapshot.data as LoadedNotificationsState)
-                          .notifications
-                          .length -
-                      i -
-                      1;
+                  int index = state.notifications.length - i - 1;
                   NotificationModel notification =
-                      (snapshot.data as LoadedNotificationsState)
-                          .notifications[index];
+                      state.notifications[index];
 
                   return Container(
                     child: (notification.isRequest != null &&
@@ -215,14 +203,12 @@ class _NotificationPageState extends State<NotificationPage> {
                   );
                 },
               );
-            } else if (snapshot.data is UnNotificationState) {
+            } else if (state is UnNotificationState) {
               this.widget.notificationBloc.dispatch(LoadNotificationsEvent());
             }
-          }
-
           return Container(child: Center(child: Spinner()));
-        },
-      ),
+        }
+      )
     );
   }
 

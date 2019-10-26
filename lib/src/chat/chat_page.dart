@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reazzon/src/chat/chat_bloc/chat_bloc.dart';
 import 'package:reazzon/src/chat/chat_bloc/chat_entity.dart';
 import 'package:reazzon/src/chat/chat_bloc/chat_events.dart';
@@ -43,11 +44,10 @@ class _ChatPageState extends State<ChatPage> {
         },
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 0, horizontal: 12.0),
-          child: StreamBuilder(
-            stream: this.widget.chatBloc.stream,
-            builder: (context, AsyncSnapshot snapshot) {
-              if (snapshot.hasData && snapshot.data is ChatsLoaded) {
-                ChatsLoaded loadedChats = (snapshot.data as ChatsLoaded);
+          child: BlocBuilder<ChatBloc, ChatsState>(
+            builder: (context, state) {
+              if (state is ChatsLoaded) {
+                ChatsLoaded loadedChats = state;
                 return ListView.separated(
                   itemCount: loadedChats.chatEntities.length,
                   itemBuilder: (BuildContext context, int index) {
@@ -83,7 +83,7 @@ class _ChatPageState extends State<ChatPage> {
                     );
                   },
                 );
-              } else if (snapshot.hasData && snapshot.data is ChatsNotLoaded) {
+              } else if (state is ChatsNotLoaded) {
                 this.widget.chatBloc.dispatch(LoadChatList());
               }
               return Center(child: Spinner());

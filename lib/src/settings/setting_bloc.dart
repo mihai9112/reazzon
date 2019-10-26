@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:reazzon/src/blocs/bloc_provider.dart';
 import 'package:reazzon/src/domain/validators.dart';
 import 'package:reazzon/src/models/reazzon.dart';
 import 'package:reazzon/src/settings/setting_repository.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:bloc/bloc.dart';
 
 class SettingUserModel {
   String email;
@@ -32,7 +32,7 @@ class SettingUserModel {
   }
 }
 
-class SettingsBloc extends BlocBase with Validators {
+class SettingsBloc extends Bloc with Validators {
   SettingRepository settingRepository;
 
   // -- user --
@@ -186,5 +186,15 @@ class SettingsBloc extends BlocBase with Validators {
 
   void removeToken() async {
     settingRepository.removePushToken();
+  }
+
+  @override
+  // TODO: implement initialState
+  get initialState => null;
+
+  @override
+  Stream mapEventToState(event) {
+    // TODO: implement mapEventToState
+    return null;
   }
 }
