@@ -421,8 +421,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
 
-  buildGoogleButtonWidget()
-  {
+  buildGoogleButtonWidget(){
     return Container(
       margin: EdgeInsets.only(left: 8.0),
       alignment: Alignment.center,

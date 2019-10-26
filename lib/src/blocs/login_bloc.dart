@@ -56,20 +56,6 @@ class LoginBloc extends Bloc<AuthenticationEvent, AuthenticationState> with Vali
     return result;
   }
 
-  Future<bool> registerWithGoogle() async {
-    var result = false;
-
-    await _authenticationRepository.signInWithGoogle().then((user) {
-      User.storeUserId(user.uid);
-      _inUser(new User(user));
-      result = true;
-    }).catchError((onError) {
-      _inMessages(onError.message);
-    });
-
-    return result;
-  }
-
   Future<bool> registerWithFacebook() async {
     var result = false;
 

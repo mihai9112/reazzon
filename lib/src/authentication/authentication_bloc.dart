@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 import 'authentication.dart';
 import 'authentication_event.dart';

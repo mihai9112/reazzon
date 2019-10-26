@@ -88,5 +88,22 @@ void main() {
       //Assert
       expectLater(_authenticationBloc.state, emitsInOrder(expectedStates));
     });
+
+    test('emits Uninitialized -> Unauthenticated when sign in with Google throws error', (){
+      //Arrange
+      final expectedStates = [
+        Uninitialized(),
+        Unauthenticated()
+      ];
+
+      when(_authenticationRepositoryMock.signInWithGoogle())
+        .thenThrow(HttpException('unavailable'));
+
+      //Act
+      _authenticationBloc.dispatch(InitializedGoogleSignIn());
+
+      //Assert
+      expectLater(_authenticationBloc.state, emitsInOrder(expectedStates));
+    });
   });
 }
