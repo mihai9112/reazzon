@@ -230,64 +230,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: Row(
                     children: <Widget>[
                       Expanded(
-                        child: Container(
-                          margin: EdgeInsets.only(right: 8.0),
-                          alignment: Alignment.center,
-                          child: Row(
-                            children: <Widget>[
-                              Expanded(
-                                child: FlatButton(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30.0),
-                                  ),
-                                  color: Color(0Xff3B5998),
-                                  onPressed: () {},
-                                  child: Container(
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Expanded(
-                                          child: FlatButton(
-                                            onPressed: () {
-                                              setState(() {
-                                                _isLoginSuccessful = _loginBloc
-                                                    .registerWithFacebook();
-                                              });
-                                            },
-                                            padding: EdgeInsets.only(
-                                              top: 20.0,
-                                              bottom: 20.0,
-                                            ),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
-                                              children: <Widget>[
-                                                Icon(
-                                                  facebookIcon,
-                                                  color: Colors.white,
-                                                  size: 15.0,
-                                                ),
-                                                Text(
-                                                  "FACEBOOK",
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        child: buildFacebookButtonWidget() 
                       ),
                       Expanded(
                         child: buildGoogleButtonWidget()
@@ -447,6 +390,44 @@ class _LoginPageState extends State<LoginPage> {
             ),
             Text(
               "GOOGLE",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: Colors.white,
+                  fontWeight:
+                      FontWeight.bold),
+            ),
+          ],
+        )
+      ),
+    );
+  }
+
+  buildFacebookButtonWidget(){
+    return Container(
+      margin: EdgeInsets.only(left: 8.0),
+      alignment: Alignment.center,
+      child: FlatButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+        padding: EdgeInsets.only(
+          top: 15.0,
+          bottom: 15.0,
+        ),
+        color: Color(0Xff3B5998),
+        onPressed: () => BlocProvider.of<AuthenticationBloc>(context)
+          .dispatch(InitializedFacebookSignIn()),
+        child: Row(
+          mainAxisAlignment:
+              MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Icon(
+              facebookIcon,
+              color: Colors.white,
+              size: 25.0,
+            ),
+            Text(
+              "FACEBOOK",
               textAlign: TextAlign.center,
               style: TextStyle(
                   color: Colors.white,

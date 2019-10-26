@@ -105,5 +105,74 @@ void main() {
       //Assert
       expectLater(_authenticationBloc.state, emitsInOrder(expectedStates));
     });
+
+    test('emits Uninitialized -> Unauthenticated when sign in with Google return null user', (){
+      //Arrange
+      final expectedStates = [
+        Uninitialized(),
+        Unauthenticated()
+      ];
+
+      when(_authenticationRepositoryMock.signInWithGoogle())
+        .thenAnswer((_) => null);
+
+      //Act
+      _authenticationBloc.dispatch(InitializedGoogleSignIn());
+
+      //Assert
+      expectLater(_authenticationBloc.state, emitsInOrder(expectedStates));
+    });
+
+    test('emits Uninitialized -> Authenticated when sign in with Facebook', (){
+      //Arrange
+      final expectedStates = [
+        Uninitialized(),
+        Authenticated(fireBaseUserMock)
+      ];
+
+      when(_authenticationRepositoryMock.signInWithFacebook())
+        .thenAnswer((_) => Future.value(fireBaseUserMock));
+
+      //Act
+      _authenticationBloc.dispatch(InitializedFacebookSignIn());
+      
+      //Assert
+      expectLater(_authenticationBloc.state, emitsInOrder(expectedStates));
+    });
+
+    test('emits Uninitialized -> Unauthenticated when sign in with Facebook throws error', (){
+      //Arrange
+      final expectedStates = [
+        Uninitialized(),
+        Unauthenticated()
+      ];
+
+      when(_authenticationRepositoryMock.signInWithFacebook())
+        .thenThrow(HttpException('unavailable'));
+
+      //Act
+      _authenticationBloc.dispatch(InitializedFacebookSignIn());
+
+      //Assert
+      expectLater(_authenticationBloc.state, emitsInOrder(expectedStates));
+    });
+
+    test('emits Uninitialized -> Unauthenticated when sign in with Facebook return null user', (){
+      //Arrange
+      final expectedStates = [
+        Uninitialized(),
+        Unauthenticated()
+      ];
+
+      when(_authenticationRepositoryMock.signInWithFacebook())
+        .thenAnswer((_) => null);
+
+      //Act
+      _authenticationBloc.dispatch(InitializedFacebookSignIn());
+
+      //Assert
+      expectLater(_authenticationBloc.state, emitsInOrder(expectedStates));
+    });
+    
   });
 }
