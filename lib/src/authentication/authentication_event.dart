@@ -26,6 +26,16 @@ class InitializedFacebookSignIn extends AuthenticationEvent {
   String toString() => 'InitializedFacebookSignIn';
 }
 
+class InitializedCredentialsSignIn extends AuthenticationEvent {
+  final String validEmail;
+  final String validPassword;
+
+  InitializedCredentialsSignIn({this.validEmail, this.validPassword});
+
+  @override
+  String toString() => 'InitializedCredentialsSignIn';  
+}
+
 class LoggedOut extends AuthenticationEvent {
   @override
   String toString() => 'LoggedOut';

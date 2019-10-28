@@ -5,7 +5,6 @@ import 'authentication.dart';
 import 'authentication_event.dart';
 import 'authentication_repository.dart';
 
-
 class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
   AuthenticationRepository _authenticationRepository;
 
@@ -28,6 +27,10 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 
     if(event is InitializedFacebookSignIn){
       yield* _mapFacebookSigningInToState();
+    }
+
+    if(event is InitializedCredentialsSignIn){
+      yield* _mapCredentialsSigningInToState(event.validEmail, event.validPassword);
     }
     yield Uninitialized();
   }
@@ -64,6 +67,21 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
     try {
       final firebaseUser = await _authenticationRepository.signInWithFacebook();
       if(firebaseUser != null){
+        yield Authenticated(firebaseUser);
+      }
+      yield Unauthenticated();
+    } 
+    catch (_, stacktrace) {
+      //TODO: log stacktrace;
+      yield Unauthenticated();
+    }
+  }
+
+  Stream<AuthenticationState> _mapCredentialsSigningInToState(String email, String password) async* {
+    try {
+      final firebaseUser = await _authenticationRepository.signUpWithCredentials(email, password);
+      if(firebaseUser != null)
+      {
         yield Authenticated(firebaseUser);
       }
       yield Unauthenticated();
