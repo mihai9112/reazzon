@@ -188,7 +188,7 @@ void main() {
 
       //Act
       _authenticationBloc.dispatch(
-        InitializedCredentialsSignIn(
+        InitializedCredentialsSignUp(
           validEmail: randomValidEmail, 
           validPassword: randomValidPassword
         )
@@ -212,7 +212,7 @@ void main() {
 
       //Act
       _authenticationBloc.dispatch(
-        InitializedCredentialsSignIn(
+        InitializedCredentialsSignUp(
           validEmail: randomValidEmail, 
           validPassword: randomValidPassword
         )
@@ -232,6 +232,78 @@ void main() {
       ];
 
       when(_authenticationRepositoryMock.signUpWithCredentials(randomValidEmail, randomValidPassword))
+        .thenAnswer((_) => null);
+
+      //Act
+      _authenticationBloc.dispatch(
+        InitializedCredentialsSignUp(
+          validEmail: randomValidEmail, 
+          validPassword: randomValidPassword
+        )
+      );
+
+      //Assert
+      expectLater(_authenticationBloc.state, emitsInOrder(expectedStates));
+    });
+
+    test('emits Uninitialized -> Authenticated when sign in with credentials', (){
+      //Arrange
+      final randomValidEmail = "test@email.com";
+      final randomValidPassword = "password123";
+      final expectedStates = [
+        Uninitialized(),
+        Authenticated(fireBaseUserMock)
+      ];
+
+      when(_authenticationRepositoryMock.signInWithCredentials(randomValidEmail, randomValidPassword))
+        .thenAnswer((_) => Future.value(fireBaseUserMock));
+
+      //Act
+      _authenticationBloc.dispatch(
+        InitializedCredentialsSignIn(
+          validEmail: randomValidEmail, 
+          validPassword: randomValidPassword
+        )
+      );
+      
+      //Assert
+      expectLater(_authenticationBloc.state, emitsInOrder(expectedStates));
+    });
+
+    test('emits Uninitialized -> Unauthenticated when sign in with credentials throws error', (){
+      //Arrange
+      final randomValidEmail = "test@email.com";
+      final randomValidPassword = "password123";
+      final expectedStates = [
+        Uninitialized(),
+        Unauthenticated()
+      ];
+
+      when(_authenticationRepositoryMock.signInWithCredentials(randomValidEmail, randomValidPassword))
+        .thenThrow(HttpException('unavailable'));
+
+      //Act
+      _authenticationBloc.dispatch(
+        InitializedCredentialsSignIn(
+          validEmail: randomValidEmail, 
+          validPassword: randomValidPassword
+        )
+      );
+
+      //Assert
+      expectLater(_authenticationBloc.state, emitsInOrder(expectedStates));
+    });
+
+    test('emits Uninitialized -> Unauthenticated when sign in with credentials return null user', (){
+      //Arrange
+      final randomValidEmail = "test@email.com";
+      final randomValidPassword = "password123";
+      final expectedStates = [
+        Uninitialized(),
+        Unauthenticated()
+      ];
+
+      when(_authenticationRepositoryMock.signInWithCredentials(randomValidEmail, randomValidPassword))
         .thenAnswer((_) => null);
 
       //Act

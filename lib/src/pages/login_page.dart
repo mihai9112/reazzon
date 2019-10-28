@@ -1,16 +1,12 @@
-import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reazzon/src/authentication/authentication.dart';
-import 'package:reazzon/src/blocs/application_bloc.dart';
-import 'package:reazzon/src/blocs/login_bloc.dart';
 import 'package:reazzon/src/helpers/fieldFocus.dart';
 import 'package:flutter/widgets.dart';
-import 'package:reazzon/src/helpers/spinner.dart';
-import 'package:reazzon/src/pages/account_page.dart';
+import 'package:reazzon/src/login/login_bloc.dart';
+import 'package:reazzon/src/login/login_event.dart';
 import 'package:reazzon/src/pages/forgotten_password_page.dart';
-import 'package:reazzon/src/pages/signup_second_page.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -24,7 +20,6 @@ class _LoginPageState extends State<LoginPage> {
   static const IconData googleIcon =
       const IconData(0xf1a0, fontFamily: _kFontFam);
   LoginBloc _loginBloc;
-  Future<bool> _isLoginSuccessful;
 
   @override
   void initState() {
@@ -43,14 +38,13 @@ class _LoginPageState extends State<LoginPage> {
     FocusNode _focusEmail = new FocusNode();
     FocusNode _focusPassword = new FocusNode();
 
-    var _appBloc = BlocProvider.of<ApplicationBloc>(context);
-
     return Scaffold(
         appBar: AppBar(
             iconTheme: IconThemeData(color: Colors.blueAccent),
             backgroundColor: Colors.white,
             elevation: 0.0,
-            title: Text("Login", style: TextStyle(color: Colors.blueAccent))),
+            title: Text("Login", style: TextStyle(color: Colors.blueAccent))
+        ),
         body: SingleChildScrollView(
           child: Container(
             height: MediaQuery.of(context).size.height - 100.0,
@@ -71,21 +65,6 @@ class _LoginPageState extends State<LoginPage> {
                       size: 50.0,
                     ),
                   ),
-                ),
-                Container(
-                  padding: EdgeInsets.only(left: 30.0, right: 30.0),
-                  child: Center(
-                      child: StreamBuilder(
-                    stream: _loginBloc.outMessages,
-                    builder: (context, snapshot) {
-                      return snapshot.hasData
-                          ? Text(snapshot.data,
-                              style: TextStyle(color: Colors.red),
-                              textAlign: TextAlign.center,
-                              softWrap: true)
-                          : Container();
-                    },
-                  )),
                 ),
                 Row(
                   children: <Widget>[
@@ -187,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: Row(
                     children: <Widget>[
                       Expanded(
-                        child: buildButton(_loginBloc, _appBloc),
+                        child: buildCredentialButtonWidget(),
                       ),
                     ],
                   ),
@@ -244,47 +223,6 @@ class _LoginPageState extends State<LoginPage> {
         ));
   }
 
-  Widget submitButton(LoginBloc bloc) {
-    return StreamBuilder(
-      stream: bloc.submitValid,
-      builder: (context, snapshot) {
-        return RaisedButton(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30.0),
-          ),
-          color: Colors.blueAccent,
-          elevation: 4.0,
-          onPressed: snapshot.hasData
-              ? () {
-                  setState(() {
-                    _isLoginSuccessful = bloc.submit();
-                  });
-                }
-              : null,
-          child: Container(
-            padding:
-                const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Expanded(
-                  child: Text(
-                    "LOGIN",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   Widget emailField(LoginBloc bloc) {
     return StreamBuilder(
       stream: bloc.email,
@@ -317,48 +255,39 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget buildButton(LoginBloc loginBloc, ApplicationBloc appBloc) {
-    return new FutureBuilder(
-      future: _isLoginSuccessful,
+  buildCredentialButtonWidget(){
+    final loginBloc = BlocProvider.of<LoginBloc>(context);
+    return StreamBuilder(
+      stream: loginBloc.submitValid,
       builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          if (snapshot.connectionState != ConnectionState.none) {
-            return Spinner();
-          }
-          return submitButton(loginBloc);
-        }
-
-        if (snapshot.hasData) {
-          if (snapshot.data) {
-            loginBloc.outUser.listen((onData) {
-              appBloc.appState.setUser(onData);
-
-              if (onData.hasUserName()) {
-                var accountRoute = MaterialPageRoute(
-                    builder: (BuildContext context) => AccountPage(
-                          loggedUserId: onData.userId,
-                        ));
-
-                Navigator.of(context).pushAndRemoveUntil(
-                    accountRoute, (Route<dynamic> route) => false);
-              } else {
-                var secondSignUpRoute = MaterialPageRoute(
-                    builder: (BuildContext context) => SecondSignUpPage());
-                Navigator.pushReplacement(context, secondSignUpRoute);
-              }
-            });
-            return Container();
-          }
-
-          if (!snapshot.data) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return submitButton(loginBloc);
-            }
-            return Spinner();
-          }
-        }
-
-        return Spinner();
+        return RaisedButton(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.0),
+          ),
+          color: Colors.blueAccent,
+          elevation: 4.0,
+          onPressed: () => BlocProvider.of<LoginBloc>(context)
+            .dispatch(LoginButtonPressed()),
+          child: Container(
+            padding:
+                const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Expanded(
+                  child: Text(
+                    "LOGIN",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
       },
     );
   }

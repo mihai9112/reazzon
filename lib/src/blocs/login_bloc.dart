@@ -37,24 +37,10 @@ class LoginBloc extends Bloc<AuthenticationEvent, AuthenticationState> with Vali
   Function(String) get _inMessages => _messagesController.sink.add;
   Function(String) get _inSuccessForgottenMessages =>
       _successForgottenMessagesController.sink.add;
-  Function(User) get _inUser => _userController.sink.add;
 
-  Future<bool> submit() async {
-    var result = false;
-
-    try {
-      var user = await _authenticationRepository.signInWithCredentials(
-          _emailController.value, _passwordController.value);
-
-      User.storeUserId(user.uid);
-      _inUser(new User(user));
-      result = true;
-    } catch (e) {
-      _inMessages(e.message);
-    }
-
-    return result;
-  }
+  //Get data
+  String get emailValue => _emailController.value;
+  String get passwordValue => _passwordController.value;
 
   Future<bool> forgottenPassword() async {
     var result = false;

@@ -17,8 +17,12 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 
   @override
   Stream<AuthenticationState> mapEventToState(AuthenticationEvent event) async* {
-    if(event is AppStarted) {
+    if(event is AppStarted){
       yield* _mapAppStartedToState();
+    }
+
+    if(event is LoggedIn){
+      yield Authenticated(event.user);
     }
 
     if(event is InitializedGoogleSignIn){
@@ -27,6 +31,10 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 
     if(event is InitializedFacebookSignIn){
       yield* _mapFacebookSigningInToState();
+    }
+
+    if(event is InitializedCredentialsSignUp){
+      yield* _mapCredentialsSigningUpToState(event.validEmail, event.validPassword);
     }
 
     if(event is InitializedCredentialsSignIn){
@@ -77,9 +85,24 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
     }
   }
 
-  Stream<AuthenticationState> _mapCredentialsSigningInToState(String email, String password) async* {
+  Stream<AuthenticationState> _mapCredentialsSigningUpToState(String email, String password) async* {
     try {
       final firebaseUser = await _authenticationRepository.signUpWithCredentials(email, password);
+      if(firebaseUser != null)
+      {
+        yield Authenticated(firebaseUser);
+      }
+      yield Unauthenticated();
+    } 
+    catch (_, stacktrace) {
+      //TODO: log stacktrace;
+      yield Unauthenticated();
+    }
+  }
+
+  Stream<AuthenticationState> _mapCredentialsSigningInToState(String email, String password) async* {
+    try {
+      final firebaseUser = await _authenticationRepository.signInWithCredentials(email, password);
       if(firebaseUser != null)
       {
         yield Authenticated(firebaseUser);

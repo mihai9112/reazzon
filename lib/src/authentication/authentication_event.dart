@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meta/meta.dart';
 
 @immutable
@@ -12,6 +13,9 @@ class AppStarted extends AuthenticationEvent {
 }
 
 class LoggedIn extends AuthenticationEvent {
+  final FirebaseUser user;
+  LoggedIn(this.user);
+
   @override
   String toString() => 'LoggedIn';
 }
@@ -24,6 +28,16 @@ class InitializedGoogleSignIn extends AuthenticationEvent {
 class InitializedFacebookSignIn extends AuthenticationEvent {
   @override
   String toString() => 'InitializedFacebookSignIn';
+}
+
+class InitializedCredentialsSignUp extends AuthenticationEvent {
+  final String validEmail;
+  final String validPassword;
+
+  InitializedCredentialsSignUp({this.validEmail, this.validPassword});
+
+  @override
+  String toString() => 'InitializedCredentialsSignUp';  
 }
 
 class InitializedCredentialsSignIn extends AuthenticationEvent {
