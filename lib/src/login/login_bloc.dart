@@ -49,9 +49,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> with Validators {
       final loggedInUser = await authenticationRepository.signInWithCredentials(
         _emailController.value, _passwordController.value);
       
-      authenticationBloc.dispatch(LoggedIn(loggedInUser));
-
-      yield LoginInitial();
+      if(loggedInUser != null){
+        authenticationBloc.dispatch(LoggedIn(loggedInUser));
+        yield LoginLoading();
+      }
+      else {
+        yield LoginFailure(error: "Could not find user. Please try different credentials");
+      }
     } 
     catch (_, stacktrace) {
       //TODO: log stacktrace;

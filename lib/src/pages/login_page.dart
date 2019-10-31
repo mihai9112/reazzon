@@ -6,6 +6,7 @@ import 'package:reazzon/src/helpers/fieldFocus.dart';
 import 'package:flutter/widgets.dart';
 import 'package:reazzon/src/login/login_bloc.dart';
 import 'package:reazzon/src/login/login_event.dart';
+import 'package:reazzon/src/login/login_state.dart';
 import 'package:reazzon/src/pages/forgotten_password_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -51,174 +52,189 @@ class _LoginPageState extends State<LoginPage> {
             decoration: BoxDecoration(
               color: Colors.white,
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.all(50.0),
-                  child: Center(
-                    child: Icon(
-                      Icons.developer_board,
-                      color: Colors.blueAccent,
-                      size: 50.0,
-                    ),
-                  ),
-                ),
-                Row(
-                  children: <Widget>[
-                    EnsureVisibleWhenFocused(
-                      focusNode: _focusEmail,
-                      child: Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 40.0),
-                          child: Text(
-                            "EMAIL",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blueAccent,
-                              fontSize: 15.0,
-                            ),
-                          ),
-                        ),
+            child: BlocListener<LoginBloc, LoginState>(
+              listener: (context, state){
+                if(state is LoginFailure){
+                  Scaffold.of(context)
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(SnackBar(
+                      content: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [Text('Login Failure'), Icon(Icons.error)],
+                      ),
+                      backgroundColor: Colors.red
+                    ));
+                }
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.all(50.0),
+                    child: Center(
+                      child: Icon(
+                        Icons.developer_board,
+                        color: Colors.blueAccent,
+                        size: 50.0,
                       ),
                     ),
-                  ],
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  margin:
-                      const EdgeInsets.only(left: 40.0, right: 40.0, top: 5.0),
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[Expanded(child: emailField(_loginBloc))],
                   ),
-                ),
-                Row(
-                  children: <Widget>[
-                    EnsureVisibleWhenFocused(
-                      focusNode: _focusPassword,
-                      child: Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 40.0),
-                          child: Text(
-                            "PASSWORD",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blueAccent,
-                              fontSize: 15.0,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  margin:
-                      const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.start,
+                  Row(
                     children: <Widget>[
-                      Expanded(child: passwordField(_loginBloc)),
+                      EnsureVisibleWhenFocused(
+                        focusNode: _focusEmail,
+                        child: Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 40.0),
+                            child: Text(
+                              "EMAIL",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blueAccent,
+                                fontSize: 15.0,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(right: 30.0),
-                      child: FlatButton(
-                        child: Text(
-                          "Forgot Password?",
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin:
+                        const EdgeInsets.only(left: 40.0, right: 40.0, top: 5.0),
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[Expanded(child: emailField(_loginBloc))],
+                    ),
+                  ),
+                  Row(
+                    children: <Widget>[
+                      EnsureVisibleWhenFocused(
+                        focusNode: _focusPassword,
+                        child: Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 40.0),
+                            child: Text(
+                              "PASSWORD",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blueAccent,
+                                fontSize: 15.0,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin:
+                        const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(child: passwordField(_loginBloc)),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 30.0),
+                        child: FlatButton(
+                          child: Text(
+                            "Forgot Password?",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blueAccent,
+                              fontSize: 15.0,
+                            ),
+                            textAlign: TextAlign.end,
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        ForgottenPasswordPage()));
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin:
+                        const EdgeInsets.only(left: 30.0, right: 30.0, top: 20.0),
+                    alignment: Alignment.center,
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: buildCredentialButtonWidget(),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin:
+                        const EdgeInsets.only(left: 30.0, right: 30.0, top: 20.0),
+                    alignment: Alignment.center,
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Container(
+                            margin: EdgeInsets.all(8.0),
+                            decoration:
+                                BoxDecoration(border: Border.all(width: 0.25)),
+                          ),
+                        ),
+                        Text(
+                          "OR CONNECT WITH",
                           style: TextStyle(
+                            color: Colors.grey,
                             fontWeight: FontWeight.bold,
-                            color: Colors.blueAccent,
-                            fontSize: 15.0,
                           ),
-                          textAlign: TextAlign.end,
                         ),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      ForgottenPasswordPage()));
-                        },
-                      ),
+                        Expanded(
+                          child: Container(
+                            margin: EdgeInsets.all(8.0),
+                            decoration:
+                                BoxDecoration(border: Border.all(width: 0.25)),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  margin:
-                      const EdgeInsets.only(left: 30.0, right: 30.0, top: 20.0),
-                  alignment: Alignment.center,
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: buildCredentialButtonWidget(),
-                      ),
-                    ],
                   ),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  margin:
-                      const EdgeInsets.only(left: 30.0, right: 30.0, top: 20.0),
-                  alignment: Alignment.center,
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: Container(
-                          margin: EdgeInsets.all(8.0),
-                          decoration:
-                              BoxDecoration(border: Border.all(width: 0.25)),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin:
+                        const EdgeInsets.only(left: 30.0, right: 30.0, top: 20.0),
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: buildFacebookButtonWidget() 
                         ),
-                      ),
-                      Text(
-                        "OR CONNECT WITH",
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontWeight: FontWeight.bold,
+                        Expanded(
+                          child: buildGoogleButtonWidget()
                         ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          margin: EdgeInsets.all(8.0),
-                          decoration:
-                              BoxDecoration(border: Border.all(width: 0.25)),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  margin:
-                      const EdgeInsets.only(left: 30.0, right: 30.0, top: 20.0),
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: buildFacebookButtonWidget() 
-                      ),
-                      Expanded(
-                        child: buildGoogleButtonWidget()
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            )
           ),
         ));
   }

@@ -40,7 +40,6 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
     if(event is InitializedCredentialsSignIn){
       yield* _mapCredentialsSigningInToState(event.validEmail, event.validPassword);
     }
-    yield Uninitialized();
   }
 
   Stream<AuthenticationState> _mapAppStartedToState() async* {
