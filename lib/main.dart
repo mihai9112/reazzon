@@ -5,8 +5,8 @@ import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:reazzon/src/authentication/authentication.dart';
 import 'package:reazzon/src/blocs/application_bloc.dart';
-import 'package:reazzon/src/blocs/login_bloc.dart';
 import 'package:reazzon/src/blocs/signup_bloc.dart';
+import 'package:reazzon/src/login/login_bloc.dart';
 import 'package:reazzon/src/pages/home_page.dart';
 
 import 'src/authentication/authentication_repository.dart';
@@ -25,15 +25,16 @@ void main() async {
   
   final AuthenticationRepository _authenticationRepository =
     AuthenticationRepository(facebookSignIn: _facebookLogin, firebaseAuth: _firebaseAuth, googleSignin: _googleSignIn);
+  final AuthenticationBloc _authenticationBloc = AuthenticationBloc(_authenticationRepository);
 
   runApp(MultiBlocProvider(
     providers: [
       BlocProvider<AuthenticationBloc>(
-        builder: (context) => AuthenticationBloc(_authenticationRepository)
+        builder: (context) => _authenticationBloc
         ..dispatch(AppStarted()),
       ),
       BlocProvider<LoginBloc>(
-        builder: (context) => LoginBloc(_authenticationRepository)
+        builder: (context) => LoginBloc(authenticationBloc: _authenticationBloc, authenticationRepository: _authenticationRepository)
       ),
       BlocProvider<SignUpBloc>(
         builder: (context) => SignUpBloc(_authenticationRepository),

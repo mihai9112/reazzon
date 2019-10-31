@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -34,6 +33,7 @@ void main() async {
   SettingsBlocMock _settingsBlocMock;
 
   Widget makeTestableWidget() {
+    //TODO: Make the testable widget register the same providers as the live app
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthenticationBloc>(
