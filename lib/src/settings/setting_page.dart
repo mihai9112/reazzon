@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:reazzon/src/blocs/login_bloc.dart';
 import 'package:reazzon/src/helpers/spinner.dart';
+import 'package:reazzon/src/login/login_bloc.dart';
 import 'package:reazzon/src/models/reazzon.dart';
 import 'package:reazzon/src/pages/home_page.dart';
 import 'package:reazzon/src/settings/setting_bloc.dart';
@@ -286,14 +286,14 @@ class _SettingPageState extends State<SettingPage> {
 
   _signOut() async {
     settingBloc.removeToken();
-    this.widget.loginBloc.signOut().then((_) {
-      var homeRoute =
-          MaterialPageRoute(builder: (BuildContext context) => HomePage());
-      Navigator.of(context)
-          .pushAndRemoveUntil(homeRoute, ModalRoute.withName('/'));
-    }).catchError((onError) {
-      print(onError);
-    });
+    // this.widget.loginBloc.signOut().then((_) {
+    //   var homeRoute =
+    //       MaterialPageRoute(builder: (BuildContext context) => HomePage());
+    //   Navigator.of(context)
+    //       .pushAndRemoveUntil(homeRoute, ModalRoute.withName('/'));
+    // }).catchError((onError) {
+    //   print(onError);
+    // });
   }
 
   Widget _reazzonsBuilder(List<String> reazzons) {

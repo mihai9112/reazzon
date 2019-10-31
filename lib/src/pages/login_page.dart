@@ -48,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
         body: SingleChildScrollView(
           child: Container(
-            height: MediaQuery.of(context).size.height - 100.0,
+            //height: MediaQuery.of(context).size.height - 100.0,
             decoration: BoxDecoration(
               color: Colors.white,
             ),
