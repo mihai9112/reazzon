@@ -58,6 +58,7 @@ class _LoginPageState extends State<LoginPage> {
                   Scaffold.of(context)
                     ..hideCurrentSnackBar()
                     ..showSnackBar(SnackBar(
+                      key: Key("snack_bar"),
                       content: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [Text('Login Failure'), Icon(Icons.error)],
@@ -244,6 +245,7 @@ class _LoginPageState extends State<LoginPage> {
       stream: bloc.email,
       builder: (context, snapshot) {
         return TextField(
+          key: Key('email_field'),
           onChanged: bloc.changeEmail,
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
@@ -260,6 +262,7 @@ class _LoginPageState extends State<LoginPage> {
       stream: bloc.password,
       builder: (context, snapshot) {
         return TextField(
+          key: Key('password_field'),
           obscureText: true,
           onChanged: bloc.changePassword,
           decoration: InputDecoration(
@@ -277,12 +280,13 @@ class _LoginPageState extends State<LoginPage> {
       stream: loginBloc.submitValid,
       builder: (context, snapshot) {
         return RaisedButton(
+          key: Key('credentials_button'),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30.0),
           ),
           color: Colors.blueAccent,
           elevation: 4.0,
-          onPressed: () => BlocProvider.of<LoginBloc>(context)
+          onPressed: () => loginBloc
             .dispatch(LoginButtonPressed()),
           child: Container(
             padding:

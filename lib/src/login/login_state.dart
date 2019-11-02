@@ -1,10 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/widgets.dart';
 
 abstract class LoginState extends Equatable {
-  const LoginState();
-  @override
-  List<Object> get props => [];
+  LoginState([List props = const []]) : super(props);
 }
 
 class LoginInitial extends LoginState {
@@ -19,8 +16,7 @@ class LoginLoading extends LoginState {
 
 class LoginFailure extends LoginState {
   final String error;
-
-  const LoginFailure({@required this.error});
+  LoginFailure({this.error});
 
   @override
   String toString() => 'LoginFailure';

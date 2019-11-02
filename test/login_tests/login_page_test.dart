@@ -5,7 +5,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:reazzon/src/authentication/authentication.dart';
 import 'package:reazzon/src/login/login_bloc.dart';
-import 'package:reazzon/src/login/login_event.dart';
 import 'package:reazzon/src/login/login_state.dart';
 import 'package:reazzon/src/pages/login_page.dart';
 
@@ -14,13 +13,15 @@ import '../authentication_tests/authentication_mock.dart';
 void main() async {
   AuthenticationRepositoryMock _authenticationRepositoryMock;
   AuthenticationBloc _authenticationBloc;
-  LoginBlocMock _loginBlocMock;
+  LoginBloc _loginBloc;
   
   Widget makeTestableWidget() {
     return BlocProvider<LoginBloc>(
-      builder: (context) => _loginBlocMock,
+      builder: (context) => _loginBloc,
       child: MaterialApp(
-        home: LoginPage(),
+        home: Scaffold(
+          body: LoginPage(),
+        )
       ),
     );
   }
@@ -28,19 +29,40 @@ void main() async {
   setUp((){
     _authenticationRepositoryMock = AuthenticationRepositoryMock();
     _authenticationBloc = AuthenticationBloc(_authenticationRepositoryMock);
-    _loginBlocMock = LoginBlocMock(authenticationRepository: _authenticationRepositoryMock);
+    _loginBloc = LoginBloc(authenticationRepository: _authenticationRepositoryMock, authenticationBloc: _authenticationBloc);
   });
 
   testWidgets('Show snack bar when state is LoginFailure', (WidgetTester tester) async {
 
     //Arrange
-    when(_loginBlocMock.currentState)
-        .thenAnswer((_) => LoginFailure(error: "Error"));
+    var expectedStates = [
+      LoginInitial(), 
+      LoginFailure(error: "Could not find user. Please try different credentials")
+    ];
+
+    when(_authenticationRepositoryMock.signInWithCredentials("est@est.com", "password"))
+      .thenAnswer((_) => Future.value(null));
+
+    final button = find.byKey(Key('credentials_button'));
     
     //Act
     await tester.pumpWidget(makeTestableWidget());
 
+    Finder finder = find.byKey(Key("snack_bar"));
+    expect(finder, findsNothing);
+
+    await tester.enterText(find.byKey(Key('email_field')), 'est@est.com');
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byKey(Key('password_field')), 'password');
+    await tester.pumpAndSettle();
+    
+    await tester.tap(button);
+    await tester.pumpAndSettle();
+
     //Assert
-    expect(find.byType(SnackBar), findsOneWidget);
+    expectLater(_loginBloc.state, emitsInOrder(expectedStates)).then((_) {
+      expect(finder, findsOneWidget);
+    });
   });
 }
