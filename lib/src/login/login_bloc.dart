@@ -61,7 +61,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> with Validators {
       //TODO: log stacktrace;
       yield LoginFailure(error: "Error trying to login. Please try again later");
     }
-    // yield LoginInitial();
   }
 
   @override
