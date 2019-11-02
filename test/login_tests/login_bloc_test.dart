@@ -46,7 +46,7 @@ void main() {
       _loginBloc.changePassword(randomValidPassword);
 
       //Act
-      _loginBloc.dispatch(LoginButtonPressed());
+      _loginBloc.add(LoginButtonPressed());
 
       //Assert
       expectLater(_authenticationBloc.state, emitsInOrder(expectedAuthState));
@@ -71,7 +71,7 @@ void main() {
       _loginBloc.changePassword(randomValidPassword);
 
       //Act
-      _loginBloc.dispatch(LoginButtonPressed());
+      _loginBloc.add(LoginButtonPressed());
 
       //Assert
       expectLater(_authenticationBloc.state, emitsInOrder(expectedAuthState));
@@ -96,7 +96,7 @@ void main() {
       _loginBloc.changePassword(randomValidPassword);
 
       //Act
-      _loginBloc.dispatch(LoginButtonPressed());
+      _loginBloc.add(LoginButtonPressed());
 
       //Assert
       expectLater(_authenticationBloc.state, emitsInOrder(expectedAuthState));

@@ -77,7 +77,7 @@ void main() async {
     //Arrange
     when(_authenticationRepositoryMock.isSignedIn())
         .thenAnswer((_) => Future.value(false));
-    when(_authenticationBlocMock.currentState)
+    when(_authenticationBlocMock.state)
         .thenAnswer((_) => Unauthenticated());
 
     //Act
@@ -91,7 +91,7 @@ void main() async {
     //Arrange
     when(_authenticationRepositoryMock.isSignedIn())
         .thenAnswer((_) => Future.value(true));
-    when(_authenticationBlocMock.currentState)
+    when(_authenticationBlocMock.state)
         .thenAnswer((_) => Authenticated(FirebaseUserMock()));
 
     //Act

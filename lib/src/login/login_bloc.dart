@@ -45,12 +45,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> with Validators {
   }
 
   Stream<LoginState> _mapLoginButtonPressedToState() async* {
+    yield LoginLoading();
     try {
       final loggedInUser = await authenticationRepository.signInWithCredentials(
         _emailController.value, _passwordController.value);
       
       if(loggedInUser != null){
-        authenticationBloc.dispatch(LoggedIn(loggedInUser));
+        authenticationBloc.add(LoggedIn(loggedInUser));
         yield LoginLoading();
       }
       else {
@@ -61,12 +62,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> with Validators {
       //TODO: log stacktrace;
       yield LoginFailure(error: "Error trying to login. Please try again later");
     }
+    yield LoginInitial();
   }
 
-  @override
   void dispose(){
     _emailController.close();
     _passwordController.close();
-    super.dispose();
   }
 }

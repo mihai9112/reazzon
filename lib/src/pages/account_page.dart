@@ -82,13 +82,6 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   @override
-  void dispose() {
-    _loginBloc?.dispose();
-    _accountPageBloc?.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () => Future.value(false),

@@ -6,13 +6,13 @@ import 'package:mockito/mockito.dart';
 import 'package:reazzon/src/login/login_bloc.dart';
 import 'package:reazzon/src/login/login_state.dart';
 import 'package:reazzon/src/pages/login_page.dart';
+import 'package:bloc_test/bloc_test.dart';
 
 import '../authentication_tests/authentication_mock.dart';
 
 void main() async {
   AuthenticationRepositoryMock _authenticationRepositoryMock;
-  AuthenticationBlocMock _authenticationBloc;
-  LoginBloc _loginBloc;
+  LoginBlocMock _loginBloc;
   
   Widget makeTestableWidget() {
     return BlocProvider<LoginBloc>(
@@ -27,8 +27,7 @@ void main() async {
 
   setUp((){
     _authenticationRepositoryMock = AuthenticationRepositoryMock();
-    _authenticationBloc = AuthenticationBlocMock(authenticationRepository: _authenticationRepositoryMock);
-    _loginBloc = LoginBloc(authenticationRepository: _authenticationRepositoryMock, authenticationBloc: _authenticationBloc);
+    _loginBloc = LoginBlocMock(authenticationRepository: _authenticationRepositoryMock);
   });
 
   testWidgets('Show snack bar when state is LoginFailure', (WidgetTester tester) async {
@@ -41,6 +40,8 @@ void main() async {
 
     when(_authenticationRepositoryMock.signInWithCredentials("est@est.com", "password"))
       .thenAnswer((_) => Future.value(null));
+    
+    whenListen(_loginBloc, Stream.fromIterable(expectedStates));
 
     final button = find.byKey(Key('credentials_button'));
     
@@ -60,8 +61,6 @@ void main() async {
     await tester.pumpAndSettle();
 
     //Assert
-    expectLater(_loginBloc.state, emitsInOrder(expectedStates)).then((_) {
-      expect(finder, findsOneWidget);
-    });
+    expect(finder, findsOneWidget);
   });
 }

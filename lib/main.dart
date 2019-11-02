@@ -31,7 +31,7 @@ void main() async {
     providers: [
       BlocProvider<AuthenticationBloc>(
         builder: (context) => _authenticationBloc
-        ..dispatch(AppStarted()),
+        ..add(AppStarted()),
       ),
       BlocProvider<LoginBloc>(
         builder: (context) => LoginBloc(authenticationBloc: _authenticationBloc, authenticationRepository: _authenticationRepository)

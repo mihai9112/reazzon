@@ -30,7 +30,7 @@ void main() {
         .thenAnswer((_) => Future.value(false));
         
       //Act
-      _authenticationBloc.dispatch(AppStarted());
+      _authenticationBloc.add(AppStarted());
 
       //Assert
       expectLater(_authenticationBloc.state, emitsInOrder(expectedStates));
@@ -49,7 +49,7 @@ void main() {
         .thenAnswer((_) => Future.value(fireBaseUserMock));
         
       //Act
-      _authenticationBloc.dispatch(AppStarted());
+      _authenticationBloc.add(AppStarted());
 
       //Assert
       expectLater(_authenticationBloc.state, emitsInOrder(expectedStates));
@@ -66,7 +66,7 @@ void main() {
         .thenThrow(HttpException('unavailable'));
 
       //Act
-      _authenticationBloc.dispatch(AppStarted());
+      _authenticationBloc.add(AppStarted());
 
       //Assert
       expectLater(_authenticationBloc.state, emitsInOrder(expectedStates));
@@ -83,7 +83,7 @@ void main() {
         .thenAnswer((_) => Future.value(fireBaseUserMock));
 
       //Act
-      _authenticationBloc.dispatch(InitializedGoogleSignIn());
+      _authenticationBloc.add(InitializedGoogleSignIn());
       
       //Assert
       expectLater(_authenticationBloc.state, emitsInOrder(expectedStates));
@@ -100,7 +100,7 @@ void main() {
         .thenThrow(HttpException('unavailable'));
 
       //Act
-      _authenticationBloc.dispatch(InitializedGoogleSignIn());
+      _authenticationBloc.add(InitializedGoogleSignIn());
 
       //Assert
       expectLater(_authenticationBloc.state, emitsInOrder(expectedStates));
@@ -117,7 +117,7 @@ void main() {
         .thenAnswer((_) => null);
 
       //Act
-      _authenticationBloc.dispatch(InitializedGoogleSignIn());
+      _authenticationBloc.add(InitializedGoogleSignIn());
 
       //Assert
       expectLater(_authenticationBloc.state, emitsInOrder(expectedStates));
@@ -134,7 +134,7 @@ void main() {
         .thenAnswer((_) => Future.value(fireBaseUserMock));
 
       //Act
-      _authenticationBloc.dispatch(InitializedFacebookSignIn());
+      _authenticationBloc.add(InitializedFacebookSignIn());
       
       //Assert
       expectLater(_authenticationBloc.state, emitsInOrder(expectedStates));
@@ -151,7 +151,7 @@ void main() {
         .thenThrow(HttpException('unavailable'));
 
       //Act
-      _authenticationBloc.dispatch(InitializedFacebookSignIn());
+      _authenticationBloc.add(InitializedFacebookSignIn());
 
       //Assert
       expectLater(_authenticationBloc.state, emitsInOrder(expectedStates));
@@ -168,7 +168,7 @@ void main() {
         .thenAnswer((_) => null);
 
       //Act
-      _authenticationBloc.dispatch(InitializedFacebookSignIn());
+      _authenticationBloc.add(InitializedFacebookSignIn());
 
       //Assert
       expectLater(_authenticationBloc.state, emitsInOrder(expectedStates));
@@ -187,7 +187,7 @@ void main() {
         .thenAnswer((_) => Future.value(fireBaseUserMock));
 
       //Act
-      _authenticationBloc.dispatch(
+      _authenticationBloc.add(
         InitializedCredentialsSignUp(
           validEmail: randomValidEmail, 
           validPassword: randomValidPassword
@@ -211,7 +211,7 @@ void main() {
         .thenThrow(HttpException('unavailable'));
 
       //Act
-      _authenticationBloc.dispatch(
+      _authenticationBloc.add(
         InitializedCredentialsSignUp(
           validEmail: randomValidEmail, 
           validPassword: randomValidPassword
@@ -235,7 +235,7 @@ void main() {
         .thenAnswer((_) => null);
 
       //Act
-      _authenticationBloc.dispatch(
+      _authenticationBloc.add(
         InitializedCredentialsSignUp(
           validEmail: randomValidEmail, 
           validPassword: randomValidPassword
@@ -259,7 +259,7 @@ void main() {
         .thenAnswer((_) => Future.value(fireBaseUserMock));
 
       //Act
-      _authenticationBloc.dispatch(
+      _authenticationBloc.add(
         InitializedCredentialsSignIn(
           validEmail: randomValidEmail, 
           validPassword: randomValidPassword
@@ -283,7 +283,7 @@ void main() {
         .thenThrow(HttpException('unavailable'));
 
       //Act
-      _authenticationBloc.dispatch(
+      _authenticationBloc.add(
         InitializedCredentialsSignIn(
           validEmail: randomValidEmail, 
           validPassword: randomValidPassword
@@ -307,7 +307,7 @@ void main() {
         .thenAnswer((_) => null);
 
       //Act
-      _authenticationBloc.dispatch(
+      _authenticationBloc.add(
         InitializedCredentialsSignIn(
           validEmail: randomValidEmail, 
           validPassword: randomValidPassword

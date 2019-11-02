@@ -65,14 +65,12 @@ class LoginBloc extends Bloc<AuthenticationEvent, AuthenticationState> with Vali
     return await _authenticationRepository.signOut();
   }
 
-  @override
   void dispose() {
     _emailController.close();
     _passwordController.close();
     _messagesController.close();
     _userController.close();
     _successForgottenMessagesController.close();
-    super.dispose();
   }
 
   @override

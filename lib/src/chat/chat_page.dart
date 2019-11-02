@@ -39,7 +39,7 @@ class _ChatPageState extends State<ChatPage> {
       ),
       body: RefreshIndicator(
         onRefresh: () {
-          this.widget.chatBloc.dispatch(LoadChatList());
+          this.widget.chatBloc.add(LoadChatList());
           return Future.delayed(Duration(milliseconds: 0));
         },
         child: Container(
@@ -84,7 +84,7 @@ class _ChatPageState extends State<ChatPage> {
                   },
                 );
               } else if (state is ChatsNotLoaded) {
-                this.widget.chatBloc.dispatch(LoadChatList());
+                this.widget.chatBloc.add(LoadChatList());
               }
               return Center(child: Spinner());
             },

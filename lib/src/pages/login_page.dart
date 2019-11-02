@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reazzon/src/authentication/authentication.dart';
 import 'package:reazzon/src/helpers/fieldFocus.dart';
 import 'package:flutter/widgets.dart';
+import 'package:reazzon/src/helpers/spinner.dart';
 import 'package:reazzon/src/login/login_bloc.dart';
 import 'package:reazzon/src/login/login_event.dart';
 import 'package:reazzon/src/login/login_state.dart';
@@ -48,7 +49,6 @@ class _LoginPageState extends State<LoginPage> {
         ),
         body: SingleChildScrollView(
           child: Container(
-            //height: MediaQuery.of(context).size.height - 100.0,
             decoration: BoxDecoration(
               color: Colors.white,
             ),
@@ -66,11 +66,24 @@ class _LoginPageState extends State<LoginPage> {
                       backgroundColor: Colors.red
                     ));
                 }
+
+                if (state is LoginLoading) {
+                  Scaffold.of(context)
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(
+                      SnackBar(
+                        content: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Logging In...'),
+                            Spinner(),
+                          ],
+                        ),
+                      ),
+                    );
+                }
               },
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
                   Container(
                     padding: EdgeInsets.all(50.0),
@@ -287,7 +300,7 @@ class _LoginPageState extends State<LoginPage> {
           color: Colors.blueAccent,
           elevation: 4.0,
           onPressed: () => loginBloc
-            .dispatch(LoginButtonPressed()),
+            .add(LoginButtonPressed()),
           child: Container(
             padding:
                 const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
@@ -326,7 +339,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
         color: Color(0Xffdb3236),
         onPressed: () => BlocProvider.of<AuthenticationBloc>(context)
-          .dispatch(InitializedGoogleSignIn()),
+          .add(InitializedGoogleSignIn()),
         child: Row(
           mainAxisAlignment:
               MainAxisAlignment.spaceEvenly,
@@ -364,7 +377,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
         color: Color(0Xff3B5998),
         onPressed: () => BlocProvider.of<AuthenticationBloc>(context)
-          .dispatch(InitializedFacebookSignIn()),
+          .add(InitializedFacebookSignIn()),
         child: Row(
           mainAxisAlignment:
               MainAxisAlignment.spaceEvenly,

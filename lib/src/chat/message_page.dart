@@ -89,7 +89,7 @@ class _MessagePageState extends State<MessagePage> with WidgetsBindingObserver {
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: BlocBuilder<MessageBloc, MessagesState>(
                   builder: (context, state) {
-                      messageBloc.dispatch(
+                      messageBloc.add(
                           LoadMessageListEvent(this.widget.data.userId));
 
                     if (state is MessagesLoaded) {

@@ -281,7 +281,7 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   Widget buildButton(SignUpBloc signUpBloc, ApplicationBloc appBloc) {
-    return new FutureBuilder(
+    return FutureBuilder(
       future: _isSignUpSuccessful,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {

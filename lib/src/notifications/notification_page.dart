@@ -109,7 +109,7 @@ class _NotificationPageState extends State<NotificationPage> {
                                               this
                                                   .widget
                                                   .notificationBloc
-                                                  .dispatch(AcceptRequestEvent(
+                                                  .add(AcceptRequestEvent(
                                                       notification
                                                           .requestFromId));
                                             },
@@ -130,7 +130,7 @@ class _NotificationPageState extends State<NotificationPage> {
                                               this
                                                   .widget
                                                   .notificationBloc
-                                                  .dispatch(RejectRequestEvent(
+                                                  .add(RejectRequestEvent(
                                                       notification
                                                           .requestFromId));
                                             },
@@ -142,7 +142,7 @@ class _NotificationPageState extends State<NotificationPage> {
                           )
                         : InkWell(
                             onTap: () {
-                              this.widget.notificationBloc.dispatch(
+                              this.widget.notificationBloc.add(
                                     OpenChatEvent(
                                       userId: notification.fromId,
                                       userName: notification.from,
@@ -204,7 +204,7 @@ class _NotificationPageState extends State<NotificationPage> {
                 },
               );
             } else if (state is UnNotificationState) {
-              this.widget.notificationBloc.dispatch(LoadNotificationsEvent());
+              this.widget.notificationBloc.add(LoadNotificationsEvent());
             }
           return Container(child: Center(child: Spinner()));
         }

@@ -154,7 +154,6 @@ class SignUpBloc extends Bloc with Validators {
     return result;
   }
 
-  @override
   void dispose() {
     _emailController.close();
     _passwordController.close();
@@ -167,7 +166,6 @@ class SignUpBloc extends Bloc with Validators {
     _validRegistrationController.close();
     _messagesController?.close();
     _userController?.close();
-    super.dispose();
   }
 
   @override
