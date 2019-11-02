@@ -49,8 +49,8 @@ void main() {
       _loginBloc.add(LoginButtonPressed());
 
       //Assert
-      expectLater(_authenticationBloc.state, emitsInOrder(expectedAuthState));
-      expectLater(_loginBloc.state, emitsInOrder(expectedLoginState));
+      expectLater(_authenticationBloc, emitsInOrder(expectedAuthState));
+      expectLater(_loginBloc, emitsInOrder(expectedLoginState));
     });
 
     test('maps to Unauthenticated state when LoginButtonPressed returns no user', () {
@@ -61,6 +61,7 @@ void main() {
 
       final expectedLoginState = [
         LoginInitial(),
+        LoginLoading(),
         LoginFailure(error: "Could not find user. Please try different credentials")
       ];
 
@@ -74,8 +75,8 @@ void main() {
       _loginBloc.add(LoginButtonPressed());
 
       //Assert
-      expectLater(_authenticationBloc.state, emitsInOrder(expectedAuthState));
-      expectLater(_loginBloc.state, emitsInOrder(expectedLoginState));
+      expectLater(_authenticationBloc, emitsInOrder(expectedAuthState));
+      expectLater(_loginBloc, emitsInOrder(expectedLoginState));
     });
 
     test('maps to Unauthenticated state when LoginButtonPressed throws exception', () {
@@ -86,6 +87,7 @@ void main() {
 
       final expectedLoginState = [
         LoginInitial(),
+        LoginLoading(),
         LoginFailure(error: "Error trying to login. Please try again later")
       ];
 
@@ -99,8 +101,8 @@ void main() {
       _loginBloc.add(LoginButtonPressed());
 
       //Assert
-      expectLater(_authenticationBloc.state, emitsInOrder(expectedAuthState));
-      expectLater(_loginBloc.state, emitsInOrder(expectedLoginState));
+      expectLater(_authenticationBloc, emitsInOrder(expectedAuthState));
+      expectLater(_loginBloc, emitsInOrder(expectedLoginState));
     });
   });
 }

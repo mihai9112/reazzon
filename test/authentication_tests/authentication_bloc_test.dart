@@ -33,7 +33,7 @@ void main() {
       _authenticationBloc.add(AppStarted());
 
       //Assert
-      expectLater(_authenticationBloc.state, emitsInOrder(expectedStates));
+      expectLater(_authenticationBloc, emitsInOrder(expectedStates));
     });
 
     test('emits Uninitialized -> Authenticated when logged in', () {
@@ -52,7 +52,7 @@ void main() {
       _authenticationBloc.add(AppStarted());
 
       //Assert
-      expectLater(_authenticationBloc.state, emitsInOrder(expectedStates));
+      expectLater(_authenticationBloc, emitsInOrder(expectedStates));
     });
 
     test('emits Uninitialized -> Unauthenticated when error throws', () {
@@ -69,7 +69,7 @@ void main() {
       _authenticationBloc.add(AppStarted());
 
       //Assert
-      expectLater(_authenticationBloc.state, emitsInOrder(expectedStates));
+      expectLater(_authenticationBloc, emitsInOrder(expectedStates));
     });
 
     test('emits Uninitialized -> Authenticated when sign in with Google', (){
@@ -86,7 +86,7 @@ void main() {
       _authenticationBloc.add(InitializedGoogleSignIn());
       
       //Assert
-      expectLater(_authenticationBloc.state, emitsInOrder(expectedStates));
+      expectLater(_authenticationBloc, emitsInOrder(expectedStates));
     });
 
     test('emits Uninitialized -> Unauthenticated when sign in with Google throws error', (){
@@ -103,7 +103,7 @@ void main() {
       _authenticationBloc.add(InitializedGoogleSignIn());
 
       //Assert
-      expectLater(_authenticationBloc.state, emitsInOrder(expectedStates));
+      expectLater(_authenticationBloc, emitsInOrder(expectedStates));
     });
 
     test('emits Uninitialized -> Unauthenticated when sign in with Google return null user', (){
@@ -120,7 +120,7 @@ void main() {
       _authenticationBloc.add(InitializedGoogleSignIn());
 
       //Assert
-      expectLater(_authenticationBloc.state, emitsInOrder(expectedStates));
+      expectLater(_authenticationBloc, emitsInOrder(expectedStates));
     });
 
     test('emits Uninitialized -> Authenticated when sign in with Facebook', (){
@@ -137,7 +137,7 @@ void main() {
       _authenticationBloc.add(InitializedFacebookSignIn());
       
       //Assert
-      expectLater(_authenticationBloc.state, emitsInOrder(expectedStates));
+      expectLater(_authenticationBloc, emitsInOrder(expectedStates));
     });
 
     test('emits Uninitialized -> Unauthenticated when sign in with Facebook throws error', (){
@@ -154,7 +154,7 @@ void main() {
       _authenticationBloc.add(InitializedFacebookSignIn());
 
       //Assert
-      expectLater(_authenticationBloc.state, emitsInOrder(expectedStates));
+      expectLater(_authenticationBloc, emitsInOrder(expectedStates));
     });
 
     test('emits Uninitialized -> Unauthenticated when sign in with Facebook return null user', (){
@@ -171,7 +171,7 @@ void main() {
       _authenticationBloc.add(InitializedFacebookSignIn());
 
       //Assert
-      expectLater(_authenticationBloc.state, emitsInOrder(expectedStates));
+      expectLater(_authenticationBloc, emitsInOrder(expectedStates));
     });
 
     test('emits Uninitialized -> Authenticated when sign up with credentials', (){
@@ -195,7 +195,7 @@ void main() {
       );
       
       //Assert
-      expectLater(_authenticationBloc.state, emitsInOrder(expectedStates));
+      expectLater(_authenticationBloc, emitsInOrder(expectedStates));
     });
 
     test('emits Uninitialized -> Unauthenticated when sign up with credentials throws error', (){
@@ -219,7 +219,7 @@ void main() {
       );
 
       //Assert
-      expectLater(_authenticationBloc.state, emitsInOrder(expectedStates));
+      expectLater(_authenticationBloc, emitsInOrder(expectedStates));
     });
 
     test('emits Uninitialized -> Unauthenticated when sign up with credentials return null user', (){
@@ -243,7 +243,7 @@ void main() {
       );
 
       //Assert
-      expectLater(_authenticationBloc.state, emitsInOrder(expectedStates));
+      expectLater(_authenticationBloc, emitsInOrder(expectedStates));
     });
 
     test('emits Uninitialized -> Authenticated when sign in with credentials', (){
@@ -267,7 +267,7 @@ void main() {
       );
       
       //Assert
-      expectLater(_authenticationBloc.state, emitsInOrder(expectedStates));
+      expectLater(_authenticationBloc, emitsInOrder(expectedStates));
     });
 
     test('emits Uninitialized -> Unauthenticated when sign in with credentials throws error', (){
@@ -291,7 +291,7 @@ void main() {
       );
 
       //Assert
-      expectLater(_authenticationBloc.state, emitsInOrder(expectedStates));
+      expectLater(_authenticationBloc, emitsInOrder(expectedStates));
     });
 
     test('emits Uninitialized -> Unauthenticated when sign in with credentials return null user', (){
@@ -315,7 +315,7 @@ void main() {
       );
 
       //Assert
-      expectLater(_authenticationBloc.state, emitsInOrder(expectedStates));
+      expectLater(_authenticationBloc, emitsInOrder(expectedStates));
     });
     
   });

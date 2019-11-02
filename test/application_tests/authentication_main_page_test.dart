@@ -1,3 +1,4 @@
+import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -24,7 +25,6 @@ void main() async {
   NotificationRepositoryMock _notificationRepositoryMock;
   ChatRepositoryMock _chatRepositoryMock;
   SettingsRepositoryMock _settingsRepositoryMock;
-
   AuthenticationBlocMock _authenticationBlocMock;
   LoginBlocMock _loginBlocMock;
   NotificationBlocMock _notificationBlocMock;
@@ -77,8 +77,9 @@ void main() async {
     //Arrange
     when(_authenticationRepositoryMock.isSignedIn())
         .thenAnswer((_) => Future.value(false));
+    whenListen(_authenticationBlocMock, Stream<AuthenticationState>.empty());
     when(_authenticationBlocMock.state)
-        .thenAnswer((_) => Unauthenticated());
+      .thenReturn(Unauthenticated());
 
     //Act
     await tester.pumpWidget(makeTestableWidget());
@@ -91,8 +92,9 @@ void main() async {
     //Arrange
     when(_authenticationRepositoryMock.isSignedIn())
         .thenAnswer((_) => Future.value(true));
+    whenListen(_authenticationBlocMock, Stream<AuthenticationState>.empty());
     when(_authenticationBlocMock.state)
-        .thenAnswer((_) => Authenticated(FirebaseUserMock()));
+        .thenReturn((Authenticated(FirebaseUserMock())));
 
     //Act
     await tester.pumpWidget(makeTestableWidget());
