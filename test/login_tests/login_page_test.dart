@@ -8,11 +8,18 @@ import 'package:reazzon/src/login/login_state.dart';
 import 'package:reazzon/src/pages/login_page.dart';
 import 'package:bloc_test/bloc_test.dart';
 
+import '../authentication_tests/authentication_firebase_mock.dart';
 import '../authentication_tests/authentication_mock.dart';
 
 void main() async {
   AuthenticationRepositoryMock _authenticationRepositoryMock;
   LoginBlocMock _loginBloc;
+  final fireBaseUserMock = FirebaseUserMock();
+  final randomValidPassword = "password";
+  final buttonFinder = find.byKey(Key('credentials_button'));
+  final snackBarFinder = find.byKey(Key("snack_bar"));
+  final emailFieldFinder = find.byKey(Key('email_field'));
+  final passwordFieldFinder = find.byKey(Key('password_field'));
   
   Widget makeTestableWidget() {
     return BlocProvider<LoginBloc>(
@@ -38,29 +45,26 @@ void main() async {
       LoginFailure(error: "Could not find user. Please try different credentials")
     ];
 
-    when(_authenticationRepositoryMock.signInWithCredentials("est@est.com", "password"))
+    when(_authenticationRepositoryMock.signInWithCredentials(fireBaseUserMock.email, randomValidPassword))
       .thenAnswer((_) => Future.value(null));
     
     whenListen(_loginBloc, Stream.fromIterable(expectedStates));
 
-    final button = find.byKey(Key('credentials_button'));
-    
     //Act
     await tester.pumpWidget(makeTestableWidget());
 
-    Finder finder = find.byKey(Key("snack_bar"));
-    expect(finder, findsNothing);
+    expect(snackBarFinder, findsNothing);
 
-    await tester.enterText(find.byKey(Key('email_field')), 'est@est.com');
+    await tester.enterText(emailFieldFinder, fireBaseUserMock.email);
     await tester.pumpAndSettle();
 
-    await tester.enterText(find.byKey(Key('password_field')), 'password');
+    await tester.enterText(passwordFieldFinder, randomValidPassword);
     await tester.pumpAndSettle();
     
-    await tester.tap(button);
+    await tester.tap(buttonFinder);
     await tester.pumpAndSettle();
 
     //Assert
-    expect(finder, findsOneWidget);
+    expect(snackBarFinder, findsOneWidget);
   });
 }
