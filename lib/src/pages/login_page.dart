@@ -56,32 +56,26 @@ class _LoginPageState extends State<LoginPage> {
               listener: (context, state){
                 if(state is LoginFailure){
                   Scaffold.of(context)
-                    ..hideCurrentSnackBar()
-                    ..showSnackBar(SnackBar(
+                    .showSnackBar(SnackBar(
                       key: Key("snack_bar_failure"),
                       content: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [Text('Login Failure'), Icon(Icons.error)],
                       ),
-                      backgroundColor: Colors.red
+                      backgroundColor: Colors.redAccent
                     ));
                 }
 
                 if (state is LoginLoading) {
                   Scaffold.of(context)
-                    ..hideCurrentSnackBar()
-                    ..showSnackBar(
-                      SnackBar(
-                        key: Key("snack_bar_loading"),
-                        content: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Logging In...'),
-                            Spinner(),
-                          ],
-                        ),
+                    .showSnackBar(SnackBar(
+                      key: Key("snack_bar_loading"),
+                      content: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [Text('Logging in...'), Spinner()],
                       ),
-                    );
+                      backgroundColor: Colors.blueAccent
+                    ));
                 }
               },
               child: Column(

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
 import 'package:reazzon/src/login/login_bloc.dart';
 import 'package:reazzon/src/login/login_state.dart';
 import 'package:reazzon/src/pages/login_page.dart';
@@ -17,7 +16,8 @@ void main() async {
   final fireBaseUserMock = FirebaseUserMock();
   final randomValidPassword = "password";
   final buttonFinder = find.byKey(Key('credentials_button'));
-  final snackBarFinder = find.byKey(Key("snack_bar_failure"));
+  final snackBarFailureFinder = find.byKey(Key("snack_bar_failure"));
+  final snackBarLoadingFinder = find.byKey(Key("snack_bar_loading"));
   final emailFieldFinder = find.byKey(Key('email_field'));
   final passwordFieldFinder = find.byKey(Key('password_field'));
   
@@ -50,7 +50,7 @@ void main() async {
     //Act
     await tester.pumpWidget(makeTestableWidget());
 
-    expect(snackBarFinder, findsNothing);
+    expect(snackBarFailureFinder, findsNothing);
 
     await tester.enterText(emailFieldFinder, fireBaseUserMock.email);
     await tester.pumpAndSettle();
@@ -62,6 +62,34 @@ void main() async {
     await tester.pumpAndSettle();
 
     //Assert
-    expect(snackBarFinder, findsOneWidget);
+    expect(snackBarFailureFinder, findsOneWidget);
+  });
+
+  testWidgets('Show snack bar when state is LoginLoading', (WidgetTester tester) async {
+
+    //Arrange
+    var expectedStates = [
+      LoginInitial(), 
+      LoginLoading()
+    ];
+    
+    whenListen(_loginBloc, Stream.fromIterable(expectedStates));
+
+    //Act
+    await tester.pumpWidget(makeTestableWidget());
+
+    expect(snackBarLoadingFinder, findsNothing);
+
+    await tester.enterText(emailFieldFinder, fireBaseUserMock.email);
+    await tester.pumpAndSettle();
+
+    await tester.enterText(passwordFieldFinder, randomValidPassword);
+    await tester.pumpAndSettle();
+    
+    await tester.tap(buttonFinder);
+    await tester.pumpAndSettle();
+
+    //Assert
+    expect(snackBarLoadingFinder, findsOneWidget);
   });
 }
