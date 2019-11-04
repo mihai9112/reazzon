@@ -58,7 +58,7 @@ class _LoginPageState extends State<LoginPage> {
                   Scaffold.of(context)
                     ..hideCurrentSnackBar()
                     ..showSnackBar(SnackBar(
-                      key: Key("snack_bar"),
+                      key: Key("snack_bar_failure"),
                       content: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [Text('Login Failure'), Icon(Icons.error)],
@@ -72,6 +72,7 @@ class _LoginPageState extends State<LoginPage> {
                     ..hideCurrentSnackBar()
                     ..showSnackBar(
                       SnackBar(
+                        key: Key("snack_bar_loading"),
                         content: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [

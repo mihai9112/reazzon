@@ -17,7 +17,7 @@ void main() async {
   final fireBaseUserMock = FirebaseUserMock();
   final randomValidPassword = "password";
   final buttonFinder = find.byKey(Key('credentials_button'));
-  final snackBarFinder = find.byKey(Key("snack_bar"));
+  final snackBarFinder = find.byKey(Key("snack_bar_failure"));
   final emailFieldFinder = find.byKey(Key('email_field'));
   final passwordFieldFinder = find.byKey(Key('password_field'));
   
@@ -44,9 +44,6 @@ void main() async {
       LoginInitial(), 
       LoginFailure(error: "Could not find user. Please try different credentials")
     ];
-
-    when(_authenticationRepositoryMock.signInWithCredentials(fireBaseUserMock.email, randomValidPassword))
-      .thenAnswer((_) => Future.value(null));
     
     whenListen(_loginBloc, Stream.fromIterable(expectedStates));
 
