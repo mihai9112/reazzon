@@ -9,6 +9,7 @@ import 'package:reazzon/src/login/login_bloc.dart';
 import 'package:reazzon/src/login/login_event.dart';
 import 'package:reazzon/src/login/login_state.dart';
 import 'package:reazzon/src/pages/forgotten_password_page.dart';
+import 'package:reazzon/src/pages/signup_second_page.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -40,7 +41,14 @@ class _LoginPageState extends State<LoginPage> {
     FocusNode _focusEmail = new FocusNode();
     FocusNode _focusPassword = new FocusNode();
 
-    return Scaffold(
+    return BlocListener<AuthenticationBloc, AuthenticationState>(
+      listener: (context, state){
+        if(state is Authenticated){
+          final route = MaterialPageRoute(builder: (_) => SecondSignUpPage());
+          Navigator.of(context).push(route);
+        }
+      },
+      child: Scaffold(
         appBar: AppBar(
             iconTheme: IconThemeData(color: Colors.blueAccent),
             backgroundColor: Colors.white,
@@ -121,6 +129,11 @@ class _LoginPageState extends State<LoginPage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[Expanded(child: emailField(_loginBloc))],
                     ),
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin:
+                        const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0)
                   ),
                   Row(
                     children: <Widget>[
@@ -245,7 +258,9 @@ class _LoginPageState extends State<LoginPage> {
               ),
             )
           ),
-        ));
+        )
+      )
+    );
   }
 
   Widget emailField(LoginBloc bloc) {
