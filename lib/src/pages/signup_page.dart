@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:reazzon/src/blocs/application_bloc.dart';
 import 'package:reazzon/src/blocs/signup_bloc.dart';
 import 'package:reazzon/src/helpers/fieldFocus.dart';
 import 'package:reazzon/src/helpers/spinner.dart';
@@ -34,8 +33,6 @@ class _SignUpPageState extends State<SignUpPage> {
     FocusNode _focusEmail = new FocusNode();
     FocusNode _focusPassword = new FocusNode();
     FocusNode _focusConfirmPassword = new FocusNode();
-
-    var _appBloc = BlocProvider.of<ApplicationBloc>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -227,7 +224,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 child: Row(
                   children: <Widget>[
                     Expanded(
-                      child: buildButton(_signUpBloc, _appBloc),
+                      child: buildButton(_signUpBloc),
                     ),
                   ],
                 ),
@@ -280,7 +277,7 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Widget buildButton(SignUpBloc signUpBloc, ApplicationBloc appBloc) {
+  Widget buildButton(SignUpBloc signUpBloc) {
     return FutureBuilder(
       future: _isSignUpSuccessful,
       builder: (context, snapshot) {
@@ -292,7 +289,7 @@ class _SignUpPageState extends State<SignUpPage> {
         } else {
           if (snapshot.data) {
             signUpBloc.outUser.listen((onData) {
-              appBloc.appState.setUser(onData);
+              //appBloc.appState.setUser(onData);
               Navigator.of(context).pushReplacement(MaterialPageRoute(
                   builder: (BuildContext context) => SecondSignUpPage()));
             });

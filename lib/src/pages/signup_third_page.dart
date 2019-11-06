@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:reazzon/src/blocs/application_bloc.dart';
 import 'package:reazzon/src/blocs/signup_bloc.dart';
 import 'package:reazzon/src/models/reazzon.dart';
 import 'package:reazzon/src/pages/account_page.dart';
@@ -28,7 +27,6 @@ class _ThirdSignUpPageState extends State<ThirdSignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    final _appBloc = BlocProvider.of<ApplicationBloc>(context);
 
     return Scaffold(
         appBar: AppBar(
@@ -76,7 +74,7 @@ class _ThirdSignUpPageState extends State<ThirdSignUpPage> {
                   )
                 ],
               ),
-              Text("Hello ${_appBloc.appState.user.userName}"),
+              //Text("Hello ${_appBloc.appState.user.userName}"),
               Container(
                   child: StreamBuilder<String>(
                 stream: _signUpBloc.outReazzonMessage,
@@ -144,7 +142,7 @@ class _ThirdSignUpPageState extends State<ThirdSignUpPage> {
                 child: Row(
                   children: <Widget>[
                     Expanded(
-                      child: completeRegistrationButton(_signUpBloc, _appBloc),
+                      child: completeRegistrationButton(_signUpBloc),
                     ),
                   ],
                 ),
@@ -156,7 +154,7 @@ class _ThirdSignUpPageState extends State<ThirdSignUpPage> {
 }
 
 Widget completeRegistrationButton(
-    SignUpBloc signUpBloc, ApplicationBloc appBloc) {
+    SignUpBloc signUpBloc) {
   return StreamBuilder(
     stream: signUpBloc.completeRegistrationValid,
     initialData: false,
@@ -169,12 +167,12 @@ Widget completeRegistrationButton(
           elevation: 4.0,
           onPressed: snapshot.data
               ? () {
-                  signUpBloc.completeRegistration(appBloc.appState.user);
+                  //signUpBloc.completeRegistration(appBloc.appState.user);
                   signUpBloc.outUser.listen((s) {
-                    appBloc.appState.setUser(s);
+                    //appBloc.appState.setUser(s);
                     var accountRoute = MaterialPageRoute(
                         builder: (BuildContext context) => AccountPage(
-                            loggedUserId: appBloc.appState.user.userId));
+                            loggedUserId: ""));
                     Navigator.of(context).pushAndRemoveUntil(
                         accountRoute, ModalRoute.withName('/account'));
                   });

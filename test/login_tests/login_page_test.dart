@@ -4,10 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:reazzon/src/authentication/authentication.dart';
+import 'package:reazzon/src/blocs/signup_bloc.dart';
 import 'package:reazzon/src/login/login_bloc.dart';
 import 'package:reazzon/src/login/login_state.dart';
 import 'package:reazzon/src/pages/login_page.dart';
 import 'package:bloc_test/bloc_test.dart';
+import 'package:reazzon/src/pages/signup_second_page.dart';
 
 import '../authentication_tests/authentication_firebase_mock.dart';
 import '../authentication_tests/authentication_mock.dart';
@@ -17,6 +19,7 @@ void main() async {
   AuthenticationRepositoryMock _authenticationRepositoryMock;
   LoginBlocMock _loginBloc;
   AuthenticationBlocMock _authenticationBloc;
+  SignUpBlocMock _signUpBloc;
   final fireBaseUserMock = FirebaseUserMock();
   final snackBarFailureFinder = find.byKey(Key("snack_bar_failure"));
   final snackBarLoadingFinder = find.byKey(Key("snack_bar_loading"));
@@ -31,6 +34,9 @@ void main() async {
         BlocProvider<LoginBloc>(
           builder: (context) => _loginBloc
         ),
+        BlocProvider<SignUpBloc>(
+          builder: (context) => _signUpBloc,
+        )
       ],
       child: MaterialApp(
         home: Scaffold(
@@ -45,6 +51,7 @@ void main() async {
     _authenticationRepositoryMock = AuthenticationRepositoryMock();
     _loginBloc = LoginBlocMock(authenticationRepository: _authenticationRepositoryMock);
     _authenticationBloc = AuthenticationBlocMock(authenticationRepository: _authenticationRepositoryMock);
+    _signUpBloc = SignUpBlocMock(authenticationRepository: _authenticationRepositoryMock);
   });
 
   testWidgets('Show snack bar when state is LoginFailure', (WidgetTester tester) async {
@@ -70,18 +77,16 @@ void main() async {
   testWidgets('Navigate to second sign up page when Authenticated', (WidgetTester tester) async {
 
     //Arrange
-    var expectedStates = [
-      Authenticated(fireBaseUserMock)
-    ];
-
-    whenListen(_authenticationBloc, Stream.fromIterable(expectedStates));
-    whenListen(_loginBloc, Stream<LoginState>.empty());
+    whenListen(_authenticationBloc, Stream.fromIterable([Uninitialized(), Authenticated(fireBaseUserMock)]));
+    whenListen(_loginBloc, Stream.fromIterable([LoginInitial()]));
 
     //Act
     await tester.pumpWidget(makeTestableWidget());
+    //await tester.pump();
 
     //Assert
     verify(mockNavigatorObserver.didPush(any, any));
+    expect(find.byType(SecondSignUpPage), findsOneWidget);
   });
 
   

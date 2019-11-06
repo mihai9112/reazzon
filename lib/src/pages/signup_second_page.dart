@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:reazzon/src/blocs/application_bloc.dart';
 import 'package:reazzon/src/blocs/signup_bloc.dart';
 import 'package:reazzon/src/helpers/fieldFocus.dart';
 import 'package:reazzon/src/helpers/spinner.dart';
@@ -35,8 +34,6 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
     FocusNode _focusFirstName = new FocusNode();
     FocusNode _focusLastName = new FocusNode();
     FocusNode _focusUserName = new FocusNode();
-
-    final ApplicationBloc _appBloc = BlocProvider.of<ApplicationBloc>(context);
   
     return Scaffold(
       appBar: AppBar(
@@ -119,7 +116,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
                     child: Row(
                       children: <Widget>[
                         Expanded(
-                          child: firstNameField(_appBloc, _signUpBloc)
+                          child: firstNameField(_signUpBloc)
                         )
                       ],
                     ),
@@ -158,7 +155,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
                     child: Row(
                       children: <Widget>[
                         Expanded(
-                          child: lastNameField(_appBloc, _signUpBloc)
+                          child: lastNameField(_signUpBloc)
                         )
                       ],
                     ),
@@ -209,7 +206,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
                 child: Row(
                   children: <Widget>[
                     Expanded(
-                      child: buildButton(_signUpBloc, _appBloc),
+                      child: buildButton(_signUpBloc),
                     ),
                   ],
                 ),
@@ -221,7 +218,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
     );
   }
 
-  Widget firstNameField(ApplicationBloc appBloc, SignUpBloc signUpBloc) {
+  Widget firstNameField(SignUpBloc signUpBloc) {
     return StreamBuilder(
       stream: signUpBloc.outFirstName,
       builder: (context, snapshot) {
@@ -237,7 +234,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
     );
   }
 
-  Widget lastNameField(ApplicationBloc appBloc, SignUpBloc signUpBloc) {
+  Widget lastNameField(SignUpBloc signUpBloc) {
     return StreamBuilder(
       stream: signUpBloc.outLastName,
       builder: (context, snapshot) {
@@ -270,7 +267,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
     );
   }
 
-  Widget continueButton(SignUpBloc signUpBloc, ApplicationBloc appBloc) {
+  Widget continueButton(SignUpBloc signUpBloc) {
     return StreamBuilder(
       stream: signUpBloc.updateDetailsValid,
       builder: (context, snapshot) {
@@ -282,7 +279,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
           elevation: 4.0,
           onPressed: snapshot.hasData ? () {
               setState(() {
-                _isSecondSignUpSuccessful = signUpBloc.updateDetails(appBloc.appState.user);
+                //_isSecondSignUpSuccessful = signUpBloc.updateDetails(appBloc.appState.user);
               });
             }
             : null,
@@ -313,7 +310,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
     );
   }
 
-  Widget buildButton(SignUpBloc signUpBloc, ApplicationBloc appBloc){
+  Widget buildButton(SignUpBloc signUpBloc){
     return new FutureBuilder(
       future: _isSecondSignUpSuccessful,
       builder: (context, snapshot){
@@ -321,13 +318,13 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
           if(snapshot.connectionState != ConnectionState.none){
             return Spinner();
           }
-          return continueButton(signUpBloc, appBloc);
+          return continueButton(signUpBloc);
         }
 
         if(snapshot.hasData){
           if(snapshot.data){
             signUpBloc.outUser.listen((onData){
-              appBloc.appState.setUser(onData);
+              //appBloc.appState.setUser(onData);
               Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
                     builder: (BuildContext context) => ThirdSignUpPage()
@@ -339,13 +336,13 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
 
           if(!snapshot.data){
             if(snapshot.connectionState == ConnectionState.done){
-              return continueButton(signUpBloc, appBloc);
+              return continueButton(signUpBloc);
             }
             return Spinner();
           }
         }
 
-        return continueButton(signUpBloc, appBloc);
+        return continueButton(signUpBloc);
       },
     );
   }

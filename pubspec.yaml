@@ -33,13 +33,13 @@ dependencies:
   firebase_storage: ^3.0.6
   image_picker: ^0.6.1+4
   intl: ^0.16.0
-  flutter_bloc: ^1.0.0
+  flutter_bloc: ^2.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   mockito: ^4.1.0
-  bloc_test: ^1.0.0
+  bloc_test: ^2.1.0
 
 
 # For information on the generic Dart part of this file, see the
