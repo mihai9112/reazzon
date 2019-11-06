@@ -301,7 +301,7 @@ class _LoginPageState extends State<LoginPage> {
     final loginBloc = BlocProvider.of<LoginBloc>(context);
     return StreamBuilder(
       stream: loginBloc.submitValid,
-      builder: (context, snapshot) {
+      builder: (context, AsyncSnapshot<bool> snapshot) {
         return RaisedButton(
           key: Key('credentials_button'),
           shape: RoundedRectangleBorder(
@@ -309,7 +309,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
           color: Colors.blueAccent,
           elevation: 4.0,
-          onPressed: () => loginBloc
+          onPressed: () => snapshot.data ? null : loginBloc
             .add(LoginButtonPressed()),
           child: Container(
             padding:

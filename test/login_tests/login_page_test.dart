@@ -8,7 +8,6 @@ import 'package:reazzon/src/login/login_bloc.dart';
 import 'package:reazzon/src/login/login_state.dart';
 import 'package:reazzon/src/pages/login_page.dart';
 import 'package:bloc_test/bloc_test.dart';
-import 'package:reazzon/src/pages/signup_second_page.dart';
 
 import '../authentication_tests/authentication_firebase_mock.dart';
 import '../authentication_tests/authentication_mock.dart';
@@ -80,7 +79,6 @@ void main() async {
 
     //Act
     await tester.pumpWidget(makeTestableWidget());
-    await tester.pump();
 
     //Assert
     verify(mockNavigatorObserver.didPush(any, any));

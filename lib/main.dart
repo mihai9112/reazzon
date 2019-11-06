@@ -11,7 +11,6 @@ import 'package:reazzon/src/pages/home_page.dart';
 
 import 'src/authentication/authentication_repository.dart';
 import 'src/pages/account_page.dart';
-import 'src/pages/signup_second_page.dart';
 
 void main() async {
   
@@ -60,9 +59,6 @@ class ReazzonMainWidget extends StatelessWidget {
       title: 'Reazzon',
       theme: theme,
       debugShowCheckedModeBanner: false,
-      routes: {
-        '/signup_second_page' : (context) => SecondSignUpPage()
-      },
       home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
         builder: (context, state) {
           if(state is Authenticated){
