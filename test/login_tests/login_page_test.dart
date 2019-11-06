@@ -86,7 +86,6 @@ void main() async {
 
     //Assert
     verify(mockNavigatorObserver.didPush(any, any));
-    expect(find.byType(SecondSignUpPage), findsOneWidget);
   });
 
   
