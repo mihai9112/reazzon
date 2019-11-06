@@ -77,3 +77,6 @@ android/app/*.keystore
 
 # Environment.sh
 ios/Flutter/flutter_export_environment.sh
+
+# Integration tests screenshot
+screenshots
