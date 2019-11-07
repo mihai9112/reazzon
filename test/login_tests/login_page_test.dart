@@ -82,7 +82,7 @@ void main() async {
 
     //Act
     await tester.pumpWidget(makeTestableWidget());
-    await tester.pump();
+    await tester.pumpAndSettle();
 
     //Assert
     verify(mockNavigatorObserver.didPush(any, any));
