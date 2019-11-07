@@ -82,10 +82,11 @@ void main() async {
 
     //Act
     await tester.pumpWidget(makeTestableWidget());
-    //await tester.pump();
+    await tester.pump();
 
     //Assert
     verify(mockNavigatorObserver.didPush(any, any));
+    expect(find.byType(SecondSignUpPage), findsOneWidget);
   });
 
   
