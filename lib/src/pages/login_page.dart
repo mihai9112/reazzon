@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reazzon/src/authentication/authentication.dart';
-import 'package:reazzon/src/helpers/fieldFocus.dart';
+import 'package:reazzon/src/helpers/field_focus.dart';
 import 'package:flutter/widgets.dart';
 import 'package:reazzon/src/helpers/spinner.dart';
 import 'package:reazzon/src/login/login_bloc.dart';

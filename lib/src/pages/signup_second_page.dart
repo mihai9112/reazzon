@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reazzon/src/blocs/signup_bloc.dart';
-import 'package:reazzon/src/helpers/fieldFocus.dart';
+import 'package:reazzon/src/helpers/field_focus.dart';
 import 'package:reazzon/src/helpers/spinner.dart';
 import 'package:reazzon/src/pages/signup_third_page.dart';
 
