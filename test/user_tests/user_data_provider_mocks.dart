@@ -34,10 +34,11 @@ class DocumentReferenceMock extends Mock implements DocumentReference{
     return Stream.empty();
   }
 }
-class DocumentSnapshotMock extends Mock implements DocumentSnapshot{
+class DocumentSnapshotMock extends Mock implements DocumentSnapshot {
   Map mockData = Map<String,dynamic>();
 
   set data(Map data)  => this.mockData = data;
+
   @override
   Map<String,dynamic > get data => mockData;
 }

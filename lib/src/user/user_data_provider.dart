@@ -15,10 +15,10 @@ class UserDataProvider {
     DocumentReference ref = firestoreUserCollection.collection(Paths.usersPath).document(
       user.uid
     );
-    final bool userExists =
+    final bool userIsEmpty =
       await ref.snapshots().isEmpty;
     
-    if(!userExists) {
+    if(userIsEmpty) {
       var userData = {
         'uid': user.uid,
         'email': user.email,
