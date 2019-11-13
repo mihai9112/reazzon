@@ -6,13 +6,14 @@ class User {
   String name;
   String userName;
   String email;
-  Set<Reazzon> _selectedReazzons = new Set<Reazzon>();
+  Set<Reazzon> reazzons = new Set<Reazzon>();
 
   User({
     this.documentId,
     this.name,
     this.userName,
-    this.email
+    this.email,
+    this.reazzons
   });
 
   factory User.fromFirestore(DocumentSnapshot doc) {
@@ -21,7 +22,8 @@ class User {
       documentId: doc.documentID,
       name: data['name'],
       userName: data['username'],
-      email: data['email']
+      email: data['email'],
+      reazzons: data['reazzons']
     );
   }
 
@@ -30,7 +32,8 @@ class User {
       documentId: data['uid'],
       name: data['name'],
       userName: data['username'],
-      email: data['email']
+      email: data['email'],
+      reazzons: data['reazzons'].map((r) => new Reazzon(r.value)).toSet()
     );
   }
 }

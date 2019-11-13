@@ -59,44 +59,77 @@ void main() async {
         await userDataProvider.saveDetailsFromProvider(firebaseUserMock);
 
       //Assert
-      expect(user.email, firebaseUserMock.email,);
+      expect(user.email, firebaseUserMock.email);
       expect(user.name, firebaseUserMock.displayName);
     });
 
-    test("", () async {
+    test("isProfileComplete returns false if there is no document", () async {
 
       //Arrange
+      when(SharedObjects.prefs.getString(any))
+        .thenReturn(firebaseUserMock.uid);
+      when(firestoreMock.collection(Paths.usersPath))
+        .thenReturn(collectionReferenceMock);
+      when(collectionReferenceMock.document(firebaseUserMock.uid))
+        .thenReturn(documentReferenceMock);
+      when(documentSnapshotMock.exists)
+        .thenReturn(false);
 
       //Act
+      var isProfileCompleteResult = await userDataProvider.isProfileComplete();
 
       //Assert
+      expect(isProfileCompleteResult, false);
     });
 
-    test("", () async {
+    test("isProfileComplete returns false if there are no reazzons saved", () async {
 
       //Arrange
+      documentReferenceMock = DocumentReferenceMock(
+        documentSnapshotMock: documentSnapshotMock
+      );
+      documentReferenceMock.setData({
+        'email' : firebaseUserMock.email,
+      });
+      when(SharedObjects.prefs.getString(any))
+        .thenReturn(firebaseUserMock.uid);
+       when(firestoreMock.collection(Paths.usersPath))
+        .thenReturn(collectionReferenceMock);
+      when(collectionReferenceMock.document(firebaseUserMock.uid))
+        .thenReturn(documentReferenceMock);
+      when(documentSnapshotMock.exists)
+        .thenReturn(true);
 
       //Act
+      var isProfileCompleteResult = await userDataProvider.isProfileComplete();
 
       //Assert
+      expect(isProfileCompleteResult, false);
     });
 
-    test("", () async {
+    test("isProfileComplete returns true if there is a document and there are reazzons saved", () async {
 
       //Arrange
+      documentReferenceMock = DocumentReferenceMock(
+        documentSnapshotMock: documentSnapshotMock
+      );
+      documentReferenceMock.setData({
+        'reazzons' : '["#Reazzon1"]',
+      });
+      when(SharedObjects.prefs.getString(any))
+        .thenReturn(firebaseUserMock.uid);
+       when(firestoreMock.collection(Paths.usersPath))
+        .thenReturn(collectionReferenceMock);
+      when(collectionReferenceMock.document(firebaseUserMock.uid))
+        .thenReturn(documentReferenceMock);
+      when(documentSnapshotMock.exists)
+        .thenReturn(true);
 
       //Act
+      var isProfileCompleteResult = await userDataProvider.isProfileComplete();
 
       //Assert
-    });
-
-    test("", () async {
-
-      //Arrange
-
-      //Act
-
-      //Assert
+      expect(isProfileCompleteResult, true);
     });
   });
 }

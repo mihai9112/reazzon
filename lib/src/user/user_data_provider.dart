@@ -44,9 +44,26 @@ class UserDataProvider {
     return currentUser;
   }
 
-  // Future<bool> isProfileComplete() async {
-  //   DocumentReference ref = firestoreUserCollection.collection(Paths.usersPath).document(
-
-  //   )
-  // }
+  Future<bool> isProfileComplete() async {
+    DocumentReference ref = firestoreUserCollection.collection(Paths.usersPath).document(
+      SharedObjects.prefs.getString(Constants.sessionUid)
+    );
+    final DocumentSnapshot userDocument = await ref.get();
+    final bool isProfileComplete = 
+      userDocument != null &&
+      userDocument.exists &&
+      userDocument.data.containsKey('reazzons');
+    
+    if(isProfileComplete) {
+      Future.wait([
+        SharedObjects.prefs.setString(Constants.sessionDisplayName, userDocument.data['name']),
+        SharedObjects.prefs.setString(Constants.sessionEmail, userDocument.data['email'])
+      ])
+      .then((onData) => true)
+      .catchError((onError) {
+        print(onError);
+      });
+    }
+    return isProfileComplete;
+  }
 }
