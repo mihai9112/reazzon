@@ -410,6 +410,48 @@ void main() {
       //Assert
       expectLater(_authenticationBloc, emitsInOrder(expectedStates));
     });
+
+    test("emits Uninitialized -> ProfileToBeUpdated when sign in with credentials returns profile not complete", () {
+
+      //Arrange
+      final expectedStates = [
+        Uninitialized(),
+        ProfileToBeUpdated()
+      ];
+
+      when(_authenticationRepositoryMock.signInWithCredentials(any, any))
+        .thenAnswer((_) => Future.value(fireBaseUserMock));
+      when(_userRepositoryMock.isProfileComplete())
+        .thenAnswer((_) => Future.value(false));
+      when(_userRepositoryMock.saveDetailsFromProvider(fireBaseUserMock))
+        .thenAnswer((_) => Future.value(User()));
+
+      //Act
+      _authenticationBloc.add(InitializedCredentialsSignIn());
+      
+      //Assert
+      expectLater(_authenticationBloc, emitsInOrder(expectedStates));
+    });
+
+    test("emits Uninitialized -> Unauthenticated when user repository throws error on credentials sign in", () {
+      
+      //Arrange
+      final expectedStates = [
+        Uninitialized(),
+        Unauthenticated()
+      ];
+
+      when(_authenticationRepositoryMock.signInWithCredentials(any, any))
+        .thenAnswer((_) => Future.value(fireBaseUserMock));
+      when(_userRepositoryMock.isProfileComplete())
+        .thenThrow(HttpException('unavailable'));
+      
+      //Act
+      _authenticationBloc.add(InitializedCredentialsSignIn());
+
+      //Assert
+      expectLater(_authenticationBloc, emitsInOrder(expectedStates));
+    });
     
   });
 }

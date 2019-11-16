@@ -121,9 +121,14 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
   Stream<AuthenticationState> _mapCredentialsSigningInToState(String email, String password) async* {
     try {
       final firebaseUser = await _authenticationRepository.signInWithCredentials(email, password);
-      if(firebaseUser != null)
-      {
-        yield Authenticated(firebaseUser);
+      if(firebaseUser != null){
+        
+        if(await _userRepository.isProfileComplete()){
+          yield Authenticated(firebaseUser);  
+        }
+
+        _userRepository.saveDetailsFromProvider(firebaseUser);
+        yield ProfileToBeUpdated();
       }
       yield Unauthenticated();
     } 
