@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:reazzon/src/authentication/authentication.dart';
+import 'package:reazzon/src/user/user.dart';
 
+import '../user_tests/user_repository_mocks.dart';
 import 'authentication_firebase_mock.dart';
 import 'authentication_mock.dart';
 
@@ -11,11 +13,18 @@ void main() {
 
   AuthenticationBloc _authenticationBloc;
   AuthenticationRepositoryMock _authenticationRepositoryMock;
+  UserRepositoryMock _userRepositoryMock;
   final fireBaseUserMock = FirebaseUserMock();
 
   setUp(() {
     _authenticationRepositoryMock = AuthenticationRepositoryMock();
-    _authenticationBloc = AuthenticationBloc(_authenticationRepositoryMock);
+    _userRepositoryMock = UserRepositoryMock();
+    when(_userRepositoryMock.isProfileComplete())
+      .thenAnswer((_) => Future.value(true));
+    _authenticationBloc = AuthenticationBloc(
+        authenticationRepository: _authenticationRepositoryMock, 
+        userRepository: _userRepositoryMock
+      );
   });
 
   group('AppStarted', () {
@@ -313,6 +322,90 @@ void main() {
           validPassword: randomValidPassword
         )
       );
+
+      //Assert
+      expectLater(_authenticationBloc, emitsInOrder(expectedStates));
+    });
+
+    test("emits Uninitialized -> ProfileToBeUpdated when sign in with Google returns profile not complete", () {
+
+      //Arrange
+      final expectedStates = [
+        Uninitialized(),
+        ProfileToBeUpdated()
+      ];
+
+      when(_authenticationRepositoryMock.signInWithGoogle())
+        .thenAnswer((_) => Future.value(fireBaseUserMock));
+      when(_userRepositoryMock.isProfileComplete())
+        .thenAnswer((_) => Future.value(false));
+      when(_userRepositoryMock.saveDetailsFromProvider(fireBaseUserMock))
+        .thenAnswer((_) => Future.value(User()));
+
+      //Act
+      _authenticationBloc.add(InitializedGoogleSignIn());
+      
+      //Assert
+      expectLater(_authenticationBloc, emitsInOrder(expectedStates));
+    });
+
+    test("emits Uninitialized -> Unauthenticated when user repository throws error on Google sign in", () {
+      
+      //Arrange
+      final expectedStates = [
+        Uninitialized(),
+        Unauthenticated()
+      ];
+
+      when(_authenticationRepositoryMock.signInWithGoogle())
+        .thenAnswer((_) => Future.value(fireBaseUserMock));
+      when(_userRepositoryMock.isProfileComplete())
+        .thenThrow(HttpException('unavailable'));
+      
+      //Act
+      _authenticationBloc.add(InitializedGoogleSignIn());
+
+      //Assert
+      expectLater(_authenticationBloc, emitsInOrder(expectedStates));
+    });
+
+    test("emits Uninitialized -> ProfileToBeUpdated when sign in with Facebook returns profile not complete", () {
+
+      //Arrange
+      final expectedStates = [
+        Uninitialized(),
+        ProfileToBeUpdated()
+      ];
+
+      when(_authenticationRepositoryMock.signInWithFacebook())
+        .thenAnswer((_) => Future.value(fireBaseUserMock));
+      when(_userRepositoryMock.isProfileComplete())
+        .thenAnswer((_) => Future.value(false));
+      when(_userRepositoryMock.saveDetailsFromProvider(fireBaseUserMock))
+        .thenAnswer((_) => Future.value(User()));
+
+      //Act
+      _authenticationBloc.add(InitializedFacebookSignIn());
+      
+      //Assert
+      expectLater(_authenticationBloc, emitsInOrder(expectedStates));
+    });
+
+    test("emits Uninitialized -> Unauthenticated when user repository throws error on Facebook sign in", () {
+      
+      //Arrange
+      final expectedStates = [
+        Uninitialized(),
+        Unauthenticated()
+      ];
+
+      when(_authenticationRepositoryMock.signInWithFacebook())
+        .thenAnswer((_) => Future.value(fireBaseUserMock));
+      when(_userRepositoryMock.isProfileComplete())
+        .thenThrow(HttpException('unavailable'));
+      
+      //Act
+      _authenticationBloc.add(InitializedFacebookSignIn());
 
       //Assert
       expectLater(_authenticationBloc, emitsInOrder(expectedStates));

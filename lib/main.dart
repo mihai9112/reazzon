@@ -7,6 +7,7 @@ import 'package:reazzon/src/authentication/authentication.dart';
 import 'package:reazzon/src/blocs/signup_bloc.dart';
 import 'package:reazzon/src/login/login_bloc.dart';
 import 'package:reazzon/src/pages/home_page.dart';
+import 'package:reazzon/src/user/user_repository.dart';
 
 import 'src/authentication/authentication_repository.dart';
 import 'src/pages/account_page.dart';
@@ -24,7 +25,10 @@ void main() async {
   
   final AuthenticationRepository _authenticationRepository =
     AuthenticationRepository(facebookSignIn: _facebookLogin, firebaseAuth: _firebaseAuth, googleSignin: _googleSignIn);
-  final AuthenticationBloc _authenticationBloc = AuthenticationBloc(_authenticationRepository);
+  final UserRepository _userRepository = 
+    UserRepository();
+  final AuthenticationBloc _authenticationBloc = 
+    AuthenticationBloc(authenticationRepository: _authenticationRepository, userRepository: _userRepository);
 
   runApp(MultiBlocProvider(
     providers: [

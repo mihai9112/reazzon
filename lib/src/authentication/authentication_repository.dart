@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:reazzon/src/helpers/cached_preferences.dart';
+import 'package:reazzon/src/helpers/constants.dart';
 
 class AuthenticationRepository {
   final FirebaseAuth _firebaseAuth;
@@ -22,7 +24,19 @@ class AuthenticationRepository {
       idToken: googleAuth.idToken,
     );
     await _firebaseAuth.signInWithCredential(credential);
-    return _firebaseAuth.currentUser();
+    var currentUser = await _firebaseAuth.currentUser();
+
+    Future.wait([
+      SharedObjects.prefs.setString(Constants.sessionUid, currentUser.uid),
+      SharedObjects.prefs.setString(Constants.sessionDisplayName, currentUser.displayName),
+      SharedObjects.prefs.setString(Constants.sessionEmail, currentUser.email)
+    ])
+    .then((onData) => true)
+    .catchError((onError) {
+      print(onError);
+    });
+
+    return currentUser;
   }
 
   Future<FirebaseUser> signInWithFacebook() async {

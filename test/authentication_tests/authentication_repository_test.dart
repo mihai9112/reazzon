@@ -2,7 +2,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:matcher/matcher.dart';
 import 'package:reazzon/src/authentication/authentication_repository.dart';
+import 'package:reazzon/src/helpers/cached_preferences.dart';
 
+import '../helpers/shared_preferences.dart';
 import 'authentication_firebase_mock.dart';
 
 void main() {
@@ -29,6 +31,8 @@ void main() {
     final FacebookLoginResultCancelledByUserMock facebookLoginResultCancelledByUserMock = 
       FacebookLoginResultCancelledByUserMock();
     final AuthResultMock authResultMock = AuthResultMock();
+    CachedPreferencesMock cachedPreferencesMock = CachedPreferencesMock();
+    SharedObjects.prefs = cachedPreferencesMock;
 
     test('signInWithGoogle returns a Firebase user', () async {
       when(googleSignInMock.signIn()).thenAnswer(

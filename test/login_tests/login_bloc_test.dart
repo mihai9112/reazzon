@@ -9,17 +9,23 @@ import 'package:reazzon/src/login/login_state.dart';
 
 import '../authentication_tests/authentication_firebase_mock.dart';
 import '../authentication_tests/authentication_mock.dart';
+import '../user_tests/user_repository_mocks.dart';
 
 void main() {
   AuthenticationBloc _authenticationBloc;
   LoginBloc _loginBloc;
   AuthenticationRepositoryMock _authenticationRepositoryMock;
+  UserRepositoryMock _userRepositoryMock;
   final fireBaseUserMock = FirebaseUserMock();
   final randomValidPassword = "password";
   
   setUp(() {
     _authenticationRepositoryMock = AuthenticationRepositoryMock();
-    _authenticationBloc = AuthenticationBloc(_authenticationRepositoryMock);
+    _userRepositoryMock = UserRepositoryMock();
+    _authenticationBloc = AuthenticationBloc(
+      authenticationRepository: _authenticationRepositoryMock,
+      userRepository: _userRepositoryMock
+    );
     _loginBloc = LoginBloc(
       authenticationRepository: _authenticationRepositoryMock, 
       authenticationBloc: _authenticationBloc

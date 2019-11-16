@@ -1,15 +1,22 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:reazzon/src/user/user_repository.dart';
 
 import 'authentication.dart';
 import 'authentication_repository.dart';
 
 class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
   AuthenticationRepository _authenticationRepository;
+  UserRepository _userRepository;
 
-  AuthenticationBloc(AuthenticationRepository authenticationRepository)
-      : assert(authenticationRepository != null),
-        _authenticationRepository = authenticationRepository;
+  AuthenticationBloc({
+      AuthenticationRepository authenticationRepository, 
+      UserRepository userRepository
+  })
+  : assert(authenticationRepository != null),
+    assert(userRepository != null),
+    _authenticationRepository = authenticationRepository,
+    _userRepository = userRepository;
 
   @override
   AuthenticationState get initialState => Uninitialized();
@@ -59,8 +66,15 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
     try {
       final firebaseUser = await _authenticationRepository.signInWithGoogle();
       if(firebaseUser != null){
-        yield Authenticated(firebaseUser);
+
+        if(await _userRepository.isProfileComplete()){
+          yield Authenticated(firebaseUser);  
+        }
+      
+        await _userRepository.saveDetailsFromProvider(firebaseUser);
+        yield ProfileToBeUpdated();
       }
+
       yield Unauthenticated();
     } 
     catch (_, stacktrace) {
@@ -73,7 +87,13 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
     try {
       final firebaseUser = await _authenticationRepository.signInWithFacebook();
       if(firebaseUser != null){
-        yield Authenticated(firebaseUser);
+
+        if(await _userRepository.isProfileComplete()){
+          yield Authenticated(firebaseUser);  
+        }
+
+        _userRepository.saveDetailsFromProvider(firebaseUser);
+        yield ProfileToBeUpdated();
       }
       yield Unauthenticated();
     } 
