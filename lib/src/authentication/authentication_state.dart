@@ -29,13 +29,3 @@ class Unauthenticated extends AuthenticationState {
   @override
   String toString() => 'Unauthenticated';
 }
-
-class ProfileUpdated extends AuthenticationState {
-  @override
-  String toString() => 'ProfileUpdated';
-}
-
-class ProfileToBeUpdated extends AuthenticationState {
-  @override
-  String toString() => 'ProfileToBeUpdated';
-}

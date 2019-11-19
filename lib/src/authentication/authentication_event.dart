@@ -20,16 +20,6 @@ class LoggedIn extends AuthenticationEvent {
   String toString() => 'LoggedIn';
 }
 
-class InitializedGoogleSignIn extends AuthenticationEvent {
-  @override
-  String toString() => 'InitializedGoogleSignIn';
-}
-
-class InitializedFacebookSignIn extends AuthenticationEvent {
-  @override
-  String toString() => 'InitializedFacebookSignIn';
-}
-
 class InitializedCredentialsSignUp extends AuthenticationEvent {
   final String validEmail;
   final String validPassword;
@@ -38,16 +28,6 @@ class InitializedCredentialsSignUp extends AuthenticationEvent {
 
   @override
   String toString() => 'InitializedCredentialsSignUp';  
-}
-
-class InitializedCredentialsSignIn extends AuthenticationEvent {
-  final String validEmail;
-  final String validPassword;
-
-  InitializedCredentialsSignIn({this.validEmail, this.validPassword});
-
-  @override
-  String toString() => 'InitializedCredentialsSignIn';  
 }
 
 class LoggedOut extends AuthenticationEvent {

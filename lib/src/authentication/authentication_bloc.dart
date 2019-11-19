@@ -1,22 +1,17 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:reazzon/src/user/user_repository.dart';
 
 import 'authentication.dart';
 import 'authentication_repository.dart';
 
 class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
   AuthenticationRepository _authenticationRepository;
-  UserRepository _userRepository;
 
   AuthenticationBloc({
-      AuthenticationRepository authenticationRepository, 
-      UserRepository userRepository
+      AuthenticationRepository authenticationRepository
   })
   : assert(authenticationRepository != null),
-    assert(userRepository != null),
-    _authenticationRepository = authenticationRepository,
-    _userRepository = userRepository;
+    _authenticationRepository = authenticationRepository;
 
   @override
   AuthenticationState get initialState => Uninitialized();
@@ -31,20 +26,8 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
       yield Authenticated(event.user);
     }
 
-    if(event is InitializedGoogleSignIn){
-      yield* _mapGoogleSigningInToState();
-    }
-
-    if(event is InitializedFacebookSignIn){
-      yield* _mapFacebookSigningInToState();
-    }
-
     if(event is InitializedCredentialsSignUp){
       yield* _mapCredentialsSigningUpToState(event.validEmail, event.validPassword);
-    }
-
-    if(event is InitializedCredentialsSignIn){
-      yield* _mapCredentialsSigningInToState(event.validEmail, event.validPassword);
     }
   }
 
@@ -62,73 +45,12 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
     }
   }
 
-  Stream<AuthenticationState> _mapGoogleSigningInToState() async* {
-    try {
-      final firebaseUser = await _authenticationRepository.signInWithGoogle();
-      if(firebaseUser != null){
-
-        if(await _userRepository.isProfileComplete()){
-          yield Authenticated(firebaseUser);  
-        }
-      
-        await _userRepository.saveDetailsFromProvider(firebaseUser);
-        yield ProfileToBeUpdated();
-      }
-
-      yield Unauthenticated();
-    } 
-    catch (_, stacktrace) {
-      //TODO: log stacktrace;
-      yield Unauthenticated();
-    }
-  }
-
-  Stream<AuthenticationState> _mapFacebookSigningInToState() async* {
-    try {
-      final firebaseUser = await _authenticationRepository.signInWithFacebook();
-      if(firebaseUser != null){
-
-        if(await _userRepository.isProfileComplete()){
-          yield Authenticated(firebaseUser);  
-        }
-
-        _userRepository.saveDetailsFromProvider(firebaseUser);
-        yield ProfileToBeUpdated();
-      }
-      yield Unauthenticated();
-    } 
-    catch (_, stacktrace) {
-      //TODO: log stacktrace;
-      yield Unauthenticated();
-    }
-  }
-
   Stream<AuthenticationState> _mapCredentialsSigningUpToState(String email, String password) async* {
     try {
       final firebaseUser = await _authenticationRepository.signUpWithCredentials(email, password);
       if(firebaseUser != null)
       {
         yield Authenticated(firebaseUser);
-      }
-      yield Unauthenticated();
-    } 
-    catch (_, stacktrace) {
-      //TODO: log stacktrace;
-      yield Unauthenticated();
-    }
-  }
-
-  Stream<AuthenticationState> _mapCredentialsSigningInToState(String email, String password) async* {
-    try {
-      final firebaseUser = await _authenticationRepository.signInWithCredentials(email, password);
-      if(firebaseUser != null){
-        
-        if(await _userRepository.isProfileComplete()){
-          yield Authenticated(firebaseUser);  
-        }
-
-        _userRepository.saveDetailsFromProvider(firebaseUser);
-        yield ProfileToBeUpdated();
       }
       yield Unauthenticated();
     } 

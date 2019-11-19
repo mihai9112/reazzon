@@ -8,9 +8,6 @@ class FilterBloc extends Bloc {
   }
 
   @override
-  void dispose() {}
-
-  @override
   // TODO: implement initialState
   get initialState => null;
 

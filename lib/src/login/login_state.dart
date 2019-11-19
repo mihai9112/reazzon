@@ -14,10 +14,20 @@ class LoginLoading extends LoginState {
   String toString() => 'LoginLoading';
 }
 
-class LoginFailure extends LoginState {
+class LoginFailed extends LoginState {
   final String error;
-  LoginFailure({this.error});
+  LoginFailed({this.error});
 
   @override
   String toString() => 'LoginFailure';
+}
+
+class LoginSucceeded extends LoginState {
+  @override
+  String toString() => 'LoginSucceeded';
+}
+
+class ProfileToBeUpdated extends LoginState {
+  @override
+  String toString() => 'ProfileToBeUpdated';
 }

@@ -1,7 +1,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:reazzon/src/authentication/authentication.dart';
 import 'package:reazzon/src/helpers/field_focus.dart';
 import 'package:flutter/widgets.dart';
 import 'package:reazzon/src/helpers/spinner.dart';
@@ -41,9 +40,9 @@ class _LoginPageState extends State<LoginPage> {
     FocusNode _focusEmail = new FocusNode();
     FocusNode _focusPassword = new FocusNode();
 
-    return BlocListener<AuthenticationBloc, AuthenticationState>(
+    return BlocListener<LoginBloc, LoginState>(
       listener: (context, state){
-        if(state is Authenticated){
+        if(state is ProfileToBeUpdated){
           final route = MaterialPageRoute(builder: (_) => SecondSignUpPage());
           Navigator.of(context).push(route);
         }
@@ -62,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             child: BlocListener<LoginBloc, LoginState>(
               listener: (context, state){
-                if(state is LoginFailure){
+                if(state is LoginFailed){
                   Scaffold.of(context)
                     .showSnackBar(SnackBar(
                       key: Key("snack_bar_failure"),
@@ -310,7 +309,7 @@ class _LoginPageState extends State<LoginPage> {
           color: Colors.blueAccent,
           elevation: 4.0,
           onPressed: () => snapshot.data ? null : loginBloc
-            .add(LoginButtonPressed()),
+            .add(InitializedCredentialsSignIn()),
           child: Container(
             padding:
                 const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
@@ -348,7 +347,7 @@ class _LoginPageState extends State<LoginPage> {
           bottom: 15.0,
         ),
         color: Color(0Xffdb3236),
-        onPressed: () => BlocProvider.of<AuthenticationBloc>(context)
+        onPressed: () => BlocProvider.of<LoginBloc>(context)
           .add(InitializedGoogleSignIn()),
         child: Row(
           mainAxisAlignment:
@@ -386,7 +385,7 @@ class _LoginPageState extends State<LoginPage> {
           bottom: 15.0,
         ),
         color: Color(0Xff3B5998),
-        onPressed: () => BlocProvider.of<AuthenticationBloc>(context)
+        onPressed: () => BlocProvider.of<LoginBloc>(context)
           .add(InitializedFacebookSignIn()),
         child: Row(
           mainAxisAlignment:

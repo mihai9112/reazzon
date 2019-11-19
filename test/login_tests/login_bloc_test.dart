@@ -2,17 +2,16 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:reazzon/src/authentication/authentication.dart';
 import 'package:reazzon/src/login/login_bloc.dart';
 import 'package:reazzon/src/login/login_event.dart';
 import 'package:reazzon/src/login/login_state.dart';
+import 'package:reazzon/src/user/user.dart';
 
 import '../authentication_tests/authentication_firebase_mock.dart';
 import '../authentication_tests/authentication_mock.dart';
 import '../user_tests/user_repository_mocks.dart';
 
 void main() {
-  AuthenticationBloc _authenticationBloc;
   LoginBloc _loginBloc;
   AuthenticationRepositoryMock _authenticationRepositoryMock;
   UserRepositoryMock _userRepositoryMock;
@@ -22,27 +21,22 @@ void main() {
   setUp(() {
     _authenticationRepositoryMock = AuthenticationRepositoryMock();
     _userRepositoryMock = UserRepositoryMock();
-    _authenticationBloc = AuthenticationBloc(
+    _userRepositoryMock = UserRepositoryMock();
+    when(_userRepositoryMock.isProfileComplete())
+      .thenAnswer((_) => Future.value(true));
+    _loginBloc = LoginBloc(
       authenticationRepository: _authenticationRepositoryMock,
       userRepository: _userRepositoryMock
-    );
-    _loginBloc = LoginBloc(
-      authenticationRepository: _authenticationRepositoryMock, 
-      authenticationBloc: _authenticationBloc
     );
   });
 
   group('Login initiated', () {
-    test('maps to Authenticated state when LoginButtonPressed returns user', () {
+    test('maps to LoginSucceeded state when InitializedCredentialsSignIn returns user', () {
       //Arrange
-      final expectedAuthState = [
-        Uninitialized(),
-        Authenticated(fireBaseUserMock)
-      ];
-
       final expectedLoginState = [
         LoginInitial(),
-        LoginLoading()
+        LoginLoading(),
+        LoginSucceeded()
       ];
 
       when(_authenticationRepositoryMock.signInWithCredentials(fireBaseUserMock.email, randomValidPassword))
@@ -52,23 +46,18 @@ void main() {
       _loginBloc.changePassword(randomValidPassword);
 
       //Act
-      _loginBloc.add(LoginButtonPressed());
+      _loginBloc.add(InitializedCredentialsSignIn());
 
       //Assert
-      expectLater(_authenticationBloc, emitsInOrder(expectedAuthState));
       expectLater(_loginBloc, emitsInOrder(expectedLoginState));
     });
 
-    test('maps to Unauthenticated state when LoginButtonPressed returns no user', () {
+    test('maps to LoginFailed state when InitializedCredentialsSignIn returns no user', () {
       //Arrange
-      final expectedAuthState = [
-        Uninitialized()
-      ];
-
       final expectedLoginState = [
         LoginInitial(),
         LoginLoading(),
-        LoginFailure(error: "Could not find user. Please try different credentials")
+        LoginFailed(error: "Could not find user. Please try different credentials")
       ];
 
       when(_authenticationRepositoryMock.signInWithCredentials(fireBaseUserMock.email, randomValidPassword))
@@ -78,23 +67,18 @@ void main() {
       _loginBloc.changePassword(randomValidPassword);
 
       //Act
-      _loginBloc.add(LoginButtonPressed());
+      _loginBloc.add(InitializedCredentialsSignIn());
 
       //Assert
-      expectLater(_authenticationBloc, emitsInOrder(expectedAuthState));
       expectLater(_loginBloc, emitsInOrder(expectedLoginState));
     });
 
-    test('maps to Unauthenticated state when LoginButtonPressed throws exception', () {
+    test('maps to LoginFailed state when InitializedCredentialsSignIn throws exception', () {
       //Arrange
-      final expectedAuthState = [
-        Uninitialized()
-      ];
-
       final expectedLoginState = [
         LoginInitial(),
         LoginLoading(),
-        LoginFailure(error: "Error trying to login. Please try again later")
+        LoginFailed(error: "Error trying to login. Please try again later")
       ];
 
       when(_authenticationRepositoryMock.signInWithCredentials(fireBaseUserMock.email, randomValidPassword))
@@ -104,11 +88,187 @@ void main() {
       _loginBloc.changePassword(randomValidPassword);
 
       //Act
-      _loginBloc.add(LoginButtonPressed());
+      _loginBloc.add(InitializedCredentialsSignIn());
 
       //Assert
-      expectLater(_authenticationBloc, emitsInOrder(expectedAuthState));
       expectLater(_loginBloc, emitsInOrder(expectedLoginState));
+    });
+
+    test('emits LoginSucceeded when sign in with Google', (){
+      //Arrange
+      final expectedLoginState = [
+        LoginInitial(),
+        LoginLoading(),
+        LoginSucceeded()
+      ];
+
+      when(_authenticationRepositoryMock.signInWithGoogle())
+        .thenAnswer((_) => Future.value(fireBaseUserMock));
+
+      //Act
+      _loginBloc.add(InitializedGoogleSignIn());
+      
+      //Assert
+      expectLater(_loginBloc, emitsInOrder(expectedLoginState));
+    });
+
+    test('emits LoginFailed when sign in with Google throws error', (){
+      //Arrange
+      final expectedStates = [
+        LoginInitial(),
+        LoginLoading(),
+        LoginFailed(error: "Error trying to login. Please try again later")
+      ];
+
+      when(_authenticationRepositoryMock.signInWithGoogle())
+        .thenThrow(HttpException('unavailable'));
+
+      //Act
+      _loginBloc.add(InitializedGoogleSignIn());
+
+      //Assert
+      expectLater(_loginBloc, emitsInOrder(expectedStates));
+    });
+
+    test('emits LoginFailed when sign in with Google return null user', (){
+      //Arrange
+      final expectedStates = [
+        LoginInitial(),
+        LoginLoading(),
+        LoginFailed(error: "Error trying to login. Please try again later")
+      ];
+
+      when(_authenticationRepositoryMock.signInWithGoogle())
+        .thenAnswer((_) => null);
+
+      //Act
+      _loginBloc.add(InitializedGoogleSignIn());
+
+      //Assert
+      expectLater(_loginBloc, emitsInOrder(expectedStates));
+    });
+
+    test('emits LoginSucceeded when sign in with Facebook', (){
+      //Arrange
+      final expectedStates = [
+        LoginInitial(),
+        LoginLoading(),
+        LoginSucceeded()
+      ];
+
+      when(_authenticationRepositoryMock.signInWithFacebook())
+        .thenAnswer((_) => Future.value(fireBaseUserMock));
+
+      //Act
+      _loginBloc.add(InitializedFacebookSignIn());
+      
+      //Assert
+      expectLater(_loginBloc, emitsInOrder(expectedStates));
+    });
+
+    test('emits LoginFailed when sign in with Facebook throws error', (){
+      //Arrange
+      final expectedStates = [
+        LoginInitial(),
+        LoginLoading(),
+        LoginFailed(error: "Error trying to login. Please try again later")
+      ];
+
+      when(_authenticationRepositoryMock.signInWithFacebook())
+        .thenThrow(HttpException('unavailable'));
+
+      //Act
+      _loginBloc.add(InitializedFacebookSignIn());
+
+      //Assert
+      expectLater(_loginBloc, emitsInOrder(expectedStates));
+    });
+
+    test('emits LoginFailed when sign in with Facebook return null user', (){
+      //Arrange
+      final expectedStates = [
+        LoginInitial(),
+        LoginLoading(),
+        LoginFailed(error: "Error trying to login. Please try again later")
+      ];
+
+      when(_authenticationRepositoryMock.signInWithFacebook())
+        .thenAnswer((_) => null);
+
+      //Act
+      _loginBloc.add(InitializedFacebookSignIn());
+
+      //Assert
+      expectLater(_loginBloc, emitsInOrder(expectedStates));
+    });
+
+    test("emits ProfileToBeUpdated when sign in with Google returns profile not complete", () {
+
+      //Arrange
+      final expectedStates = [
+        LoginInitial(),
+        LoginLoading(),
+        ProfileToBeUpdated()
+      ];
+
+      when(_authenticationRepositoryMock.signInWithGoogle())
+        .thenAnswer((_) => Future.value(fireBaseUserMock));
+      when(_userRepositoryMock.isProfileComplete())
+        .thenAnswer((_) => Future.value(false));
+      when(_userRepositoryMock.saveDetailsFromProvider(fireBaseUserMock))
+        .thenAnswer((_) => Future.value(User()));
+
+      //Act
+      _loginBloc.add(InitializedGoogleSignIn());
+      
+      //Assert
+      expectLater(_loginBloc, emitsInOrder(expectedStates));
+    });
+
+    test("emits ProfileToBeUpdated when sign in with Facebook returns profile not complete", () {
+
+      //Arrange
+      final expectedStates = [
+        LoginInitial(),
+        LoginLoading(),
+        ProfileToBeUpdated()
+      ];
+
+      when(_authenticationRepositoryMock.signInWithFacebook())
+        .thenAnswer((_) => Future.value(fireBaseUserMock));
+      when(_userRepositoryMock.isProfileComplete())
+        .thenAnswer((_) => Future.value(false));
+      when(_userRepositoryMock.saveDetailsFromProvider(fireBaseUserMock))
+        .thenAnswer((_) => Future.value(User()));
+
+      //Act
+      _loginBloc.add(InitializedFacebookSignIn());
+      
+      //Assert
+      expectLater(_loginBloc, emitsInOrder(expectedStates));
+    });
+
+    test("emits ProfileToBeUpdated when sign in with credentials returns profile not complete", () {
+
+      //Arrange
+      final expectedStates = [
+        LoginInitial(),
+        LoginLoading(),
+        ProfileToBeUpdated()
+      ];
+
+      when(_authenticationRepositoryMock.signInWithCredentials(any, any))
+        .thenAnswer((_) => Future.value(fireBaseUserMock));
+      when(_userRepositoryMock.isProfileComplete())
+        .thenAnswer((_) => Future.value(false));
+      when(_userRepositoryMock.saveDetailsFromProvider(fireBaseUserMock))
+        .thenAnswer((_) => Future.value(User()));
+
+      //Act
+      _loginBloc.add(InitializedCredentialsSignIn());
+      
+      //Assert
+      expectLater(_loginBloc, emitsInOrder(expectedStates));
     });
   });
 }

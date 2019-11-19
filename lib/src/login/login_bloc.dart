@@ -1,10 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
-import 'package:reazzon/src/authentication/authentication.dart';
-import 'package:reazzon/src/authentication/authentication_bloc.dart';
 import 'package:reazzon/src/authentication/authentication_repository.dart';
 import 'package:reazzon/src/domain/validators.dart';
+import 'package:reazzon/src/user/user_repository.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'login_event.dart';
@@ -13,7 +12,7 @@ import 'package:bloc/bloc.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> with Validators {
   final AuthenticationRepository authenticationRepository;
-  final AuthenticationBloc authenticationBloc;
+  final UserRepository userRepository;
 
   final _emailController = BehaviorSubject<String>();
   final _passwordController = BehaviorSubject<String>();
@@ -30,39 +29,94 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> with Validators {
 
   LoginBloc({
     @required this.authenticationRepository,
-    @required this.authenticationBloc,
+    @required this.userRepository
   })  : assert(authenticationRepository != null),
-        assert(authenticationBloc != null);
+        assert(userRepository != null);
 
   @override
   LoginState get initialState => LoginInitial();
 
   @override
   Stream<LoginState> mapEventToState(LoginEvent event) async* {
-    if(event is LoginButtonPressed) {
-      yield* _mapLoginButtonPressedToState();
+    if(event is InitializedCredentialsSignIn) {
+      yield* _mapInitializedCredentialsSignIn();
+    }
+
+    if(event is InitializedGoogleSignIn){
+      yield* _mapGoogleSigningInToState();
+    }
+
+    if(event is InitializedFacebookSignIn){
+      yield* _mapFacebookSigningInToState();
     }
   }
 
-  Stream<LoginState> _mapLoginButtonPressedToState() async* {
+  Stream<LoginState> _mapInitializedCredentialsSignIn() async* {
     yield LoginLoading();
     try {
-      final loggedInUser = await authenticationRepository.signInWithCredentials(
+      final firebaseUser = await authenticationRepository.signInWithCredentials(
         _emailController.value, _passwordController.value);
       
-      if(loggedInUser != null){
-        authenticationBloc.add(LoggedIn(loggedInUser));
-        yield LoginLoading();
+      if(firebaseUser != null){
+        if(!await userRepository.isProfileComplete()){
+          await userRepository.saveDetailsFromProvider(firebaseUser);
+          yield ProfileToBeUpdated();  
+        }
+        yield LoginSucceeded();
       }
       else {
-        yield LoginFailure(error: "Could not find user. Please try different credentials");
+        yield LoginFailed(error: "Could not find user. Please try different credentials");
       }
     } 
     catch (_, stacktrace) {
       //TODO: log stacktrace;
-      yield LoginFailure(error: "Error trying to login. Please try again later");
+      yield LoginFailed(error: "Error trying to login. Please try again later");
     }
     yield LoginInitial();
+  }
+
+  Stream<LoginState> _mapGoogleSigningInToState() async* {
+    yield LoginLoading();
+    try {
+      final firebaseUser = await authenticationRepository.signInWithGoogle();
+      if(firebaseUser != null){
+
+        if(!await userRepository.isProfileComplete()){
+          await userRepository.saveDetailsFromProvider(firebaseUser);
+          yield ProfileToBeUpdated();  
+        }
+        yield LoginSucceeded();
+      }
+      else {
+        yield LoginFailed();
+      }
+    } 
+    catch (_, stacktrace) {
+      //TODO: log stacktrace;
+      yield LoginFailed();
+    }
+  }
+
+  Stream<LoginState> _mapFacebookSigningInToState() async* {
+    yield LoginLoading();
+    try {
+      final firebaseUser = await authenticationRepository.signInWithFacebook();
+      if(firebaseUser != null){
+
+        if(!await userRepository.isProfileComplete()){
+          await userRepository.saveDetailsFromProvider(firebaseUser);
+          yield ProfileToBeUpdated();  
+        }
+        yield LoginSucceeded();
+      }
+      else {
+        yield LoginFailed();
+      }
+    } 
+    catch (_, stacktrace) {
+      //TODO: log stacktrace;
+      yield LoginFailed();
+    }
   }
 
   void dispose(){

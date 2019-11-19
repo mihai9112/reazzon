@@ -6,8 +6,17 @@ abstract class LoginEvent extends Equatable {
   LoginEvent([List props = const []]) : super(props);
 }
 
-class LoginButtonPressed extends LoginEvent {
-
+class InitializedGoogleSignIn extends LoginEvent {
   @override
-  String toString() => 'LoginButtonPressed';
+  String toString() => 'InitializedGoogleSignIn';
+}
+
+class InitializedFacebookSignIn extends LoginEvent {
+  @override
+  String toString() => 'InitializedFacebookSignIn';
+}
+
+class InitializedCredentialsSignIn extends LoginEvent {
+  @override
+  String toString() => 'InitializedCredentialsSignIn';  
 }

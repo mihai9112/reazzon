@@ -28,7 +28,7 @@ void main() async {
   final UserRepository _userRepository = 
     UserRepository();
   final AuthenticationBloc _authenticationBloc = 
-    AuthenticationBloc(authenticationRepository: _authenticationRepository, userRepository: _userRepository);
+    AuthenticationBloc(authenticationRepository: _authenticationRepository);
 
   runApp(MultiBlocProvider(
     providers: [
@@ -37,7 +37,7 @@ void main() async {
         ..add(AppStarted()),
       ),
       BlocProvider<LoginBloc>(
-        builder: (context) => LoginBloc(authenticationBloc: _authenticationBloc, authenticationRepository: _authenticationRepository)
+        builder: (context) => LoginBloc(authenticationRepository: _authenticationRepository, userRepository: _userRepository)
       ),
       BlocProvider<SignUpBloc>(
         builder: (context) => SignUpBloc(_authenticationRepository),

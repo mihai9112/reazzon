@@ -7,7 +7,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:reazzon/src/helpers/spinner.dart';
 import 'package:reazzon/src/login/login_bloc.dart';
 import 'package:reazzon/src/models/reazzon.dart';
-import 'package:reazzon/src/pages/home_page.dart';
 import 'package:reazzon/src/settings/setting_bloc.dart';
 import 'package:reazzon/src/settings/setting_repository.dart';
 
