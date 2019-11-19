@@ -27,8 +27,9 @@ void main() async {
     AuthenticationRepository(facebookSignIn: _facebookLogin, firebaseAuth: _firebaseAuth, googleSignin: _googleSignIn);
   final UserRepository _userRepository = 
     UserRepository();
+  final LoginBloc _loginBloc = LoginBloc(authenticationRepository: _authenticationRepository, userRepository: _userRepository);
   final AuthenticationBloc _authenticationBloc = 
-    AuthenticationBloc(authenticationRepository: _authenticationRepository);
+    AuthenticationBloc(authenticationRepository: _authenticationRepository, loginBloc: _loginBloc);
 
   runApp(MultiBlocProvider(
     providers: [
@@ -37,7 +38,7 @@ void main() async {
         ..add(AppStarted()),
       ),
       BlocProvider<LoginBloc>(
-        builder: (context) => LoginBloc(authenticationRepository: _authenticationRepository, userRepository: _userRepository)
+        builder: (context) => _loginBloc
       ),
       BlocProvider<SignUpBloc>(
         builder: (context) => SignUpBloc(_authenticationRepository),

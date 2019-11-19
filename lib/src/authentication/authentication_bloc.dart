@@ -1,18 +1,31 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:flutter/widgets.dart';
+import 'package:reazzon/src/login/login_bloc.dart';
+import 'package:reazzon/src/login/login_state.dart';
 
 import 'authentication.dart';
 import 'authentication_repository.dart';
 
 class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
-  AuthenticationRepository _authenticationRepository;
+  final AuthenticationRepository authenticationRepository;
+  final LoginBloc loginBloc;
+  StreamSubscription loginBlocSubscription;
 
   AuthenticationBloc({
-      AuthenticationRepository authenticationRepository
+    @required this.authenticationRepository,
+    @required this.loginBloc
   })
   : assert(authenticationRepository != null),
-    _authenticationRepository = authenticationRepository;
-
+    assert(loginBloc != null)
+  {
+    loginBlocSubscription = loginBloc.listen((state){
+      if(state is LoginSucceeded){
+        add(LoggedIn());
+      }
+    });
+  }
+    
   @override
   AuthenticationState get initialState => Uninitialized();
 
@@ -23,7 +36,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
     }
 
     if(event is LoggedIn){
-      yield Authenticated(event.user);
+      yield Authenticated();
     }
 
     if(event is InitializedCredentialsSignUp){
@@ -33,9 +46,9 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 
   Stream<AuthenticationState> _mapAppStartedToState() async* {
     try {
-      final isSignedIn = await _authenticationRepository.isSignedIn();
+      final isSignedIn = await authenticationRepository.isSignedIn();
       if(isSignedIn){
-        yield Authenticated(await _authenticationRepository.getUser());
+        yield Authenticated();
       }
       yield Unauthenticated();
     }
@@ -47,10 +60,10 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 
   Stream<AuthenticationState> _mapCredentialsSigningUpToState(String email, String password) async* {
     try {
-      final firebaseUser = await _authenticationRepository.signUpWithCredentials(email, password);
+      final firebaseUser = await authenticationRepository.signUpWithCredentials(email, password);
       if(firebaseUser != null)
       {
-        yield Authenticated(firebaseUser);
+        yield Authenticated();
       }
       yield Unauthenticated();
     } 
@@ -58,5 +71,11 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
       //TODO: log stacktrace;
       yield Unauthenticated();
     }
+  }
+
+  @override
+  Future<void> close() {
+    loginBlocSubscription.cancel();
+    return super.close();
   }
 }
