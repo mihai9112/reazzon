@@ -31,3 +31,18 @@ class ProfileToBeUpdated extends LoginState {
   @override
   String toString() => 'ProfileToBeUpdated';
 }
+
+class LogoutSucceeded extends LoginState {
+  @override
+  String toString() => 'LogOutSucceeded';
+}
+
+class ForgotPasswordSucceeded extends LoginState {
+  @override
+  String toString() => 'ForgotPasswordSucceeded';
+}
+
+class ForgotPasswordFailed extends LoginState {
+  @override
+  String toString() => 'ForgotPasswordFailed';
+}

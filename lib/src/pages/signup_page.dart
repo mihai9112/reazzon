@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reazzon/src/blocs/signup_bloc.dart';
 import 'package:reazzon/src/helpers/field_focus.dart';
 import 'package:reazzon/src/helpers/spinner.dart';
-import 'package:reazzon/src/pages/login_page.dart';
+import 'package:reazzon/src/login/login_page.dart';
 import 'package:reazzon/src/pages/signup_second_page.dart';
 
 class SignUpPage extends StatefulWidget {

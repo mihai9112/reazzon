@@ -270,5 +270,20 @@ void main() {
       //Assert
       expectLater(_loginBloc, emitsInOrder(expectedStates));
     });
+
+    test('emits LogoutSucceeded when logging out', (){
+      
+      //Arrange
+      final expectedStates = [
+        LoginInitial(),
+        LogoutSucceeded(),
+      ];
+
+      //Act
+      _loginBloc.add(InitializedLogOut());
+
+      //Assert
+      expectLater(_loginBloc, emitsInOrder(expectedStates));
+    });
   });
 }

@@ -176,5 +176,28 @@ void main() {
       //Assert
       expectLater(_authenticationBloc, emitsInOrder(authenticatedExpectedState));
     });
+
+    test('emits Uninitialized -> Unauthenticated when LogoutSucceeded state is emited', (){
+
+      //Arrange
+      final loginEmittedStates = [
+        LoginInitial(),
+        LogoutSucceeded()
+      ];
+
+      final authenticatedExpectedState = [
+        Uninitialized(),
+        Unauthenticated()
+      ];
+
+      whenListen(_loginBloc, Stream.fromIterable(loginEmittedStates));
+
+      //Act
+      _authenticationBloc = AuthenticationBloc(
+        loginBloc: _loginBloc, authenticationRepository: _authenticationRepositoryMock);
+
+      //Assert
+      expectLater(_authenticationBloc, emitsInOrder(authenticatedExpectedState));
+    });
   });
 }

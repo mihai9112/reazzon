@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:reazzon/src/pages/login_page.dart';
+import 'package:reazzon/src/login/login_page.dart';
 import 'package:reazzon/src/pages/signup_page.dart';
 
 class HomePage extends StatelessWidget {

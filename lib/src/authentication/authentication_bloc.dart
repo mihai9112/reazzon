@@ -23,6 +23,10 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
       if(state is LoginSucceeded){
         add(LoggedIn());
       }
+
+      if(state is LogoutSucceeded){
+        add(LoggedOut());
+      }
     });
   }
     
@@ -37,6 +41,10 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 
     if(event is LoggedIn){
       yield Authenticated();
+    }
+
+    if(event is LoggedOut){
+      yield Unauthenticated();
     }
 
     if(event is InitializedCredentialsSignUp){

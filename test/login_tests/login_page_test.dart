@@ -5,8 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:reazzon/src/blocs/signup_bloc.dart';
 import 'package:reazzon/src/login/login_bloc.dart';
+import 'package:reazzon/src/login/login_page.dart';
 import 'package:reazzon/src/login/login_state.dart';
-import 'package:reazzon/src/pages/login_page.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:reazzon/src/pages/signup_second_page.dart';
 

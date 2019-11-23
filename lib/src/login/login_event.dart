@@ -20,3 +20,13 @@ class InitializedCredentialsSignIn extends LoginEvent {
   @override
   String toString() => 'InitializedCredentialsSignIn';  
 }
+
+class InitializedLogOut extends LoginEvent {
+  @override
+  String toString() => 'InitializedLogOut'; 
+}
+
+class InitializedForgottenPassword extends LoginEvent {
+  @override
+  String toString() => 'InitializedForgottenPassword'; 
+}

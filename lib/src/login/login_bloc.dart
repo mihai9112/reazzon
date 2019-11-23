@@ -23,6 +23,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> with Validators {
       _passwordController.stream.transform(validatePassword);
   Stream<bool> get submitValid =>
       Observable.combineLatest2(email, password, (e, p) => true);
+  Stream<bool> get forgottenPasswordValid =>
+      Observable.combineLatest([email], (e) => true);
 
   Function(String) get changeEmail => _emailController.sink.add;
   Function(String) get changePassword => _passwordController.sink.add;
@@ -48,6 +50,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> with Validators {
 
     if(event is InitializedFacebookSignIn){
       yield* _mapFacebookSigningInToState();
+    }
+
+    if(event is InitializedLogOut){
+      yield* _mapInitializedLogOut();
+    }
+
+    if(event is InitializedForgottenPassword){
+      yield* _mapInitializedForgottenPassword();
     }
   }
 
@@ -116,6 +126,29 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> with Validators {
     catch (_, stacktrace) {
       //TODO: log stacktrace;
       yield LoginFailed();
+    }
+  }
+
+  Stream<LoginState> _mapInitializedLogOut() async* {
+    try {
+      await authenticationRepository.signOut();
+      yield LogoutSucceeded();
+    } 
+    catch (_, stacktrace) {
+      //TODO: log stacktrace;
+    }
+  }
+
+  Stream<LoginState> _mapInitializedForgottenPassword() async* {
+    try {
+      await authenticationRepository.forgottenPassword(
+        _emailController.value
+      );
+      yield ForgotPasswordSucceeded();
+    } 
+    catch (_, stacktrace) {
+      //TODO: log stacktrace;
+      yield ForgotPasswordFailed();
     }
   }
 

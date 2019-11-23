@@ -16,6 +16,11 @@ class LoggedIn extends AuthenticationEvent {
   String toString() => 'LoggedIn';
 }
 
+class LoggedOut extends AuthenticationEvent {
+  @override
+  String toString() => 'LoggedOut';
+}
+
 class InitializedCredentialsSignUp extends AuthenticationEvent {
   final String validEmail;
   final String validPassword;
@@ -24,9 +29,4 @@ class InitializedCredentialsSignUp extends AuthenticationEvent {
 
   @override
   String toString() => 'InitializedCredentialsSignUp';  
-}
-
-class LoggedOut extends AuthenticationEvent {
-  @override
-  String toString() => 'LoggedOut';
 }
