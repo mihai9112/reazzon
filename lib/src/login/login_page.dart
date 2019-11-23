@@ -49,10 +49,10 @@ class _LoginPageState extends State<LoginPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-            iconTheme: IconThemeData(color: Colors.blueAccent),
-            backgroundColor: Colors.white,
-            elevation: 0.0,
-            title: Text("Login", style: TextStyle(color: Colors.blueAccent))
+          iconTheme: IconThemeData(color: Colors.blueAccent),
+          backgroundColor: Colors.white,
+          elevation: 0.0,
+          title: Text("Login", style: TextStyle(color: Colors.blueAccent))
         ),
         body: SingleChildScrollView(
           child: Container(

@@ -122,7 +122,7 @@ class SettingsBloc extends Bloc with Validators {
     reazzons.forEach((reazzon) {
       for (int i = 0; i < _list.length; i++) {
         if (reazzon.value.compareTo(_list[i].value) == 0) {
-          _list[i].setSelection();
+          //_list[i].setSelection();
         }
       }
     });

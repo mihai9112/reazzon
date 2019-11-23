@@ -1,43 +1,40 @@
 class Reazzon {
+  int _id;
   bool _isSelected;
   String _value;
 
   bool get isSelected => _isSelected;
   String get value => _value;
+  int get id => _id;
 
-  Reazzon(this._value) {
+  Reazzon(
+    this._id,
+    this._value
+  ) {
     _isSelected = false;
   }
 
-  void setSelection() {
-    if (isSelected)
-      _isSelected = false;
-    else {
-      _isSelected = true;
-    }
-  }
-
   static List<Reazzon> allReazzons() {
-    return new List<Reazzon>()
+    return  List<Reazzon>()
       ..addAll([
-        new Reazzon("#Divorce"),
-        new Reazzon("#Perfectionist"),
-        new Reazzon("#Breakups"),
-        new Reazzon("#Loneliness"),
-        new Reazzon("#Grief"),
-        new Reazzon("#WorkStress"),
-        new Reazzon("#FinancialStress"),
-        new Reazzon("#KidsCustody"),
-        new Reazzon("#Bullying"),
-        new Reazzon("#Insomnia"),
-        new Reazzon("#MoodSwings"),
-        new Reazzon("#Preasure\nToSucceed"),
-        new Reazzon("#Anxiety"),
-        new Reazzon("#Breakups"),
-        new Reazzon("#Cheating"),
-        new Reazzon("#SelfEsteem"),
-        new Reazzon("#BodyImage"),
-        new Reazzon("#Exercise\nMotivation")
+        Reazzon(1,"#Divorce"),
+        Reazzon(2,"#Perfectionist"),
+        Reazzon(3,"#Breakups"),
+        Reazzon(4,"#Loneliness"),
+        Reazzon(5,"#Grief"),
+        Reazzon(6,"#WorkStress"),
+        Reazzon(7,"#FinancialStress"),
+        Reazzon(8,"#KidsCustody"),
+        Reazzon(9,"#Bullying"),
+        Reazzon(10,"#Insomnia"),
+        Reazzon(11,"#MoodSwings"),
+        Reazzon(12,"#Preasure\nToSucceed"),
+        Reazzon(13,"#Anxiety"),
+        Reazzon(14,"#Breakups"),
+        Reazzon(15,"#Cheating"),
+        Reazzon(16,"#SelfEsteem"),
+        Reazzon(17,"#BodyImage"),
+        Reazzon(18,"#Exercise\nMotivation")
       ]);
   }
 }

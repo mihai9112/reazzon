@@ -1,60 +1,58 @@
+import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:reazzon/src/login/login_bloc.dart';
-import 'package:reazzon/src/login/login_page.dart';
-import 'package:reazzon/src/login/login_state.dart';
-import 'package:bloc_test/bloc_test.dart';
 import 'package:reazzon/src/pages/signup_second_page.dart';
 import 'package:reazzon/src/signup/presentation/bloc/signup.dart';
+import 'package:reazzon/src/signup/presentation/bloc/signup_bloc.dart';
+import 'package:reazzon/src/signup/presentation/pages/signup_page.dart';
 
 import '../authentication_tests/authentication_mock.dart';
 import '../helpers/navigator_observer_mock.dart';
 
 void main() async {
   AuthenticationRepositoryMock _authenticationRepositoryMock;
-  LoginBlocMock _loginBloc;
-  SignUpBlocMock _signUpBloc;
+  SignUpBlocMock _signUpBlocMock;
+  LoginBlocMock _loginBlockMock;
   final snackBarFailureFinder = find.byKey(Key("snack_bar_failure"));
-  final snackBarLoadingFinder = find.byKey(Key("snack_bar_loading"));
   final mockNavigatorObserver = MockNavigatorObserver();
-  
+
   Widget makeTestableWidget() {
     return MultiBlocProvider(
       providers: [
         BlocProvider<LoginBloc>(
-          builder: (context) => _loginBloc
+          builder: (context) => _loginBlockMock
         ),
         BlocProvider<SignupBloc>(
-          builder: (context) => _signUpBloc,
+          builder: (context) => _signUpBlocMock,
         )
       ],
       child: MaterialApp(
         home: Scaffold(
-          body: LoginPage(),
+          body: SignUpPage(),
         ),
         navigatorObservers: [mockNavigatorObserver]
       )
     );
   }
 
-  setUp((){
+  setUp(() {
     _authenticationRepositoryMock = AuthenticationRepositoryMock();
-    _loginBloc = LoginBlocMock(authenticationRepository: _authenticationRepositoryMock);
-    _signUpBloc = SignUpBlocMock(authenticationRepository: _authenticationRepositoryMock);
+    _signUpBlocMock = SignUpBlocMock(authenticationRepository: _authenticationRepositoryMock);
+    _loginBlockMock = LoginBlocMock(authenticationRepository: _authenticationRepositoryMock);
   });
 
-  testWidgets('Show snack bar when state is LoginFailure', (WidgetTester tester) async {
-
-    //Arrange
+  testWidgets('Show snack bar when state is SignupFailed', (WidgetTester tester) async {
+    //Assert
     var expectedStates = [
-      LoginInitial(), 
-      LoginFailed(error: "Could not find user. Please try different credentials")
+      InitialSignupState(),
+      SignupFailed()
     ];
-    
-    whenListen(_loginBloc, Stream.fromIterable(expectedStates));
+
+    whenListen(_signUpBlocMock, Stream.fromIterable(expectedStates));
 
     //Act
     await tester.pumpWidget(makeTestableWidget());
@@ -65,15 +63,14 @@ void main() async {
     expect(snackBarFailureFinder, findsOneWidget);
   });
 
-  testWidgets('Navigate to second sign up page when ProfileToBeUpdated', (WidgetTester tester) async {
-
-    //Arrange
+  testWidgets('Navigate to second sign up page when SignupSucceeded', (WidgetTester tester) async {
+    //Assert
     var expectedStates = [
-      LoginInitial(), 
-      ProfileToBeUpdated()
+      InitialSignupState(),
+      SignupSucceeded()
     ];
 
-    whenListen(_loginBloc, Stream.fromIterable(expectedStates));
+    whenListen(_signUpBlocMock, Stream.fromIterable(expectedStates));
 
     //Act
     await tester.pumpWidget(makeTestableWidget());
@@ -82,25 +79,5 @@ void main() async {
     //Assert
     verify(mockNavigatorObserver.didPush(any, any));
     expect(find.byType(SecondSignUpPage), findsOneWidget);
-  });
-
-  
-  testWidgets('Show snack bar when state is LoginLoading', (WidgetTester tester) async {
-
-    //Arrange
-    var expectedStates = [
-      LoginInitial(), 
-      LoginLoading()
-    ];
-    
-    whenListen(_loginBloc, Stream.fromIterable(expectedStates));
-
-    //Act
-    await tester.pumpWidget(makeTestableWidget());
-    expect(snackBarLoadingFinder, findsNothing);
-    await tester.pump();
-
-    //Assert
-    expect(snackBarLoadingFinder, findsOneWidget);
   });
 }

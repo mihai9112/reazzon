@@ -33,7 +33,7 @@ class User {
       name: data['name'],
       userName: data['username'],
       email: data['email'],
-      reazzons: data['reazzons'].map((r) => new Reazzon(r.value)).toSet()
+      reazzons: data['reazzons'].map((r) => new Reazzon(null, null)).toSet() //TODO: Map correctly
     );
   }
 }

@@ -46,10 +46,6 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
     if(event is LoggedOut){
       yield Unauthenticated();
     }
-
-    if(event is InitializedCredentialsSignUp){
-      yield* _mapCredentialsSigningUpToState(event.validEmail, event.validPassword);
-    }
   }
 
   Stream<AuthenticationState> _mapAppStartedToState() async* {
@@ -61,21 +57,6 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
       yield Unauthenticated();
     }
     catch(_, stacktrace) {
-      //TODO: log stacktrace;
-      yield Unauthenticated();
-    }
-  }
-
-  Stream<AuthenticationState> _mapCredentialsSigningUpToState(String email, String password) async* {
-    try {
-      final firebaseUser = await authenticationRepository.signUpWithCredentials(email, password);
-      if(firebaseUser != null)
-      {
-        yield Authenticated();
-      }
-      yield Unauthenticated();
-    } 
-    catch (_, stacktrace) {
       //TODO: log stacktrace;
       yield Unauthenticated();
     }

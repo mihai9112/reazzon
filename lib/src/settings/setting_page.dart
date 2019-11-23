@@ -346,7 +346,7 @@ class _SettingPageState extends State<SettingPage> {
                                   settingBloc.outAvailableReazzons,
                               settingBloc: settingBloc,
                               initialData:
-                                  reazzons.map((r) => Reazzon(r)).toList(),
+                                  reazzons.map((r) => Reazzon(null, null)).toList(),
                             ),
                           ));
                 },
@@ -983,11 +983,11 @@ class __ReazzonModalBuilderState extends State<_ReazzonModalBuilder> {
                               ),
                             ),
                             onTap: () {
-                              if (this.widget.settingBloc.canAddReazzon &&
-                                  !snapshot.data[index].isSelected)
-                                snapshot.data[index].setSelection();
-                              else if (snapshot.data[index].isSelected)
-                                snapshot.data[index].setSelection();
+                              // if (this.widget.settingBloc.canAddReazzon &&
+                              //     !snapshot.data[index].isSelected)
+                              //   snapshot.data[index].setSelection();
+                              // else if (snapshot.data[index].isSelected)
+                              //   snapshot.data[index].setSelection();
 
                               this.widget.inAvailableReazzons(snapshot.data);
                             },

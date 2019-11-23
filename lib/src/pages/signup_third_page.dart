@@ -121,7 +121,7 @@ class _ThirdSignUpPageState extends State<ThirdSignUpPage> {
                                       ),
                                     ),
                                     onTap: () {
-                                      reazzon.setSelection();
+                                      //reazzon.setSelection();
                                       _signUpBloc
                                           .inAvailableReazzons(snapshot.data);
                                     },
