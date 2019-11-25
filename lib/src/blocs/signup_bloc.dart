@@ -133,7 +133,7 @@ class SignUpBloc extends Bloc with Validators {
   }
 
   void loadReazzons() {
-    inAvailableReazzons(Reazzon.allReazzons());
+    //inAvailableReazzons(Reazzon.allReazzons());
   }
 
   Future<bool> completeRegistration(User user) async {

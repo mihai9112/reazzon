@@ -12,7 +12,6 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> with Validators {
   final _emailController = BehaviorSubject<String>();
   final _passwordController = BehaviorSubject<String>();
   final _confirmPasswordController = BehaviorSubject<String>();
-  List<Reazzon> _selectedReazzons = new List<Reazzon>();
 
   SignupBloc({
     @required this.authenticationRepository
@@ -49,11 +48,15 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> with Validators {
       yield* _mapCredentialsSigningUpToState();
     }
 
-    if(event is ReazzonSelected){
+    if(event is LoadReazzons){
+      yield ReazzonsLoaded(_allReazzons());
+    }
+
+    if(event is SelectReazzon){
       yield* _mapReazzonSelected();
     }
 
-    if(event is ReazzonDeselected){
+    if(event is DeselectReazzon){
       yield* _mapReazzonDeselected();
     }
   }
@@ -64,11 +67,13 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> with Validators {
         _emailController.value,
         _passwordController.value
       );
-      if(firebaseUser != null)
-      {
+      if(firebaseUser != null) {
+        add(LoadReazzons());
         yield SignupSucceeded();
       }
-      yield SignupFailed();
+      else {
+        yield SignupFailed();
+      }
     } 
     catch (_, stacktrace) {
       //TODO: log stacktrace;
@@ -88,5 +93,29 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> with Validators {
     _emailController.close();
     _passwordController.close();
     _confirmPasswordController.close();
+  }
+
+  static List<Reazzon> _allReazzons() {
+    return List<Reazzon>()
+      ..addAll([
+        Reazzon(1,"#Divorce"),
+        Reazzon(2,"#Perfectionist"),
+        Reazzon(3,"#Breakups"),
+        Reazzon(4,"#Loneliness"),
+        Reazzon(5,"#Grief"),
+        Reazzon(6,"#WorkStress"),
+        Reazzon(7,"#FinancialStress"),
+        Reazzon(8,"#KidsCustody"),
+        Reazzon(9,"#Bullying"),
+        Reazzon(10,"#Insomnia"),
+        Reazzon(11,"#MoodSwings"),
+        Reazzon(12,"#Preasure\nToSucceed"),
+        Reazzon(13,"#Anxiety"),
+        Reazzon(14,"#Breakups"),
+        Reazzon(15,"#Cheating"),
+        Reazzon(16,"#SelfEsteem"),
+        Reazzon(17,"#BodyImage"),
+        Reazzon(18,"#Exercise\nMotivation")
+      ]);
   }
 }

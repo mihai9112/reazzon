@@ -103,7 +103,7 @@ class SettingsBloc extends Bloc with Validators {
       _availableReazzonsController.sink.add;
 
   SettingsBloc(this.settingRepository) {
-    _availableReazzonsController.add(Reazzon.allReazzons());
+    //_availableReazzonsController.add(Reazzon.allReazzons());
 
     _availableReazzonsController.stream.listen((onData) {
       if (onData.where((reazzon) => reazzon.isSelected == true).length >= 3) {
@@ -117,7 +117,7 @@ class SettingsBloc extends Bloc with Validators {
   }
 
   initializeReazzon(List<Reazzon> reazzons) {
-    List<Reazzon> _list = Reazzon.allReazzons();
+    List<Reazzon> _list = null; //Reazzon.allReazzons();
 
     reazzons.forEach((reazzon) {
       for (int i = 0; i < _list.length; i++) {

@@ -5,7 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:reazzon/src/login/login_bloc.dart';
-import 'package:reazzon/src/pages/signup_second_page.dart';
+import 'package:reazzon/src/models/reazzon.dart';
+import 'package:reazzon/src/pages/signup_continue_page.dart';
 import 'package:reazzon/src/signup/presentation/bloc/signup.dart';
 import 'package:reazzon/src/signup/presentation/bloc/signup_bloc.dart';
 import 'package:reazzon/src/signup/presentation/pages/signup_page.dart';
@@ -67,7 +68,8 @@ void main() async {
     //Assert
     var expectedStates = [
       InitialSignupState(),
-      SignupSucceeded()
+      SignupSucceeded(),
+      ReazzonsLoaded()
     ];
 
     whenListen(_signUpBlocMock, Stream.fromIterable(expectedStates));
@@ -78,6 +80,6 @@ void main() async {
 
     //Assert
     verify(mockNavigatorObserver.didPush(any, any));
-    expect(find.byType(SecondSignUpPage), findsOneWidget);
+    expect(find.byType(SignupContinuePage), findsOneWidget);
   });
 }

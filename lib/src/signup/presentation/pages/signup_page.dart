@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reazzon/src/helpers/field_focus.dart';
 import 'package:reazzon/src/login/login_page.dart';
+import 'package:reazzon/src/pages/signup_continue_page.dart';
 import 'package:reazzon/src/pages/signup_second_page.dart';
 import 'package:reazzon/src/signup/presentation/bloc/signup.dart';
 
@@ -35,7 +36,7 @@ class _SignUpPageState extends State<SignUpPage> {
     return BlocListener<SignupBloc, SignupState>(
       listener: (context, state){
         if(state is SignupSucceeded){
-          final route = MaterialPageRoute(builder: (_) => SecondSignUpPage());
+          final route = MaterialPageRoute(builder: (_) => SignupContinuePage());
           Navigator.of(context).push(route);
         }
 
@@ -245,8 +246,8 @@ class _SignUpPageState extends State<SignUpPage> {
           ),
           color: Colors.blueAccent,
           elevation: 4.0,
-          onPressed: () => snapshot.data ? null : signupBloc
-            .add(InitializedCredentialsSignUp()),
+          onPressed: () => snapshot.data ? signupBloc
+            .add(InitializedCredentialsSignUp()) : null,
           child: Container(
             padding:
                 const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
@@ -255,7 +256,7 @@ class _SignUpPageState extends State<SignUpPage> {
               children: <Widget>[
                 Expanded(
                   child: Text(
-                    "LOGIN",
+                    "SIGN UP",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white,

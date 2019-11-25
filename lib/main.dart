@@ -4,13 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:reazzon/src/authentication/authentication.dart';
-import 'package:reazzon/src/blocs/signup_bloc.dart';
 import 'package:reazzon/src/login/login_bloc.dart';
 import 'package:reazzon/src/pages/home_page.dart';
 import 'package:reazzon/src/user/user_repository.dart';
 
 import 'src/authentication/authentication_repository.dart';
 import 'src/pages/account_page.dart';
+import 'src/signup/presentation/bloc/signup.dart';
 
 void main() async {
   
@@ -40,8 +40,8 @@ void main() async {
       BlocProvider<LoginBloc>(
         builder: (context) => _loginBloc
       ),
-      BlocProvider<SignUpBloc>(
-        builder: (context) => SignUpBloc(_authenticationRepository),
+      BlocProvider<SignupBloc>(
+        builder: (context) => SignupBloc(authenticationRepository: _authenticationRepository),
       )
     ],
     child: ReazzonMainWidget(),

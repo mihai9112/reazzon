@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:reazzon/src/signup/presentation/bloc/signup.dart';
@@ -19,7 +20,7 @@ void main() async {
   });
 
   group('Signup initiated', () {
-    test('maps to SignupSucceeded when InitializedCredentialsSignUp returns user', (){
+    test('maps to SignupSucceeded when InitializedCredentialsSignUp returns user', () async {
       
       //Arrange
       final expectedSignupState = [
@@ -38,10 +39,10 @@ void main() async {
       _signupBloc.add(InitializedCredentialsSignUp());
 
       //Assert
-      expectLater(_signupBloc, emitsInOrder(expectedSignupState));
+      await emitsExactly(_signupBloc, expectedSignupState);
     });
 
-    test('maps to SignupFailed when InitializedCredentialsSignUp returns no user', (){
+    test('maps to SignupFailed when InitializedCredentialsSignUp returns no user', () async {
       //Arrange
       final expectedSignupState = [
         InitialSignupState(),
@@ -59,10 +60,10 @@ void main() async {
       _signupBloc.add(InitializedCredentialsSignUp());
 
       //Assert
-      expectLater(_signupBloc, emitsInOrder(expectedSignupState));
+      await emitsExactly(_signupBloc, expectedSignupState);
     });
 
-    test('maps to SignupFailed when InitializedCredentialsSignUp throws exception', (){
+    test('maps to SignupFailed when InitializedCredentialsSignUp throws exception', () async {
       //Arrange
       final expectedSignupState = [
         InitialSignupState(),
@@ -80,7 +81,7 @@ void main() async {
       _signupBloc.add(InitializedCredentialsSignUp());
 
       //Assert
-      expectLater(_signupBloc, emitsInOrder(expectedSignupState));
+      await emitsExactly(_signupBloc, expectedSignupState);
     });
   });
 }

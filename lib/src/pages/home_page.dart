@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reazzon/src/login/login_page.dart';
-import 'package:reazzon/src/pages/signup_page.dart';
+import 'package:reazzon/src/signup/presentation/pages/signup_page.dart';
 
 class HomePage extends StatelessWidget {
   final _kArrowColor = Colors.black.withOpacity(0.8);

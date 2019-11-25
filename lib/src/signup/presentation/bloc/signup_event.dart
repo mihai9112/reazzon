@@ -9,13 +9,17 @@ class InitializedCredentialsSignUp extends SignupEvent {
   String toString() => 'InitializedCredentialsSignUp';  
 }
 
-
-class ReazzonDeselected extends SignupEvent {
+class DeselectReazzon extends SignupEvent {
   @override
-  String toString() => 'ReazzonDeselected';  
+  String toString() => 'DeselectReazzon';  
 }
 
-class ReazzonSelected extends SignupEvent {
+class SelectReazzon extends SignupEvent {
   @override
-  String toString() => 'ReazzonSelected';  
+  String toString() => 'SelectReazzon';  
+}
+
+class LoadReazzons extends SignupEvent {
+  @override
+  String toString() => 'LoadReazzons';  
 }

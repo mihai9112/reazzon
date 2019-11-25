@@ -15,8 +15,8 @@ class FilterDialogState extends State<FilterDialog> {
   void initState() {
     filterBloc = FilterBloc();
 
-    Reazzon.allReazzons().forEach(
-        (r) => filterBloc.filterEntities.add(FilterEntity(r.value, false)));
+    // Reazzon.allReazzons().forEach(
+    //     (r) => filterBloc.filterEntities.add(FilterEntity(r.value, false)));
 
     super.initState();
   }
@@ -75,8 +75,8 @@ class _ItemState extends State<Item> {
   void initState() {
     filterBloc = BlocProvider.of<FilterBloc>(context);
 
-    Reazzon.allReazzons().forEach(
-        (r) => filterBloc.filterEntities.add(FilterEntity(r.value, false)));
+    // Reazzon.allReazzons().forEach(
+    //     (r) => filterBloc.filterEntities.add(FilterEntity(r.value, false)));
 
     super.initState();
   }
