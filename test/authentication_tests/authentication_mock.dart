@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bloc_test/bloc_test.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mockito/mockito.dart';
 import 'package:reazzon/src/authentication/authentication.dart';
@@ -23,7 +24,7 @@ class LoginBlocMock extends Mock implements LoginBloc {
   LoginBlocMock({this.authenticationRepository});
 }
 
-class SignUpBlocMock extends Mock implements SignupBloc {
+class SignUpBlocMock extends MockBloc<SignupEvent, SignupState> implements SignupBloc {
   AuthenticationRepositoryMock authenticationRepository;
 
   SignUpBlocMock({this.authenticationRepository});
