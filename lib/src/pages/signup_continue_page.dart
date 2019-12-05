@@ -89,7 +89,8 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
                                 )
                               )
                             );
-                          }
+                          },
+                          itemCount: reazzons.length,
                         )
                       )
                     );

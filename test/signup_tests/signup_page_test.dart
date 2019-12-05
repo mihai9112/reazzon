@@ -68,9 +68,10 @@ void main() async {
     //Assert
     var expectedStates = [
       InitialSignupState(),
-      ReazzonsLoaded([new Reazzon(1, "#TestReazzon")]),
       SignupSucceeded()
     ];
+    when(_signUpBlocMock.state)
+      .thenReturn(ReazzonsLoaded([new Reazzon(1, "#TestReazzon")]));
 
     whenListen(_signUpBlocMock, Stream.fromIterable(expectedStates));
 
