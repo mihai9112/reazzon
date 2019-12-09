@@ -24,8 +24,4 @@ class LoginBlocMock extends Mock implements LoginBloc {
   LoginBlocMock({this.authenticationRepository});
 }
 
-class SignUpBlocMock extends MockBloc<SignupEvent, SignupState> implements SignupBloc {
-  AuthenticationRepositoryMock authenticationRepository;
-
-  SignUpBlocMock({this.authenticationRepository});
-}
+class SignUpBlocMock extends MockBloc<SignupEvent, SignupState> implements SignupBloc {}

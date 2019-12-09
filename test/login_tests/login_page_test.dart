@@ -43,7 +43,7 @@ void main() async {
   setUp((){
     _authenticationRepositoryMock = AuthenticationRepositoryMock();
     _loginBloc = LoginBlocMock(authenticationRepository: _authenticationRepositoryMock);
-    _signUpBloc = SignUpBlocMock(authenticationRepository: _authenticationRepositoryMock);
+    _signUpBloc = SignUpBlocMock();
   });
 
   testWidgets('Show snack bar when state is LoginFailure', (WidgetTester tester) async {

@@ -3,9 +3,9 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reazzon/src/helpers/field_focus.dart';
 import 'package:reazzon/src/login/login_page.dart';
-import 'package:reazzon/src/pages/signup_continue_page.dart';
-import 'package:reazzon/src/pages/signup_second_page.dart';
 import 'package:reazzon/src/signup/presentation/bloc/signup.dart';
+
+import 'signup_continue_page.dart';
 
 class SignUpPage extends StatefulWidget {
   @override

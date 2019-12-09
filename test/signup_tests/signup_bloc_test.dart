@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:reazzon/src/models/reazzon.dart';
 import 'package:reazzon/src/signup/presentation/bloc/signup.dart';
 
 import '../authentication_tests/authentication_firebase_mock.dart';
@@ -83,5 +84,60 @@ void main() async {
       //Assert
       await emitsExactly(_signupBloc, expectedSignupState);
     });
+  });
+
+  group('Reazzon selection', () {
+    blocTest(
+      'should load all reazzons',
+      build: () => _signupBloc,
+      act: (SignupBloc bloc) async => bloc.add(LoadReazzons()),
+      expect: [
+        isA<InitialSignupState>(),
+        isA<ReazzonsLoaded>()
+      ]
+    );
+
+    blocTest(
+      'should select reazzon',
+      build: () => _signupBloc,
+      act: (SignupBloc bloc) async => bloc..add(LoadReazzons())
+        ..add(SelectReazzon(Reazzon(1, '#Reazzon'))),
+      expect: [
+        isA<InitialSignupState>(),
+        isA<ReazzonsLoaded>(),
+        isA<ReazzonsLoaded>()
+      ] 
+    );
+
+    blocTest(
+      'should deselect reazzon',
+      build: () => _signupBloc,
+      act: (SignupBloc bloc) async => bloc..add(LoadReazzons())
+        ..add(DeselectReazzon(Reazzon(1, '#Reazzon'))),
+      expect: [
+        isA<InitialSignupState>(),
+        isA<ReazzonsLoaded>(),
+        isA<ReazzonsLoaded>()
+      ] 
+    );
+
+    blocTest(
+      'should not select reazzon after 3 reazzons selected',
+      build: () => _signupBloc,
+      act: (SignupBloc bloc) async => bloc..add(LoadReazzons())
+        ..add(SelectReazzon(Reazzon(1, '#Reazzon')))
+        ..add(SelectReazzon(Reazzon(2, '#Reazzon')))
+        ..add(SelectReazzon(Reazzon(3, '#Reazzon')))
+        ..add(SelectReazzon(Reazzon(4, '#Reazzon'))),
+      expect: [
+        isA<InitialSignupState>(),
+        isA<ReazzonsLoaded>(),
+        isA<ReazzonsLoaded>(),
+        isA<ReazzonsLoaded>(),
+        isA<ReazzonsLoaded>(),
+        isA<ReazzonLimitSelected>(),
+        isA<ReazzonsLoaded>()
+      ] 
+    );
   });
 }

@@ -13,4 +13,10 @@ class Reazzon {
   ) {
     _isSelected = false;
   }
+
+  Reazzon.selected(Reazzon reazzon){
+    _id = reazzon.id;
+    _value = reazzon.value;
+    _isSelected = true;
+  }
 }

@@ -1,7 +1,6 @@
-import 'dart:async';
+import 'dart:async' show Future;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:reazzon/src/blocs/signup_bloc.dart';
 import 'package:reazzon/src/helpers/field_focus.dart';
 import 'package:reazzon/src/helpers/spinner.dart';
 import 'package:reazzon/src/signup/presentation/bloc/signup.dart';

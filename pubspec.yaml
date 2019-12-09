@@ -42,7 +42,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   mockito: ^4.1.0
-  bloc_test: ^2.1.0
+  bloc_test: ^2.2.2
 
 
 # For information on the generic Dart part of this file, see the

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reazzon/src/blocs/filter_bloc.dart';
-import 'package:reazzon/src/models/reazzon.dart';
 
 class FilterDialog extends StatefulWidget {
   @override

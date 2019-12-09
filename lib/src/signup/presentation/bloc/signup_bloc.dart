@@ -53,11 +53,11 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> with Validators {
     }
 
     if(event is SelectReazzon){
-      yield* _mapReazzonSelected();
+      yield* _mapReazzonSelected(event);
     }
 
     if(event is DeselectReazzon){
-      yield* _mapReazzonDeselected();
+      yield* _mapReazzonDeselected(event);
     }
   }
 
@@ -81,12 +81,30 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> with Validators {
     }
   }
 
-  Stream<SignupState> _mapReazzonSelected() async* {
-    
+  Stream<SignupState> _mapReazzonSelected(SelectReazzon event) async* {
+    if(state is ReazzonsLoaded){
+      var reazzonsToWork = (state as ReazzonsLoaded).reazzons;
+
+      if(reazzonsToWork.where((r) => r.isSelected == true).length == 3){
+        yield ReazzonLimitSelected();
+      }
+      else {
+        reazzonsToWork = reazzonsToWork.map((reazzon) {
+          return reazzon.id == event.reazzon.id ? Reazzon.selected(reazzon) : reazzon;
+        }).toList();
+      }
+        
+      yield ReazzonsLoaded(reazzonsToWork);
+    }
   }
 
-  Stream<SignupState> _mapReazzonDeselected() async* {
-    
+  Stream<SignupState> _mapReazzonDeselected(DeselectReazzon event) async* {
+    if(state is ReazzonsLoaded){
+      final List<Reazzon> updatedReazzons = (state as ReazzonsLoaded).reazzons.map((reazzon) {
+        return reazzon.id == event.reazzon.id ? event.reazzon : reazzon;
+      }).toList();
+      yield ReazzonsLoaded(updatedReazzons);
+    }
   }
 
   void dispose(){

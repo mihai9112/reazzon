@@ -15,14 +15,14 @@ class SignupSucceeded extends SignupState {
   String toString() => 'SignupSucceeded';  
 }
 
+class ReazzonLimitSelected extends SignupState {
+  @override
+  String toString() => 'ReazzonLimitSelected';  
+}
+
 class SignupFailed extends SignupState {
   @override
   String toString() => 'SignupFailed'; 
-}
-
-class ReazzonSelectionUpdated extends SignupState {
-  @override
-  String toString() => 'ReazzonSelectionUpdated'; 
 }
 
 class ReazzonsLoaded extends SignupState {
