@@ -49,7 +49,9 @@ class _MessagePageState extends State<MessagePage> with WidgetsBindingObserver {
             .removeChattingWith(messageBloc.messageRepo.loggedUserId);
         print('Paused');
         break;
-      case AppLifecycleState.suspending:
+      case AppLifecycleState.paused:
+        break;
+      default:
         break;
     }
   }

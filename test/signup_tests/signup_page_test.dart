@@ -25,10 +25,10 @@ void main() async {
     return MultiBlocProvider(
       providers: [
         BlocProvider<LoginBloc>(
-          builder: (context) => _loginBlockMock
+          create: (context) => _loginBlockMock
         ),
         BlocProvider<SignupBloc>(
-          builder: (context) => _signUpBlocMock,
+          create: (context) => _signUpBlocMock,
         )
       ],
       child: MaterialApp(
@@ -47,7 +47,7 @@ void main() async {
   });
 
   testWidgets('Show snack bar when state is SignupFailed', (WidgetTester tester) async {
-    //Assert
+    //Arrage
     var expectedStates = [
       InitialSignupState(),
       SignupFailed()
@@ -65,7 +65,7 @@ void main() async {
   });
 
   testWidgets('Navigate to second sign up page when SignupSucceeded', (WidgetTester tester) async {
-    //Assert
+    //Arrange
     var expectedStates = [
       InitialSignupState(),
       SignupSucceeded()

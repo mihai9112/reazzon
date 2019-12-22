@@ -19,7 +19,7 @@ void main() async {
     return MultiBlocProvider(
       providers: [
         BlocProvider<LoginBloc>(
-          builder: (context) => _loginBloc
+          create: (context) => _loginBloc
         )
       ],
       child: MaterialApp(

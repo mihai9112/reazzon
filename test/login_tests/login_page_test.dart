@@ -25,10 +25,10 @@ void main() async {
     return MultiBlocProvider(
       providers: [
         BlocProvider<LoginBloc>(
-          builder: (context) => _loginBloc
+          create: (context) => _loginBloc
         ),
         BlocProvider<SignupBloc>(
-          builder: (context) => _signUpBloc,
+          create: (context) => _signUpBloc,
         )
       ],
       child: MaterialApp(

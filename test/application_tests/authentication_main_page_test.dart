@@ -36,22 +36,22 @@ void main() async {
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthenticationBloc>(
-          builder: (context) => _authenticationBlocMock,
+          create: (context) => _authenticationBlocMock,
         ),
         BlocProvider<LoginBloc>(
-          builder: (context) => _loginBlocMock
+          create: (context) => _loginBlocMock
         ),
         BlocProvider<NotificationBloc>(
-          builder: (context) => _notificationBlocMock,
+          create: (context) => _notificationBlocMock,
         ),
         BlocProvider<ChatBloc>(
-          builder: (context) => _chatBlocMock,
+          create: (context) => _chatBlocMock,
         ),
         BlocProvider<AccountPageBloc>(
-          builder: (context) => _accountPageBlocMock,
+          create: (context) => _accountPageBlocMock,
         ),
         BlocProvider<SettingsBloc>(
-          builder: (context) => _settingsBlocMock,
+          create: (context) => _settingsBlocMock,
         )
       ],
       child: ReazzonMainWidget()

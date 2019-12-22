@@ -34,14 +34,14 @@ void main() async {
   runApp(MultiBlocProvider(
     providers: [
       BlocProvider<AuthenticationBloc>(
-        builder: (context) => _authenticationBloc
+        create: (context) => _authenticationBloc
         ..add(AppStarted()),
       ),
       BlocProvider<LoginBloc>(
-        builder: (context) => _loginBloc
+        create: (context) => _loginBloc
       ),
       BlocProvider<SignupBloc>(
-        builder: (context) => SignupBloc(authenticationRepository: _authenticationRepository),
+        create: (context) => SignupBloc(authenticationRepository: _authenticationRepository),
       )
     ],
     child: ReazzonMainWidget(),

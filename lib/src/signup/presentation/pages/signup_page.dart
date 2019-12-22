@@ -49,7 +49,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 children: [Text('Sign up failure'), Icon(Icons.error)],
               ),
               backgroundColor: Colors.redAccent
-            ));
+          ));
         }
       },
       child: Scaffold(

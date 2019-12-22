@@ -24,8 +24,21 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
 
   @override
   Widget build(BuildContext context) {
-
-    return Scaffold(
+    return BlocListener<SignupBloc, SignupState>(
+      listener: (context, state) {
+        if(state is ReazzonLimitSelected){
+          Scaffold.of(context)
+            .showSnackBar(SnackBar(
+              key: Key("snack_bar_limit_reached"),
+              content: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [Text('Cannot select more than 3 reazzons'), Icon(Icons.info)],
+              ),
+              backgroundColor: Colors.deepOrangeAccent
+          ));
+        }
+      },
+      child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0.0,
@@ -65,6 +78,7 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
                   builder: (context, state) {
                     final reazzons = (state as ReazzonsLoaded)
                       .reazzons;
+                      
                     return Container(
                       child: Align(
                         child: GridView.builder(
@@ -73,21 +87,29 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
                             childAspectRatio: 3.0
                           ),
                           itemBuilder: (context, index){
+                            var reazzon = reazzons[index];
                             return GestureDetector(
+                              key: Key('${reazzon.id}_${reazzon.value}'),
                               child: Card(
                                 elevation: 5.0,
                                 child: Container(
                                   alignment: Alignment.center,
                                   child: new Text(
-                                    reazzons[index].value,
+                                    reazzon.value,
                                     textAlign: TextAlign.center,
                                     style: new TextStyle(
-                                        fontWeight: reazzons[index].isSelected
+                                        fontWeight: reazzon.isSelected
                                             ? FontWeight.bold
                                             : FontWeight.normal),
+                                    key: Key('${reazzon.id}_${reazzon.value}_text'),
                                   )
                                 )
-                              )
+                              ),
+                              onTap: () => {
+                                reazzon.isSelected ? 
+                                _signUpBloc.add(DeselectReazzon(reazzon)) : 
+                                _signUpBloc.add(SelectReazzon(reazzon)),
+                              }
                             );
                           },
                           itemCount: reazzons.length,
@@ -99,6 +121,8 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
               )
             ],
           ),
-        ));
+        )
+      ),
+    );
   }
 }
