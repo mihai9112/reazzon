@@ -77,9 +77,6 @@ void main() async {
     //Arrange
     final snackBarLimitFinder = find.byKey(Key("snack_bar_limit_reached"));
 
-    // when(_signUpBlocMock.state)
-    //   .thenReturn(ReazzonsLoaded([reazzon]));
-
     whenListen(_signUpBlocMock, Stream.fromIterable([InitialSignupState(), ReazzonLimitSelected(), ReazzonsLoaded([reazzon])]));
 
     //Act

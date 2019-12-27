@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:reazzon/src/models/reazzon.dart';
 import 'package:reazzon/src/signup/presentation/bloc/signup.dart';
 
 class SignupContinuePage extends StatefulWidget {
@@ -76,8 +77,10 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
               Flexible(
                 child: BlocBuilder<SignupBloc, SignupState>(
                   builder: (context, state) {
-                    final reazzons = (state as ReazzonsLoaded)
-                      .reazzons;
+                    var reazzons = new List<Reazzon>();
+                    if(state is ReazzonsLoaded){
+                      reazzons = state.reazzons;
+                    }
                       
                     return Container(
                       child: Align(
