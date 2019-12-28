@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:reazzon/src/models/reazzon.dart';
+import 'package:reazzon/src/pages/home_page.dart';
 import 'package:reazzon/src/signup/presentation/bloc/signup.dart';
 import 'package:reazzon/src/signup/presentation/pages/signup_continue_page.dart';
 
@@ -90,9 +91,18 @@ void main() async {
 
   testWidgets('Navigate to home page when sign up completed', (WidgetTester tester) async {
     //Arrage
+    var expectedStates = [
+      InitialSignupState(),
+      SignupCompleted()
+    ];
+    whenListen(_signUpBlocMock, Stream.fromIterable(expectedStates));
 
     //Act
+    await tester.pumpWidget(makeTestableWidget());
+    await tester.pumpAndSettle();
 
     //Assert
+    verify(mockNavigatorObserver.didPush(any, any));
+    expect(find.byType(HomePage), findsOneWidget);
   });
 }

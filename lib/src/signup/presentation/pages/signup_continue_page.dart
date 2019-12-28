@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reazzon/src/models/reazzon.dart';
+import 'package:reazzon/src/pages/home_page.dart';
 import 'package:reazzon/src/signup/presentation/bloc/signup.dart';
 
 class SignupContinuePage extends StatefulWidget {
@@ -37,6 +38,11 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
               ),
               backgroundColor: Colors.deepOrangeAccent
           ));
+        }
+
+        if(state is SignupCompleted){
+          final route = MaterialPageRoute(builder: (_) => HomePage());
+          Navigator.of(context).push(route);
         }
       },
       child: Scaffold(

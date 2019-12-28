@@ -7,8 +7,8 @@ import 'package:reazzon/src/login/login_bloc.dart';
 import 'package:reazzon/src/login/login_page.dart';
 import 'package:reazzon/src/login/login_state.dart';
 import 'package:bloc_test/bloc_test.dart';
-import 'package:reazzon/src/pages/signup_second_page.dart';
 import 'package:reazzon/src/signup/presentation/bloc/signup.dart';
+import 'package:reazzon/src/signup/presentation/pages/signup_continue_page.dart';
 
 import '../authentication_tests/authentication_mock.dart';
 import '../helpers/navigator_observer_mock.dart';
@@ -81,7 +81,7 @@ void main() async {
 
     //Assert
     verify(mockNavigatorObserver.didPush(any, any));
-    expect(find.byType(SecondSignUpPage), findsOneWidget);
+    expect(find.byType(SignupContinuePage), findsOneWidget);
   });
 
   

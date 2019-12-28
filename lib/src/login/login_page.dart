@@ -8,7 +8,7 @@ import 'package:reazzon/src/login/login_bloc.dart';
 import 'package:reazzon/src/login/login_event.dart';
 import 'package:reazzon/src/login/login_state.dart';
 import 'package:reazzon/src/pages/forgotten_password_page.dart';
-import 'package:reazzon/src/pages/signup_second_page.dart';
+import 'package:reazzon/src/signup/presentation/pages/signup_continue_page.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -43,7 +43,7 @@ class _LoginPageState extends State<LoginPage> {
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state){
         if(state is ProfileToBeUpdated){
-          final route = MaterialPageRoute(builder: (_) => SecondSignUpPage());
+          final route = MaterialPageRoute(builder: (_) => SignupContinuePage());
           Navigator.of(context).push(route);
         }
       },
