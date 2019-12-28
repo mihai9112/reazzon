@@ -43,19 +43,19 @@ class SettingsBloc extends Bloc with Validators {
   // -- first name --
   final _firstNameController = BehaviorSubject<String>();
   Stream<String> get outFirstName =>
-      _firstNameController.stream.transform(validateFirstName);
+      _firstNameController.stream;
   Function(String) get inFirstName => _firstNameController.sink.add;
 
   // -- last name --
   final _lastNameController = BehaviorSubject<String>();
   Stream<String> get outLastName =>
-      _lastNameController.stream.transform(validateLastName);
+      _lastNameController.stream;
   Function(String) get inLastName => _lastNameController.sink.add;
 
   // -- user name --
   final _userNameController = BehaviorSubject<String>();
   Stream<String> get outUserName =>
-      _userNameController.stream.transform(validateUserName);
+      _userNameController.stream;
   Function(String) get inUserName => _userNameController.sink.add;
 
   // -- email --

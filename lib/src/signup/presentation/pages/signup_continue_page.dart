@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:reazzon/src/helpers/field_focus.dart';
 import 'package:reazzon/src/models/reazzon.dart';
 import 'package:reazzon/src/pages/home_page.dart';
 import 'package:reazzon/src/signup/presentation/bloc/signup.dart';
@@ -11,6 +12,7 @@ class SignupContinuePage extends StatefulWidget {
 
 class _SignupContinuePageState extends State<SignupContinuePage> {
   SignupBloc _signUpBloc;
+  FocusNode _focusUsername = new FocusNode();
 
   @override
   void initState() {
@@ -80,6 +82,43 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
                   )
                 ],
               ),
+              Row(
+                children: <Widget>[
+                  EnsureVisibleWhenFocused(
+                    focusNode: _focusUsername,
+                    child: Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 40.0),
+                        child: Text(
+                          "USERNAME",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blueAccent,
+                            fontSize: 15.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                margin:
+                    const EdgeInsets.only(left: 40.0, right: 40.0, top: 5.0),
+                alignment: Alignment.center,
+                padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[Expanded(child: userNameField(_signUpBloc))],
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                margin:
+                    const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0)
+              ),
               Flexible(
                 child: BlocBuilder<SignupBloc, SignupState>(
                   builder: (context, state) {
@@ -127,7 +166,20 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
                     );
                   },
                 ),
-              )
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                margin:
+                    const EdgeInsets.only(left: 30.0, right: 30.0, top: 20.0),
+                alignment: Alignment.center,
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: buildCompleteButonWidget(_signUpBloc)
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         )
@@ -135,3 +187,57 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
     );
   }
 }
+
+Widget userNameField(SignupBloc signupBloc) {
+  return StreamBuilder(
+    stream: signupBloc.username,
+    builder: (context, snapshot) {
+      return TextField(
+        style: TextStyle(fontSize: 15.0),
+        onChanged: signupBloc.changeUsername,
+        decoration: InputDecoration(
+          errorStyle: TextStyle(fontSize: 15.0),
+          errorText: snapshot.error,
+          prefixText: "@"
+        ),
+      );
+    },
+  );
+}
+
+buildCompleteButonWidget(SignupBloc signupBloc){
+    return StreamBuilder(
+      stream: signupBloc.completeValid,
+      builder: (context, AsyncSnapshot<bool> snapshot) {
+        return RaisedButton(
+          key: Key('credentials_button'),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.0),
+          ),
+          color: Colors.blueAccent,
+          elevation: 4.0,
+          onPressed: () => snapshot.data ? null : signupBloc
+            .add(CompleteSignup()),
+          child: Container(
+            padding:
+                const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Expanded(
+                  child: Text(
+                    "COMPLETE",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }

@@ -13,6 +13,8 @@ import 'src/pages/account_page.dart';
 import 'src/signup/presentation/bloc/signup.dart';
 
 void main() async {
+
+  WidgetsFlutterBinding.ensureInitialized();
   
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn(

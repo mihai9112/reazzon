@@ -41,3 +41,8 @@ class LoadReazzons extends SignupEvent {
   @override
   String toString() => 'LoadReazzons';  
 }
+
+class CompleteSignup extends SignupEvent {
+  @override
+  String toString() => 'CompleteSignup';
+}

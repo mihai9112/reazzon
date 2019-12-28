@@ -39,18 +39,6 @@ class _SignUpPageState extends State<SignUpPage> {
           final route = MaterialPageRoute(builder: (_) => SignupContinuePage());
           Navigator.of(context).push(route);
         }
-
-        if(state is SignupFailed){
-          Scaffold.of(context)
-            .showSnackBar(SnackBar(
-              key: Key("snack_bar_failure"),
-              content: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [Text('Sign up failure'), Icon(Icons.error)],
-              ),
-              backgroundColor: Colors.redAccent
-          ));
-        }
       },
       child: Scaffold(
         appBar: AppBar(
@@ -64,68 +52,43 @@ class _SignUpPageState extends State<SignUpPage> {
             decoration: BoxDecoration(
               color: Colors.white,
             ),
-            child: Column(children: <Widget>[
-              Container(
-                padding: EdgeInsets.all(50.0),
-                child: Center(
-                  child: Icon(
-                    Icons.developer_board,
-                    color: Colors.blueAccent,
-                    size: 50.0,
+            child: BlocListener<SignupBloc, SignupState>(
+              listener: (context, state){
+                if(state is SignupFailed){
+                  Scaffold.of(context)
+                    .showSnackBar(SnackBar(
+                      key: Key("snack_bar_failure"),
+                      content: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [Text('Sign up failure'), Icon(Icons.error)],
+                      ),
+                      backgroundColor: Colors.redAccent
+                  ));
+                }
+              },
+              child: Column(children: <Widget>[
+                Container(
+                  padding: EdgeInsets.all(50.0),
+                  child: Center(
+                    child: Icon(
+                      Icons.developer_board,
+                      color: Colors.blueAccent,
+                      size: 50.0,
+                    ),
                   ),
                 ),
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Row(children: <Widget>[
-                      EnsureVisibleWhenFocused(
-                        focusNode: _focusEmail,
-                        child: Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 40.0),
-                            child: Text(
-                              "EMAIL",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blueAccent,
-                                fontSize: 15.0,
-                              ),
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    margin: const EdgeInsets.only(
-                        left: 40.0, right: 40.0, top: 5.0),
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Expanded(child: emailField(_signupBloc))
-                      ],
-                    ),
-                  )
-                ]),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Row(
-                      children: <Widget>[
+                    Row(children: <Widget>[
                         EnsureVisibleWhenFocused(
-                          focusNode: _focusPassword,
+                          focusNode: _focusEmail,
                           child: Expanded(
                             child: Padding(
                               padding: const EdgeInsets.only(left: 40.0),
                               child: Text(
-                                "PASSWORD",
+                                "EMAIL",
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.blueAccent,
@@ -140,94 +103,134 @@ class _SignUpPageState extends State<SignUpPage> {
                     Container(
                       width: MediaQuery.of(context).size.width,
                       margin: const EdgeInsets.only(
-                          left: 40.0, right: 40.0, top: 10.0),
+                          left: 40.0, right: 40.0, top: 5.0),
                       alignment: Alignment.center,
                       padding: const EdgeInsets.only(left: 0.0, right: 10.0),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
-                          Expanded(child: passwordField(_signupBloc)),
+                          Expanded(child: emailField(_signupBloc))
                         ],
                       ),
                     )
                   ]),
-                Column(children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    EnsureVisibleWhenFocused(
-                      focusNode: _focusConfirmPassword,
-                      child: Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 40.0),
-                          child: Text(
-                            "CONFIRM PASSWORD",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blueAccent,
-                              fontSize: 15.0,
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          EnsureVisibleWhenFocused(
+                            focusNode: _focusPassword,
+                            child: Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 40.0),
+                                child: Text(
+                                  "PASSWORD",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blueAccent,
+                                    fontSize: 15.0,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        margin: const EdgeInsets.only(
+                            left: 40.0, right: 40.0, top: 10.0),
+                        alignment: Alignment.center,
+                        padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Expanded(child: passwordField(_signupBloc)),
+                          ],
+                        ),
+                      )
+                    ]),
+                  Column(children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      EnsureVisibleWhenFocused(
+                        focusNode: _focusConfirmPassword,
+                        child: Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 40.0),
+                            child: Text(
+                              "CONFIRM PASSWORD",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blueAccent,
+                                fontSize: 15.0,
+                              ),
                             ),
                           ),
                         ),
+                      )
+                    ],
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin:
+                        const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(child: confirmPasswordField(_signupBloc)),
+                      ],
+                    ),
+                  ),
+                ]),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(right: 20.0),
+                      child: FlatButton(
+                        child: Text(
+                          "Already have an account?",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blueAccent,
+                            fontSize: 15.0,
+                            decoration: TextDecoration.underline,
+                          ),
+                          textAlign: TextAlign.end,
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LoginPage()));
+                        },
                       ),
-                    )
+                    ),
                   ],
                 ),
                 Container(
                   width: MediaQuery.of(context).size.width,
                   margin:
-                      const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
+                      const EdgeInsets.only(left: 30.0, right: 30.0, top: 20.0),
                   alignment: Alignment.center,
-                  padding: const EdgeInsets.only(left: 0.0, right: 10.0),
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      Expanded(child: confirmPasswordField(_signupBloc)),
+                      Expanded(
+                        child: buildButton(),
+                      ),
                     ],
                   ),
-                ),
-              ]),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(right: 20.0),
-                    child: FlatButton(
-                      child: Text(
-                        "Already have an account?",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blueAccent,
-                          fontSize: 15.0,
-                          decoration: TextDecoration.underline,
-                        ),
-                        textAlign: TextAlign.end,
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginPage()));
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                margin:
-                    const EdgeInsets.only(left: 30.0, right: 30.0, top: 20.0),
-                alignment: Alignment.center,
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: buildButton(),
-                    ),
-                  ],
-                ),
-              )
-            ])
+                )
+              ])
+            ),
           ),
         )
       )

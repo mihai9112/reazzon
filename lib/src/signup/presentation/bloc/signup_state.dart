@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:reazzon/src/models/reazzon.dart';
-import 'package:reazzon/src/signup/presentation/bloc/signup.dart';
 
 abstract class SignupState extends Equatable {
   const SignupState();

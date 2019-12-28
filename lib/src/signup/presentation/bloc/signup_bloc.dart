@@ -12,6 +12,8 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> with Validators {
   final _emailController = BehaviorSubject<String>();
   final _passwordController = BehaviorSubject<String>();
   final _confirmPasswordController = BehaviorSubject<String>();
+  final _usernameController = BehaviorSubject<String>();
+  final _validationController = BehaviorSubject<bool>();
 
   SignupBloc({
     @required this.authenticationRepository
@@ -34,10 +36,14 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> with Validators {
   });
   Stream<bool> get submitValid => Observable.combineLatest3(
     email, password, confirmPassword, (e, p, cp) => true);
+  Stream<String> get username => 
+    _usernameController.stream.transform(validateUsername);
+  Stream<bool> get completeValid => Observable.combineLatest2(username, _validationController.stream, (u, vc) => true);
 
   Function(String) get changeEmail => _emailController.sink.add;
   Function(String) get changePassword => _passwordController.sink.add;
   Function(String) get changeConfirmPassword => _confirmPasswordController.sink.add;
+  Function(String) get changeUsername => _usernameController.sink.add;
   
   @override
   SignupState get initialState => InitialSignupState();
@@ -92,6 +98,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> with Validators {
         reazzonsToWork = reazzonsToWork.map((reazzon) {
           return reazzon.id == event.reazzon.id ? Reazzon.selected(reazzon) : reazzon;
         }).toList();
+        _validationController.sink.add(true);
       }
         
       yield ReazzonsLoaded(reazzonsToWork);
@@ -104,6 +111,10 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> with Validators {
         return reazzon.id == event.reazzon.id ? event.reazzon : reazzon;
       }).toList();
       yield ReazzonsLoaded(updatedReazzons);
+
+      if(updatedReazzons.where((reazzon) => reazzon.isSelected == true).length == 0){
+        _validationController.drain();
+      }
     }
   }
 
@@ -111,6 +122,8 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> with Validators {
     _emailController.close();
     _passwordController.close();
     _confirmPasswordController.close();
+    _usernameController.close();
+    _validationController.close();
   }
 
   static List<Reazzon> _allReazzons() {
