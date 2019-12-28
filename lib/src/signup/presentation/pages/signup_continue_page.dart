@@ -30,18 +30,6 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
   Widget build(BuildContext context) {
     return BlocListener<SignupBloc, SignupState>(
       listener: (context, state) {
-        if(state is ReazzonLimitSelected){
-          Scaffold.of(context)
-            .showSnackBar(SnackBar(
-              key: Key("snack_bar_limit_reached"),
-              content: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [Text('Cannot select more than 3 reazzons'), Icon(Icons.info)],
-              ),
-              backgroundColor: Colors.deepOrangeAccent
-          ));
-        }
-
         if(state is SignupCompleted){
           final route = MaterialPageRoute(builder: (_) => HomePage());
           Navigator.of(context).push(route);
@@ -54,136 +42,156 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
           title: Text("Signup", style: TextStyle(color: Colors.blueAccent)),
           centerTitle: true,
         ),
-        body: Container(
-          decoration: BoxDecoration(color: Colors.white),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Icon(
-                    Icons.looks_one,
-                    size: 30.0,
-                    color: Colors.grey,
-                  ),
-                  Icon(
-                    Icons.trending_flat,
-                    color: Colors.grey,
-                    size: 30.0,
-                  ),
-                  Icon(
-                    Icons.looks_two,
-                    color: Colors.grey,
-                    size: 30.0,
-                  )
-                ],
-              ),
-              Row(
-                children: <Widget>[
-                  EnsureVisibleWhenFocused(
-                    focusNode: _focusUsername,
-                    child: Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 40.0),
-                        child: Text(
-                          "USERNAME",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blueAccent,
-                            fontSize: 15.0,
+        body: SingleChildScrollView(
+          child: Container(
+            child: BlocListener<SignupBloc, SignupState>(
+              listener: (context, state){
+                if(state is ReazzonLimitSelected){
+                  Scaffold.of(context)
+                    .showSnackBar(SnackBar(
+                      key: Key("snack_bar_limit_reached"),
+                      content: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [Text('Cannot select more than 3 reazzons'), Icon(Icons.info)],
+                      ),
+                      backgroundColor: Colors.deepOrangeAccent
+                  ));
+                }
+              },
+              child: Container(
+                decoration: BoxDecoration(color: Colors.white),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Icon(
+                          Icons.looks_one,
+                          size: 30.0,
+                          color: Colors.grey,
+                        ),
+                        Icon(
+                          Icons.trending_flat,
+                          color: Colors.grey,
+                          size: 30.0,
+                        ),
+                        Icon(
+                          Icons.looks_two,
+                          color: Colors.grey,
+                          size: 30.0,
+                        )
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        EnsureVisibleWhenFocused(
+                          focusNode: _focusUsername,
+                          child: Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 40.0),
+                              child: Text(
+                                "USERNAME",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.blueAccent,
+                                  fontSize: 15.0,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
+                      ],
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      margin:
+                          const EdgeInsets.only(left: 40.0, right: 40.0, top: 5.0),
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[Expanded(child: userNameField(_signUpBloc))],
                       ),
                     ),
-                  ),
-                ],
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                margin:
-                    const EdgeInsets.only(left: 40.0, right: 40.0, top: 5.0),
-                alignment: Alignment.center,
-                padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[Expanded(child: userNameField(_signUpBloc))],
-                ),
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                margin:
-                    const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0)
-              ),
-              Flexible(
-                child: BlocBuilder<SignupBloc, SignupState>(
-                  builder: (context, state) {
-                    var reazzons = new List<Reazzon>();
-                    if(state is ReazzonsLoaded){
-                      reazzons = state.reazzons;
-                    }
-                      
-                    return Container(
-                      child: Align(
-                        child: GridView.builder(
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            childAspectRatio: 3.0
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      margin:
+                          const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0)
+                    ),
+                    Flexible(
+                      child: BlocBuilder<SignupBloc, SignupState>(
+                        builder: (context, state) {
+                          var reazzons = new List<Reazzon>();
+                          if(state is ReazzonsLoaded){
+                            reazzons = state.reazzons;
+                          }
+                            
+                          return Container(
+                            height: 280.0,
+                            child: Align(
+                              child: GridView.builder(
+                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3,
+                                  childAspectRatio: 3.0
+                                ),
+                                itemBuilder: (context, index){
+                                  var reazzon = reazzons[index];
+                                  return GestureDetector(
+                                    key: Key('${reazzon.id}_${reazzon.value}'),
+                                    child: Card(
+                                      elevation: 5.0,
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          reazzon.value,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontWeight: reazzon.isSelected
+                                                  ? FontWeight.bold
+                                                  : FontWeight.normal),
+                                          key: Key('${reazzon.id}_${reazzon.value}_text'),
+                                        )
+                                      )
+                                    ),
+                                    onTap: () => {
+                                      reazzon.isSelected ? 
+                                      _signUpBloc.add(DeselectReazzon(reazzon)) : 
+                                      _signUpBloc.add(SelectReazzon(reazzon)),
+                                    }
+                                  );
+                                },
+                                itemCount: reazzons.length,
+                              )
+                            )
+                          );
+                        },
+                      ),
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      margin:
+                          const EdgeInsets.only(left: 30.0, right: 30.0, top: 20.0),
+                      alignment: Alignment.center,
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: buildCompleteButonWidget(_signUpBloc)
                           ),
-                          itemBuilder: (context, index){
-                            var reazzon = reazzons[index];
-                            return GestureDetector(
-                              key: Key('${reazzon.id}_${reazzon.value}'),
-                              child: Card(
-                                elevation: 5.0,
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  child: new Text(
-                                    reazzon.value,
-                                    textAlign: TextAlign.center,
-                                    style: new TextStyle(
-                                        fontWeight: reazzon.isSelected
-                                            ? FontWeight.bold
-                                            : FontWeight.normal),
-                                    key: Key('${reazzon.id}_${reazzon.value}_text'),
-                                  )
-                                )
-                              ),
-                              onTap: () => {
-                                reazzon.isSelected ? 
-                                _signUpBloc.add(DeselectReazzon(reazzon)) : 
-                                _signUpBloc.add(SelectReazzon(reazzon)),
-                              }
-                            );
-                          },
-                          itemCount: reazzons.length,
-                        )
-                      )
-                    );
-                  },
-                ),
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                margin:
-                    const EdgeInsets.only(left: 30.0, right: 30.0, top: 20.0),
-                alignment: Alignment.center,
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: buildCompleteButonWidget(_signUpBloc)
+                        ],
+                      ),
                     ),
                   ],
                 ),
-              ),
-            ],
-          ),
+              )
+            )
+          )
         )
-      ),
+      )
     );
   }
 }
