@@ -56,7 +56,7 @@ void main() async {
     expect(textWidget.style.fontWeight.index, 6);
   });
 
-  testWidgets('Set text to normal when selecting reazzon', (WidgetTester tester) async {
+  testWidgets('Set text to normal when deselected reazzon', (WidgetTester tester) async {
     //Arrage
     when(_signUpBlocMock.state)
       .thenReturn(ReazzonsLoaded([reazzon]));

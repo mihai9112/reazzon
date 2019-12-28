@@ -108,7 +108,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> with Validators {
   Stream<SignupState> _mapReazzonDeselected(DeselectReazzon event) async* {
     if(state is ReazzonsLoaded){
       final List<Reazzon> updatedReazzons = (state as ReazzonsLoaded).reazzons.map((reazzon) {
-        return reazzon.id == event.reazzon.id ? event.reazzon : reazzon;
+        return reazzon.id == event.reazzon.id ? Reazzon(reazzon.id, reazzon.value) : reazzon;
       }).toList();
       yield ReazzonsLoaded(updatedReazzons);
 
