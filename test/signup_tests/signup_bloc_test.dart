@@ -26,6 +26,7 @@ void main() async {
       //Arrange
       final expectedSignupState = [
         InitialSignupState(),
+        SignupLoading(),
         SignupSucceeded()
       ];
 
@@ -47,6 +48,7 @@ void main() async {
       //Arrange
       final expectedSignupState = [
         InitialSignupState(),
+        SignupLoading(),
         SignupFailed()
       ];
 
@@ -68,6 +70,7 @@ void main() async {
       //Arrange
       final expectedSignupState = [
         InitialSignupState(),
+        SignupLoading(),
         SignupFailed()
       ];
 
