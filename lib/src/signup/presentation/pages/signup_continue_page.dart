@@ -215,6 +215,7 @@ Widget userNameField(SignupBloc signupBloc) {
 
 buildCompleteButonWidget(SignupBloc signupBloc){
     return StreamBuilder(
+      initialData: false,
       stream: signupBloc.completeValid,
       builder: (context, AsyncSnapshot<bool> snapshot) {
         return RaisedButton(
@@ -224,8 +225,8 @@ buildCompleteButonWidget(SignupBloc signupBloc){
           ),
           color: Colors.blueAccent,
           elevation: 4.0,
-          onPressed: () => snapshot.data ? null : signupBloc
-            .add(CompleteSignup()),
+          onPressed: snapshot.data ? () => signupBloc
+            .add(CompleteSignup()) : null,
           child: Container(
             padding:
                 const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),

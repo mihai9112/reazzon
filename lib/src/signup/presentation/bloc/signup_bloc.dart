@@ -65,6 +65,10 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> with Validators {
     if(event is DeselectReazzon){
       yield* _mapReazzonDeselected(event);
     }
+
+    if(event is CompleteSignup){
+      yield* _mapCompletedSignup();
+    }
   }
 
   Stream<SignupState> _mapCredentialsSigningUpToState() async* {
@@ -116,6 +120,11 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> with Validators {
         _validationController.drain();
       }
     }
+  }
+
+  Stream<SignupState> _mapCompletedSignup() async* {
+    
+    yield SignupCompleted();
   }
 
   void dispose(){

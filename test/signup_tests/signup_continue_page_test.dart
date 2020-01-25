@@ -95,6 +95,9 @@ void main() async {
       InitialSignupState(),
       SignupCompleted()
     ];
+
+    when(_signUpBlocMock.completeValid)
+      .thenAnswer((_) => Stream.value(true));
     whenListen(_signUpBlocMock, Stream.fromIterable(expectedStates));
 
     //Act
