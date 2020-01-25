@@ -70,6 +70,9 @@ void main() async {
       InitialSignupState(),
       SignupSucceeded()
     ];
+
+    when(_signUpBlocMock.submitValid)
+      .thenAnswer((_) => Stream.value(true));
     when(_signUpBlocMock.state)
       .thenReturn(ReazzonsLoaded([new Reazzon(1, "#TestReazzon")]));
 

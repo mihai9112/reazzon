@@ -103,7 +103,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     Container(
                       width: MediaQuery.of(context).size.width,
                       margin: const EdgeInsets.only(
-                          left: 40.0, right: 40.0, top: 5.0),
+                          left: 40.0, right: 40.0),
                       alignment: Alignment.center,
                       padding: const EdgeInsets.only(left: 0.0, right: 10.0),
                       child: Row(
@@ -115,6 +115,11 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     )
                   ]),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin:
+                        const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0)
+                  ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -142,7 +147,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       Container(
                         width: MediaQuery.of(context).size.width,
                         margin: const EdgeInsets.only(
-                            left: 40.0, right: 40.0, top: 10.0),
+                            left: 40.0, right: 40.0),
                         alignment: Alignment.center,
                         padding: const EdgeInsets.only(left: 0.0, right: 10.0),
                         child: Row(
@@ -154,6 +159,11 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                       )
                     ]),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin:
+                        const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0)
+                  ),
                   Column(children: <Widget>[
                   Row(
                     children: <Widget>[
@@ -178,7 +188,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   Container(
                     width: MediaQuery.of(context).size.width,
                     margin:
-                        const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
+                        const EdgeInsets.only(left: 40.0, right: 40.0),
                     alignment: Alignment.center,
                     padding: const EdgeInsets.only(left: 0.0, right: 10.0),
                     child: Row(
@@ -224,7 +234,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   child: Row(
                     children: <Widget>[
                       Expanded(
-                        child: buildButton(),
+                        child: buildButton(_signupBloc),
                       ),
                     ],
                   ),
@@ -237,8 +247,7 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  buildButton(){
-    final signupBloc = BlocProvider.of<SignupBloc>(context);
+  buildButton(SignupBloc signupBloc){
     return StreamBuilder(
       stream: signupBloc.submitValid,
       builder: (context, AsyncSnapshot<bool> snapshot) {
@@ -249,7 +258,7 @@ class _SignUpPageState extends State<SignUpPage> {
           ),
           color: Colors.blueAccent,
           elevation: 4.0,
-          onPressed: () => snapshot.data ? signupBloc
+          onPressed: snapshot.hasData ? () => signupBloc
             .add(InitializedCredentialsSignUp()) : null,
           child: Container(
             padding:
@@ -284,9 +293,9 @@ class _SignUpPageState extends State<SignUpPage> {
           onChanged: bloc.changeEmail,
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
-              hintText: 'you@example.com',
-              errorText: snapshot.error,
-              errorStyle: TextStyle(fontSize: 15.0)),
+            hintText: 'you@example.com',
+            errorText: snapshot.error,
+            errorStyle: TextStyle(fontSize: 15.0)),
         );
       },
     );
@@ -301,9 +310,9 @@ class _SignUpPageState extends State<SignUpPage> {
           obscureText: true,
           onChanged: bloc.changePassword,
           decoration: InputDecoration(
-              hintText: 'password',
-              errorText: snapshot.error,
-              errorStyle: TextStyle(fontSize: 15.0)),
+            hintText: 'password',
+            errorText: snapshot.error,
+            errorStyle: TextStyle(fontSize: 15.0)),
         );
       },
     );
@@ -317,9 +326,9 @@ class _SignUpPageState extends State<SignUpPage> {
           obscureText: true,
           onChanged: bloc.changeConfirmPassword,
           decoration: InputDecoration(
-              hintText: 'password',
-              errorText: snapshot.error,
-              errorStyle: TextStyle(fontSize: 15.0)),
+            hintText: 'password',
+            errorText: snapshot.error,
+            errorStyle: TextStyle(fontSize: 15.0)),
         );
       },
     );

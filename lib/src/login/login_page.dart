@@ -120,7 +120,7 @@ class _LoginPageState extends State<LoginPage> {
                   Container(
                     width: MediaQuery.of(context).size.width,
                     margin:
-                        const EdgeInsets.only(left: 40.0, right: 40.0, top: 5.0),
+                        const EdgeInsets.only(left: 40.0, right: 40.0),
                     alignment: Alignment.center,
                     padding: const EdgeInsets.only(left: 0.0, right: 10.0),
                     child: Row(
@@ -157,7 +157,7 @@ class _LoginPageState extends State<LoginPage> {
                   Container(
                     width: MediaQuery.of(context).size.width,
                     margin:
-                        const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
+                        const EdgeInsets.only(left: 40.0, right: 40.0),
                     alignment: Alignment.center,
                     padding: const EdgeInsets.only(left: 0.0, right: 10.0),
                     child: Row(

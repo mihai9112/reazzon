@@ -117,7 +117,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> with Validators {
       yield ReazzonsLoaded(updatedReazzons);
 
       if(updatedReazzons.where((reazzon) => reazzon.isSelected == true).length == 0){
-        _validationController.drain();
+        _validationController.sink.addError("Please select at least one #reazzon");
       }
     }
   }

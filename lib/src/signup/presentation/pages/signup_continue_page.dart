@@ -92,7 +92,7 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
                           focusNode: _focusUsername,
                           child: Expanded(
                             child: Padding(
-                              padding: const EdgeInsets.only(left: 40.0),
+                              padding: const EdgeInsets.only(left: 40.0, top: 20.0),
                               child: Text(
                                 "USERNAME",
                                 style: TextStyle(
@@ -123,6 +123,26 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
                       margin:
                           const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0)
                     ),
+                    Row(
+                      children: <Widget>[
+                        StreamBuilder(
+                          stream: _signUpBloc.completeValid,
+                          builder: (context, snapshot) {
+                            return Container(
+                              margin: const EdgeInsets.all(10.0),
+                              padding: const EdgeInsets.all(10.0),
+                              child: Text(
+                                snapshot.hasError ? snapshot.error.toString() : "Please tap to select one #reazzon",
+                                style: TextStyle (
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.blueAccent
+                                ),
+                              )
+                            );
+                          }
+                        )
+                      ],
+                    ),
                     Flexible(
                       child: BlocBuilder<SignupBloc, SignupState>(
                         builder: (context, state) {
@@ -133,6 +153,12 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
                             
                           return Container(
                             height: 280.0,
+                            margin: const EdgeInsets.all(10.0),
+                            padding: const EdgeInsets.all(10.0),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                              border: Border.all(color: Colors.blueAccent)
+                            ),
                             child: Align(
                               child: GridView.builder(
                                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -180,7 +206,7 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
                       child: Row(
                         children: <Widget>[
                           Expanded(
-                            child: buildCompleteButonWidget(_signUpBloc)
+                            child: buildCompleteButtonWidget(_signUpBloc)
                           ),
                         ],
                       ),
@@ -213,9 +239,8 @@ Widget userNameField(SignupBloc signupBloc) {
   );
 }
 
-buildCompleteButonWidget(SignupBloc signupBloc){
+buildCompleteButtonWidget(SignupBloc signupBloc){
     return StreamBuilder(
-      initialData: false,
       stream: signupBloc.completeValid,
       builder: (context, AsyncSnapshot<bool> snapshot) {
         return RaisedButton(
@@ -225,7 +250,7 @@ buildCompleteButonWidget(SignupBloc signupBloc){
           ),
           color: Colors.blueAccent,
           elevation: 4.0,
-          onPressed: snapshot.data ? () => signupBloc
+          onPressed: snapshot.hasData ? () => signupBloc
             .add(CompleteSignup()) : null,
           child: Container(
             padding:
