@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reazzon/src/helpers/field_focus.dart';
+import 'package:reazzon/src/helpers/spinner.dart';
 import 'package:reazzon/src/login/login_page.dart';
 import 'package:reazzon/src/signup/presentation/bloc/signup.dart';
 
@@ -56,7 +57,8 @@ class _SignUpPageState extends State<SignUpPage> {
               listener: (context, state){
                 if(state is SignupFailed){
                   Scaffold.of(context)
-                    .showSnackBar(SnackBar(
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(SnackBar(
                       key: Key("snack_bar_failure"),
                       content: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -64,6 +66,21 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       backgroundColor: Colors.redAccent
                   ));
+                }
+                if(state is SignupLoading){
+                  Scaffold.of(context)
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(
+                      SnackBar(
+                        content: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Registering...'),
+                            Spinner(),
+                          ],
+                        ),
+                      ),
+                    );
                 }
               },
               child: Column(children: <Widget>[

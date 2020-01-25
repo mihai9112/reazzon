@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:reazzon/src/models/reazzon.dart';
+import 'package:reazzon/src/signup/presentation/bloc/signup.dart';
 
 abstract class SignupState extends Equatable {
   const SignupState();
@@ -45,5 +46,10 @@ class ReazzonNotLoaded extends SignupState {
 class SignupCompleted extends SignupState {
   @override
   String toString() => 'SignupCompleted';
+}
+
+class SignupLoading extends SignupState {
+  @override
+  String toString() => 'SignupLoading';
 }
 

@@ -72,6 +72,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> with Validators {
   }
 
   Stream<SignupState> _mapCredentialsSigningUpToState() async* {
+    yield SignupLoading();
     try {
       final firebaseUser = await authenticationRepository.signUpWithCredentials(
         _emailController.value,
@@ -123,8 +124,13 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> with Validators {
   }
 
   Stream<SignupState> _mapCompletedSignup() async* {
+    yield SignupLoading();
+    try {
+      
+    } 
+    catch (e) {
     
-    yield SignupCompleted();
+    }
   }
 
   void dispose(){

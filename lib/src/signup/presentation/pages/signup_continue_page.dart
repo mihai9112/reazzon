@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reazzon/src/helpers/field_focus.dart';
+import 'package:reazzon/src/helpers/spinner.dart';
 import 'package:reazzon/src/models/reazzon.dart';
 import 'package:reazzon/src/pages/home_page.dart';
 import 'package:reazzon/src/signup/presentation/bloc/signup.dart';
@@ -48,7 +49,8 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
               listener: (context, state){
                 if(state is ReazzonLimitSelected){
                   Scaffold.of(context)
-                    .showSnackBar(SnackBar(
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(SnackBar(
                       key: Key("snack_bar_limit_reached"),
                       content: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -56,6 +58,21 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
                       ),
                       backgroundColor: Colors.deepOrangeAccent
                   ));
+                }
+                if(state is SignupLoading){
+                  Scaffold.of(context)
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(
+                      SnackBar(
+                        content: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Registering...'),
+                            Spinner(),
+                          ],
+                        ),
+                      ),
+                    );
                 }
               },
               child: Container(
