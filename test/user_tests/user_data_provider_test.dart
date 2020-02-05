@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:reazzon/src/helpers/cached_preferences.dart';
 import 'package:reazzon/src/helpers/paths.dart';
+import 'package:reazzon/src/models/reazzon.dart';
+import 'package:reazzon/src/user/user.dart';
 import 'package:reazzon/src/user/user_data_provider.dart';
 
 import '../authentication_tests/authentication_firebase_mock.dart';
@@ -130,6 +134,35 @@ void main() async {
 
       //Assert
       expect(isProfileCompleteResult, true);
+    });
+
+    test("updateDetails returns user with saved reazzons if saved successfully", () async {
+      //Arrange
+      User userWithReazzons = User(
+        documentId: firebaseUserMock.uid, 
+        name: firebaseUserMock.displayName,
+        email: firebaseUserMock.email,
+        reazzons: {new Reazzon(1, "#Reazzon")},
+        userName: 'userName'
+      );
+
+      documentReferenceMock = DocumentReferenceMock(
+        documentSnapshotMock: documentSnapshotMock
+      );
+      documentReferenceMock.setData({
+        'reazzons' : '{"id" : 1, "value" : "Reazzon"}' 
+      });
+      when(firestoreMock.collection(Paths.usersPath))
+        .thenReturn(collectionReferenceMock);
+      when(collectionReferenceMock.document(firebaseUserMock.uid))
+        .thenReturn(documentReferenceMock);
+      expect(await documentReferenceMock.snapshots().isEmpty, false);
+
+      //Act
+      var currentUser = await userDataProvider.updateDetails(userWithReazzons);
+
+      //Assert
+      expect(currentUser.reazzons.length, 1);
     });
   });
 }

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:reazzon/src/models/reazzon.dart';
+import 'dart:convert';
 
 class User {
   String documentId;
@@ -17,14 +18,7 @@ class User {
   });
 
   factory User.fromFirestore(DocumentSnapshot doc) {
-    Map data = doc.data;
-    return User(
-      documentId: doc.documentID,
-      name: data['name'],
-      userName: data['username'],
-      email: data['email'],
-      reazzons: data['reazzons']
-    );
+    return User.fromMap(doc.data);
   }
 
   factory User.fromMap(Map data) {
@@ -33,7 +27,7 @@ class User {
       name: data['name'],
       userName: data['username'],
       email: data['email'],
-      reazzons: data['reazzons'].map((r) => new Reazzon(null, null)).toSet() //TODO: Map correctly
+      reazzons: data['reazzons'] != null ? json.decode(data['reazzons']).map((r) => Reazzon.fromJson(r)).toSet() : Set<Reazzon>()
     );
   }
 }

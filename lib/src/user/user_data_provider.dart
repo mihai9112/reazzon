@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:reazzon/src/helpers/cached_preferences.dart';
@@ -18,7 +20,7 @@ class UserDataProvider {
     final bool userIsEmpty =
       await ref.snapshots().isEmpty;
     
-    if(userIsEmpty) {
+    if(userIsEmpty || user != null) {
       var userData = {
         'uid': user.uid,
         'email': user.email,
@@ -41,6 +43,38 @@ class UserDataProvider {
       print(onError);
     });
     
+    return currentUser;
+  }
+
+  Future<User> updateDetails(User user) async {
+    DocumentReference ref = firestoreUserCollection.collection(Paths.usersPath).document(
+      user.documentId
+    );
+    final bool userIsNotEmpty =
+      !await ref.snapshots().isEmpty;
+    
+    final sd = json.encode(user.reazzons.toList());
+
+    if(userIsNotEmpty) {
+      var userData = {
+        'username': user.userName,
+        'reazzons': sd,
+      };
+      ref.setData(userData, merge: true);
+    }
+
+    final DocumentSnapshot userDocument =
+      await ref.get();
+    var currentUser = User.fromFirestore(userDocument);
+
+    Future.wait([
+      SharedObjects.prefs.setString(Constants.sessionUsername, currentUser.userName)
+    ])
+    .then((onData) => true)
+    .catchError((onError) {
+      print(onError);
+    });
+
     return currentUser;
   }
 

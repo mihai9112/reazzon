@@ -19,4 +19,16 @@ class Reazzon {
     _value = reazzon.value;
     _isSelected = true;
   }
+
+  Reazzon.fromJson(Map<String, dynamic> json)
+    : _id = json['id'],
+      _value = json['value'],
+      _isSelected = true;
+
+  Map<String, dynamic> toJson(){
+    return {
+      "id": _id,
+      "value": _value
+    };
+  }
 }

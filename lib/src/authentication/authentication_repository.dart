@@ -23,20 +23,7 @@ class AuthenticationRepository {
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-    await _firebaseAuth.signInWithCredential(credential);
-    var currentUser = await _firebaseAuth.currentUser();
-
-    Future.wait([
-      SharedObjects.prefs.setString(Constants.sessionUid, currentUser.uid),
-      SharedObjects.prefs.setString(Constants.sessionDisplayName, currentUser.displayName),
-      SharedObjects.prefs.setString(Constants.sessionEmail, currentUser.email)
-    ])
-    .then((onData) => true)
-    .catchError((onError) {
-      print(onError);
-    });
-
-    return currentUser;
+    return (await _firebaseAuth.signInWithCredential(credential)).user;
   }
 
   Future<FirebaseUser> signInWithFacebook() async {
@@ -47,6 +34,7 @@ class AuthenticationRepository {
           final AuthCredential credential = FacebookAuthProvider.getCredential(
             accessToken: facebookUser.accessToken.token
           );
+
           return (await _firebaseAuth.signInWithCredential(credential)).user;
         break;
       case FacebookLoginStatus.error :
@@ -71,7 +59,7 @@ class AuthenticationRepository {
     return (await _firebaseAuth.createUserWithEmailAndPassword(
       email: email, 
       password: password
-    )).user; 
+    )).user;
   }
 
   Future<void> signOut() async {

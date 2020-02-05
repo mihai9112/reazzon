@@ -8,5 +8,8 @@ class UserRepository {
   Future<User> saveDetailsFromProvider(FirebaseUser user) =>
     _userDataProvider.saveDetailsFromProvider(user);
   
+  Future<User> updateDetails(User user) =>  
+    _userDataProvider.updateDetails(user);
+  
   Future<bool> isProfileComplete() => _userDataProvider.isProfileComplete();
 }

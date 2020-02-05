@@ -8,16 +8,19 @@ import 'package:reazzon/src/signup/presentation/bloc/signup.dart';
 
 import '../authentication_tests/authentication_firebase_mock.dart';
 import '../authentication_tests/authentication_mock.dart';
+import '../user_tests/user_repository_mocks.dart';
 
 void main() async {
   SignupBloc _signupBloc;
   AuthenticationRepositoryMock _authenticationRepositoryMock;
+  UserRepositoryMock _userRepositoryMock;
   final fireBaseUserMock = FirebaseUserMock();
   final randomValidPassword = "password";
 
   setUp(() {
     _authenticationRepositoryMock = AuthenticationRepositoryMock();
-    _signupBloc = SignupBloc(authenticationRepository: _authenticationRepositoryMock);
+    _userRepositoryMock = UserRepositoryMock();
+    _signupBloc = SignupBloc(authenticationRepository: _authenticationRepositoryMock, userRepository: _userRepositoryMock);
   });
 
   group('Signup initiated', () {

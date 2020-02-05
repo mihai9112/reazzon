@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:reazzon/src/authentication/authentication.dart';
+import 'package:reazzon/src/helpers/cached_preferences.dart';
 import 'package:reazzon/src/login/login_bloc.dart';
 import 'package:reazzon/src/pages/home_page.dart';
 import 'package:reazzon/src/user/user_repository.dart';
@@ -33,6 +34,8 @@ void main() async {
   final AuthenticationBloc _authenticationBloc = 
     AuthenticationBloc(authenticationRepository: _authenticationRepository, loginBloc: _loginBloc);
 
+  SharedObjects.prefs = await CachedPreferences.getInstance();
+
   runApp(MultiBlocProvider(
     providers: [
       BlocProvider<AuthenticationBloc>(
@@ -43,7 +46,7 @@ void main() async {
         create: (context) => _loginBloc
       ),
       BlocProvider<SignupBloc>(
-        create: (context) => SignupBloc(authenticationRepository: _authenticationRepository),
+        create: (context) => SignupBloc(authenticationRepository: _authenticationRepository, userRepository: _userRepository),
       )
     ],
     child: ReazzonMainWidget(),

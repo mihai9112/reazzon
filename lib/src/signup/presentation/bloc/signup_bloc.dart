@@ -3,25 +3,30 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/widgets.dart';
 import 'package:reazzon/src/authentication/authentication_repository.dart';
 import 'package:reazzon/src/domain/validators.dart';
+import 'package:reazzon/src/helpers/cached_preferences.dart';
+import 'package:reazzon/src/helpers/constants.dart';
 import 'package:reazzon/src/models/reazzon.dart';
+import 'package:reazzon/src/user/user.dart';
+import 'package:reazzon/src/user/user_repository.dart';
 import 'package:rxdart/rxdart.dart';
 import './signup.dart';
 
 class SignupBloc extends Bloc<SignupEvent, SignupState> with Validators {
   final AuthenticationRepository authenticationRepository;
+  final UserRepository userRepository;
   final _emailController = BehaviorSubject<String>();
   final _passwordController = BehaviorSubject<String>();
   final _confirmPasswordController = BehaviorSubject<String>();
   final _usernameController = BehaviorSubject<String>();
   final _validationController = BehaviorSubject<bool>();
+  Set<Reazzon> _selectedReazzons = Set<Reazzon>();
 
   SignupBloc({
-    @required this.authenticationRepository
+    @required this.authenticationRepository,
+    @required this.userRepository
   })
-  : assert(authenticationRepository != null)
-  {
-
-  }
+  : assert(authenticationRepository != null),
+    assert(userRepository != null){}
 
   Stream<String> get email =>
     _emailController.stream.transform(validateEmail);
@@ -78,7 +83,10 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> with Validators {
         _emailController.value,
         _passwordController.value
       );
-      if(firebaseUser != null) {
+
+      final savedUser = await userRepository.saveDetailsFromProvider(firebaseUser);
+
+      if(savedUser != null) {
         add(LoadReazzons());
         yield SignupSucceeded();
       }
@@ -103,6 +111,8 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> with Validators {
         reazzonsToWork = reazzonsToWork.map((reazzon) {
           return reazzon.id == event.reazzon.id ? Reazzon.selected(reazzon) : reazzon;
         }).toList();
+        _selectedReazzons.clear();
+        _selectedReazzons.addAll(reazzonsToWork.where((r) => r.isSelected == true));
         _validationController.sink.add(true);
       }
         
@@ -115,6 +125,8 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> with Validators {
       final List<Reazzon> updatedReazzons = (state as ReazzonsLoaded).reazzons.map((reazzon) {
         return reazzon.id == event.reazzon.id ? Reazzon(reazzon.id, reazzon.value) : reazzon;
       }).toList();
+      _selectedReazzons.clear();
+      _selectedReazzons.addAll(updatedReazzons.where((r) => r.isSelected == true));
       yield ReazzonsLoaded(updatedReazzons);
 
       if(updatedReazzons.where((reazzon) => reazzon.isSelected == true).length == 0){
@@ -126,10 +138,18 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> with Validators {
   Stream<SignupState> _mapCompletedSignup() async* {
     yield SignupLoading();
     try {
-      
+      final updatedUser = User(
+        documentId: SharedObjects.prefs.getString(Constants.sessionUid),
+        name: SharedObjects.prefs.getString(Constants.sessionDisplayName),
+        email: SharedObjects.prefs.getString(Constants.sessionEmail),
+        reazzons: _selectedReazzons,
+        userName: _usernameController.value
+      );
+      await userRepository.updateDetails(updatedUser);
     } 
-    catch (e) {
-    
+    catch (_, stacktrace) {
+      //TODO: log stacktrace;
+      yield SignupFailed();
     }
   }
 
