@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:reazzon/src/helpers/cached_preferences.dart';
@@ -118,7 +116,7 @@ void main() async {
         documentSnapshotMock: documentSnapshotMock
       );
       documentReferenceMock.setData({
-        'reazzons' : '["#Reazzon1"]',
+        'reazzons' : '[{"id":1,"value":"#Reazzon"}]',
       });
       when(SharedObjects.prefs.getString(any))
         .thenReturn(firebaseUserMock.uid);
@@ -150,7 +148,7 @@ void main() async {
         documentSnapshotMock: documentSnapshotMock
       );
       documentReferenceMock.setData({
-        'reazzons' : '{"id" : 1, "value" : "Reazzon"}' 
+        'reazzons' : '[{"id":1,"value":"#Reazzon"}]' 
       });
       when(firestoreMock.collection(Paths.usersPath))
         .thenReturn(collectionReferenceMock);

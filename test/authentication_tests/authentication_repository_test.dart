@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:matcher/matcher.dart';
@@ -31,6 +32,7 @@ void main() {
     final FacebookLoginResultCancelledByUserMock facebookLoginResultCancelledByUserMock = 
       FacebookLoginResultCancelledByUserMock();
     final AuthResultMock authResultMock = AuthResultMock();
+
     CachedPreferencesMock cachedPreferencesMock = CachedPreferencesMock();
     SharedObjects.prefs = cachedPreferencesMock;
 
@@ -41,11 +43,13 @@ void main() {
         Future<GoogleSignInAuthenticationMock>.value(
           googleSignInAuthenticationMock
         ));
-      when(firebaseAuthMock.currentUser())
-        .thenAnswer((_) => Future<FirebaseUserMock>.value(firebaseUserMock));
+      when(firebaseAuthMock.signInWithCredential(argThat(isA<AuthCredential>())))
+        .thenAnswer((_) => Future<AuthResult>.value(authResultMock));
 
       //call the method and expect the Firebase user as return
-      expect(await authenticationRepository.signInWithGoogle(), firebaseUserMock);
+      var expectedUser = await authenticationRepository.signInWithGoogle();
+      expect(expectedUser.displayName, firebaseUserMock.displayName);
+      expect(expectedUser.email, firebaseUserMock.email);
       verify(googleSignInMock.signIn()).called(1);
       verify(googleSignInAccountMock.authentication).called(1);
     });

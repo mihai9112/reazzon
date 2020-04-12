@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:reazzon/src/models/reazzon.dart';
 import 'package:reazzon/src/signup/presentation/bloc/signup.dart';
+import 'package:reazzon/src/user/user.dart';
 
 import '../authentication_tests/authentication_firebase_mock.dart';
 import '../authentication_tests/authentication_mock.dart';
@@ -35,6 +36,8 @@ void main() async {
 
       when(_authenticationRepositoryMock.signUpWithCredentials(fireBaseUserMock.email, randomValidPassword))
         .thenAnswer((_) => Future.value(fireBaseUserMock));
+      when(_userRepositoryMock.saveDetailsFromProvider(fireBaseUserMock))
+        .thenAnswer((_) => Future.value(UserMock()));
 
       //Act 
       _signupBloc.changeEmail(fireBaseUserMock.email);

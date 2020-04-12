@@ -22,12 +22,22 @@ class User {
   }
 
   factory User.fromMap(Map data) {
+
+    Set<Reazzon> savedReazzons = Set<Reazzon>();
+    if(data['reazzons'] != null){
+      var listOfReazzons = json.decode(data['reazzons'])
+        .map((r) => Reazzon.fromJson(r))
+        .cast<Reazzon>()
+        .toList();
+      savedReazzons.addAll(listOfReazzons);
+    }
+
     return User(
       documentId: data['uid'],
       name: data['name'],
       userName: data['username'],
       email: data['email'],
-      reazzons: data['reazzons'] != null ? json.decode(data['reazzons']).map((r) => Reazzon.fromJson(r)).toSet() : Set<Reazzon>()
+      reazzons: savedReazzons
     );
   }
 }

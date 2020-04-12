@@ -7,6 +7,7 @@ class FirebaseAuthMock extends Mock implements FirebaseAuth{}
 class GoogleSignInMock extends Mock implements GoogleSignIn{}
 class FacebookSignInMock extends Mock implements FacebookLogin{}
 class GoogleSignInAccountMock extends Mock implements GoogleSignInAccount{}
+class AuthCredentialMock extends Mock implements AuthCredential{}
 
 class FacebookAccessTokenMock extends Mock implements FacebookAccessToken{
   @override 
