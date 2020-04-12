@@ -89,7 +89,7 @@ void main() async {
     expect(snackBarLimitFinder, findsOneWidget);
   });
 
-  testWidgets('Navigate to home page when sign up completed', (WidgetTester tester) async {
+  testWidgets('Navigate to account page when sign up completed', (WidgetTester tester) async {
     //Arrage
     var expectedStates = [
       InitialSignupState(),
@@ -106,6 +106,6 @@ void main() async {
 
     //Assert
     verify(mockNavigatorObserver.didPush(any, any));
-    expect(find.byType(HomePage), findsOneWidget);
+    expectLater(find.text("Account"), findsOneWidget);
   });
 }
