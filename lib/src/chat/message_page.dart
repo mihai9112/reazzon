@@ -69,8 +69,8 @@ class _MessagePageState extends State<MessagePage> with WidgetsBindingObserver {
       theme: ThemeData(
         fontFamily: 'reazzon',
         textTheme: TextTheme(
-          title: TextStyle(color: Colors.white),
-          body1: TextStyle(color: Colors.white),
+          headline6: TextStyle(color: Colors.white),
+          bodyText1: TextStyle(color: Colors.white),
         ),
       ),
       home: Scaffold(

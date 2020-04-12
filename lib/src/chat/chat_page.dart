@@ -107,14 +107,14 @@ class ChatItem extends StatelessWidget {
     TextStyle itemNameStyle;
     TextStyle itemMessageStyle;
 
-    itemNameStyle = Theme.of(context).textTheme.title.copyWith(
+    itemNameStyle = Theme.of(context).textTheme.headline6.copyWith(
           fontWeight: FontWeight.bold,
           fontSize: 16,
         );
-    itemMessageStyle = Theme.of(context).textTheme.title.copyWith(
+    itemMessageStyle = Theme.of(context).textTheme.headline6.copyWith(
           fontWeight: FontWeight.normal,
           fontSize: 14,
-          color: Theme.of(context).textTheme.title.color.withOpacity(0.8),
+          color: Theme.of(context).textTheme.headline6.color.withOpacity(0.8),
         );
 
     return Container(

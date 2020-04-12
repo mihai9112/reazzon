@@ -34,7 +34,7 @@ class FilterDialogState extends State<FilterDialog> {
         actions: <Widget>[
           FlatButton(
             child: Text('SAVE',
-                style: theme.textTheme.body1.copyWith(color: Colors.white)),
+                style: theme.textTheme.bodyText1.copyWith(color: Colors.white)),
             onPressed: () {
               List<String> _list = [];
               filterBloc.filterEntities

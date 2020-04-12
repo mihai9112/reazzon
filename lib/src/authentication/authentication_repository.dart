@@ -2,8 +2,6 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:reazzon/src/helpers/cached_preferences.dart';
-import 'package:reazzon/src/helpers/constants.dart';
 
 class AuthenticationRepository {
   final FirebaseAuth _firebaseAuth;
