@@ -1,12 +1,12 @@
 import 'dart:async';
-import 'package:bloc/bloc.dart';
 
 import 'package:flutter/material.dart';
+import 'package:reazzon/src/chat/base_bloc/base_bloc.dart';
 import 'package:reazzon/src/chat/chat_bloc/chat_events.dart';
 import 'package:reazzon/src/chat/chat_bloc/chat_state.dart';
 import 'package:reazzon/src/chat/repository/chat_repository.dart';
 
-class ChatBloc extends Bloc<ChatsEvent, ChatsState> {
+class ChatBloc extends BlocEventStateBase<ChatsEvent, ChatsState> {
   ChatRepository _chatRepository;
 
   ChatBloc({@required ChatRepository chatRepository})
@@ -15,10 +15,11 @@ class ChatBloc extends Bloc<ChatsEvent, ChatsState> {
   }
 
   @override
-  ChatsState get initialState => ChatsNotLoaded();
+  ChatsState initialState() => ChatsNotLoaded();
 
   @override
-  Stream<ChatsState> mapEventToState(ChatsEvent event) async* {
+  Stream<ChatsState> mapEventToState(
+      ChatsEvent event, ChatsState currentState) async* {
     if (event is LoadChatList) {
       yield* _chatRepository
           .chattedWithEntities()

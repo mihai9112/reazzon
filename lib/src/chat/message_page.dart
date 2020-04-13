@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reazzon/src/chat/chat_bloc/chat_entity.dart';
 import 'package:reazzon/src/chat/message_bloc/message_bloc.dart';
 import 'package:reazzon/src/chat/message_bloc/message_entity.dart';
@@ -49,9 +48,7 @@ class _MessagePageState extends State<MessagePage> with WidgetsBindingObserver {
             .removeChattingWith(messageBloc.messageRepo.loggedUserId);
         print('Paused');
         break;
-      case AppLifecycleState.paused:
-        break;
-      default:
+      case AppLifecycleState.suspending:
         break;
     }
   }
@@ -69,8 +66,8 @@ class _MessagePageState extends State<MessagePage> with WidgetsBindingObserver {
       theme: ThemeData(
         fontFamily: 'reazzon',
         textTheme: TextTheme(
-          headline6: TextStyle(color: Colors.white),
-          bodyText1: TextStyle(color: Colors.white),
+          title: TextStyle(color: Colors.white),
+          body1: TextStyle(color: Colors.white),
         ),
       ),
       home: Scaffold(
@@ -89,39 +86,43 @@ class _MessagePageState extends State<MessagePage> with WidgetsBindingObserver {
               padding: const EdgeInsets.only(bottom: 48.0),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: BlocBuilder<MessageBloc, MessagesState>(
-                  builder: (context, state) {
-                      messageBloc.add(
-                          LoadMessageListEvent(this.widget.data.userId));
+                child: StreamBuilder(
+                    stream: messageBloc.stream,
+                    builder: (context, AsyncSnapshot<MessagesState> snapshot) {
+                      if (!snapshot.hasData) {
+                        messageBloc.dispatch(
+                            LoadMessageListEvent(this.widget.data.userId));
+                      }
 
-                    if (state is MessagesLoaded) {
-                      return ListView.separated(
-                        reverse: true,
-                        itemCount: state
-                            .messageEntities
-                            .length,
-                        separatorBuilder: (context, index) {
-                          return SizedBox(height: 8);
-                        },
-                        itemBuilder: (context, index) {
-                          MessageEntity data = state.messageEntities[index];
+                      if (snapshot.hasData && snapshot.data is MessagesLoaded) {
+                        return ListView.separated(
+                          reverse: true,
+                          itemCount: (snapshot.data as MessagesLoaded)
+                              .messageEntities
+                              .length,
+                          separatorBuilder: (context, index) {
+                            return SizedBox(height: 8);
+                          },
+                          itemBuilder: (context, index) {
+                            MessageEntity data =
+                                (snapshot.data as MessagesLoaded)
+                                    .messageEntities[index];
 
-                          return _MessageListItem(
-                            sent: (data.from
-                                        .toString()
-                                        .compareTo(this.widget.data.userId) ==
-                                    0)
-                                ? false
-                                : true,
-                            text: data.content,
-                          );
-                        },
-                      );
-                    }
+                            return _MessageListItem(
+                              sent: (data.from
+                                          .toString()
+                                          .compareTo(this.widget.data.userId) ==
+                                      0)
+                                  ? false
+                                  : true,
+                              text: data.content,
+                            );
+                          },
+                        );
+                      }
 
-                    return Center(child: Spinner());
-                  }
-                )
+                      return Center(child: Spinner());
+                    }),
               ),
             ),
             Positioned(

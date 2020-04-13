@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:reazzon/src/chat/base_bloc/base_bloc.dart';
 import 'package:reazzon/src/chat/chat_bloc/chat_entity.dart';
 import 'package:reazzon/src/chat/message_bloc/message_bloc.dart';
 import 'package:reazzon/src/chat/message_page.dart';
 import 'package:reazzon/src/chat/repository/message_repository.dart';
 import 'package:reazzon/src/models/user.dart';
 import 'package:reazzon/src/notifications/notification_state.dart';
-import 'package:bloc/bloc.dart';
 
 import 'notification_event.dart';
 import 'notification_repository.dart';
@@ -26,16 +26,17 @@ void openMessage(context, userId, username) async {
 }
 
 class NotificationBloc
-    extends Bloc<NotificationEvents, NotificationStates> {
+    extends BlocEventStateBase<NotificationEvents, NotificationStates> {
   final NotificationRepository notificationRepository;
 
   NotificationBloc(this.notificationRepository);
 
   @override
-  NotificationStates get initialState => UnNotificationState();
+  NotificationStates initialState() => UnNotificationState();
 
   @override
-  Stream<NotificationStates> mapEventToState(NotificationEvents event) async* {
+  Stream<NotificationStates> mapEventToState(
+      event, NotificationStates currentState) async* {
     if (event is LoadNotificationsEvent) {
       yield LoadingNotificationState();
 

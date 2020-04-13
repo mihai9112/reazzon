@@ -1,8 +1,7 @@
-
-import 'package:equatable/equatable.dart';
+import 'package:reazzon/src/chat/base_bloc/base_bloc.dart';
 import 'package:reazzon/src/chat/chat_bloc/chat_entity.dart';
 
-abstract class ChatsState extends Equatable {}
+abstract class ChatsState extends BlocStates {}
 
 class ChatsNotLoaded extends ChatsState {
   @override

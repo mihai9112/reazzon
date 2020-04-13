@@ -105,7 +105,7 @@ class _AccountHomePageItem extends StatelessWidget {
 
     TextStyle itemNameStyle;
 
-    itemNameStyle = Theme.of(context).textTheme.headline6.copyWith(
+    itemNameStyle = Theme.of(context).textTheme.title.copyWith(
           fontWeight: FontWeight.bold,
           fontSize: 16,
         );

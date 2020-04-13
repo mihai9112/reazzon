@@ -1,8 +1,6 @@
+import 'package:reazzon/src/chat/base_bloc/base_bloc.dart';
 
-
-import 'package:equatable/equatable.dart';
-
-abstract class ChatsEvent extends Equatable {}
+abstract class ChatsEvent extends BlocEvents {}
 
 class LoadChatList extends ChatsEvent {
   @override

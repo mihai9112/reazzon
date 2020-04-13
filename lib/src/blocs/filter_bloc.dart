@@ -1,6 +1,6 @@
-import 'package:bloc/bloc.dart';
+import 'bloc_provider.dart';
 
-class FilterBloc extends Bloc {
+class FilterBloc extends BlocBase {
   List<FilterEntity> filterEntities;
 
   FilterBloc() {
@@ -8,14 +8,7 @@ class FilterBloc extends Bloc {
   }
 
   @override
-  // TODO: implement initialState
-  get initialState => null;
-
-  @override
-  Stream mapEventToState(event) {
-    // TODO: implement mapEventToState
-    return null;
-  }
+  void dispose() {}
 }
 
 class FilterEntity {
