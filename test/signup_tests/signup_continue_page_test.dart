@@ -105,6 +105,6 @@ void main() async {
 
     //Assert
     verify(mockNavigatorObserver.didPush(any, any));
-    expectLater(find.text("Feeds"), findsOneWidget);
+    expectLater(find.text("Conversations"), findsOneWidget);
   });
 }

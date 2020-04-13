@@ -7,7 +7,7 @@ class AccountPage extends StatelessWidget
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Feeds"),
+        title: Text("Account"),
         centerTitle: true,
         actions: <Widget>[
           IconButton(
