@@ -5,7 +5,7 @@ import 'package:reazzon/src/helpers/field_focus.dart';
 import 'package:reazzon/src/helpers/spinner.dart';
 import 'package:reazzon/src/models/reazzon.dart';
 import 'package:reazzon/src/pages/home_page.dart';
-import 'package:reazzon/src/signup/presentation/bloc/signup.dart';
+import 'package:reazzon/src/features/signup/presentation/bloc/signup.dart';
 
 class SignupContinuePage extends StatefulWidget {
   @override

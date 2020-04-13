@@ -6,10 +6,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:reazzon/src/login/login_bloc.dart';
 import 'package:reazzon/src/models/reazzon.dart';
-import 'package:reazzon/src/signup/presentation/bloc/signup.dart';
-import 'package:reazzon/src/signup/presentation/bloc/signup_bloc.dart';
-import 'package:reazzon/src/signup/presentation/pages/signup_continue_page.dart';
-import 'package:reazzon/src/signup/presentation/pages/signup_page.dart';
+import 'package:reazzon/src/features/signup/presentation/bloc/signup.dart';
+import 'package:reazzon/src/features/signup/presentation/bloc/signup_bloc.dart';
+import 'package:reazzon/src/features/signup/presentation/pages/signup_page.dart';
 
 import '../authentication_tests/authentication_mock.dart';
 import '../helpers/navigator_observer_mock.dart';

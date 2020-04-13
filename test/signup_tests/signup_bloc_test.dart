@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:reazzon/src/helpers/cached_preferences.dart';
 import 'package:reazzon/src/models/reazzon.dart';
-import 'package:reazzon/src/signup/presentation/bloc/signup.dart';
+import 'package:reazzon/src/features/signup/presentation/bloc/signup.dart';
 import 'package:reazzon/src/user/user.dart';
 
 import '../authentication_tests/authentication_firebase_mock.dart';

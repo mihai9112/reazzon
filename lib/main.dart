@@ -11,7 +11,7 @@ import 'package:reazzon/src/user/user_repository.dart';
 
 import 'src/authentication/authentication_repository.dart';
 import 'src/pages/account_page.dart';
-import 'src/signup/presentation/bloc/signup.dart';
+import 'src/features/signup/presentation/bloc/signup.dart';
 
 void main() async {
 

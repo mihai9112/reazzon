@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reazzon/src/helpers/field_focus.dart';
 import 'package:reazzon/src/helpers/spinner.dart';
 import 'package:reazzon/src/login/login_page.dart';
-import 'package:reazzon/src/signup/presentation/bloc/signup.dart';
+import 'package:reazzon/src/features/signup/presentation/bloc/signup.dart';
 
 import 'signup_continue_page.dart';
 

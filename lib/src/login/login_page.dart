@@ -8,7 +8,7 @@ import 'package:reazzon/src/login/login_bloc.dart';
 import 'package:reazzon/src/login/login_event.dart';
 import 'package:reazzon/src/login/login_state.dart';
 import 'package:reazzon/src/pages/forgotten_password_page.dart';
-import 'package:reazzon/src/signup/presentation/pages/signup_continue_page.dart';
+import 'package:reazzon/src/features/signup/presentation/pages/signup_continue_page.dart';
 
 class LoginPage extends StatefulWidget {
   @override

@@ -7,8 +7,7 @@ import 'package:reazzon/src/login/login_bloc.dart';
 import 'package:reazzon/src/login/login_page.dart';
 import 'package:reazzon/src/login/login_state.dart';
 import 'package:bloc_test/bloc_test.dart';
-import 'package:reazzon/src/signup/presentation/bloc/signup.dart';
-import 'package:reazzon/src/signup/presentation/pages/signup_continue_page.dart';
+import 'package:reazzon/src/features/signup/presentation/bloc/signup.dart';
 
 import '../authentication_tests/authentication_mock.dart';
 import '../helpers/navigator_observer_mock.dart';
