@@ -3,11 +3,14 @@ import 'dart:io';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:reazzon/src/helpers/cached_preferences.dart';
 import 'package:reazzon/src/models/reazzon.dart';
 import 'package:reazzon/src/signup/presentation/bloc/signup.dart';
+import 'package:reazzon/src/user/user.dart';
 
 import '../authentication_tests/authentication_firebase_mock.dart';
 import '../authentication_tests/authentication_mock.dart';
+import '../helpers/shared_preferences.dart';
 import '../user_tests/user_repository_mocks.dart';
 
 void main() async {
@@ -15,6 +18,8 @@ void main() async {
   AuthenticationRepositoryMock _authenticationRepositoryMock;
   UserRepositoryMock _userRepositoryMock;
   final fireBaseUserMock = FirebaseUserMock();
+  CachedPreferencesMock cachedPreferencesMock = CachedPreferencesMock();
+  SharedObjects.prefs = cachedPreferencesMock;
   final randomValidPassword = "password";
 
   setUp(() {
@@ -92,6 +97,48 @@ void main() async {
       //Assert
       await emitsExactly(_signupBloc, expectedSignupState);
     });
+  });
+
+  test("maps to SignupSucceeded when CompleteSignup completes", () async {
+    //Arrange
+    final expectedSignupState = [
+      InitialSignupState(),
+      SignupLoading(),
+      SignupSucceeded()
+    ];
+
+    when(_userRepositoryMock.updateDetails(argThat(isA<User>())))
+        .thenAnswer((_) => Future.value(User()));
+    when(SharedObjects.prefs.getString(any))
+        .thenReturn("test");
+
+    //Act
+    _signupBloc.changeUsername("mockusername");
+    _signupBloc.add(CompleteSignup());
+
+    //Assert
+    await emitsExactly(_signupBloc, expectedSignupState);
+  });
+
+  test("maps to SignupFailed when CompleteSignup fails", () async {
+    //Arrange
+    final expectedSignupState = [
+      InitialSignupState(),
+      SignupLoading(),
+      SignupFailed()
+    ];
+
+    when(_userRepositoryMock.updateDetails(argThat(isA<User>())))
+        .thenThrow(HttpException('unavailable'));
+    when(SharedObjects.prefs.getString(any))
+        .thenReturn("test");
+
+    //Act
+    _signupBloc.changeUsername("mockusername");
+    _signupBloc.add(CompleteSignup());
+
+    //Assert
+    await emitsExactly(_signupBloc, expectedSignupState);
   });
 
   group('Reazzon selection', () {

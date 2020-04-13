@@ -145,7 +145,10 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> with Validators {
         reazzons: _selectedReazzons,
         userName: _usernameController.value
       );
+      
       await userRepository.updateDetails(updatedUser);
+
+      yield SignupSucceeded();
     } 
     catch (_, stacktrace) {
       //TODO: log stacktrace;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:reazzon/src/features/account/presentation/pages/account_page.dart';
 import 'package:reazzon/src/helpers/field_focus.dart';
 import 'package:reazzon/src/helpers/spinner.dart';
 import 'package:reazzon/src/models/reazzon.dart';
@@ -33,6 +34,11 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
       listener: (context, state) {
         if(state is SignupCompleted){
           final route = MaterialPageRoute(builder: (_) => HomePage());
+          Navigator.of(context).push(route);
+        }
+        
+        if(state is SignupSucceeded){
+          final route = MaterialPageRoute(builder: (_) => AccountPage());
           Navigator.of(context).push(route);
         }
       },

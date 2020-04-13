@@ -89,11 +89,11 @@ void main() async {
     expect(snackBarLimitFinder, findsOneWidget);
   });
 
-  testWidgets('Navigate to account page when sign up completed', (WidgetTester tester) async {
+  testWidgets('Navigate to account page when sign up succeeded', (WidgetTester tester) async {
     //Arrage
     var expectedStates = [
       InitialSignupState(),
-      SignupCompleted()
+      SignupSucceeded()
     ];
 
     when(_signUpBlocMock.completeValid)
@@ -106,6 +106,6 @@ void main() async {
 
     //Assert
     verify(mockNavigatorObserver.didPush(any, any));
-    expectLater(find.text("Account"), findsOneWidget);
+    expectLater(find.text("Feeds"), findsOneWidget);
   });
 }
