@@ -1,43 +1,34 @@
 class Reazzon {
+  int _id;
   bool _isSelected;
   String _value;
 
   bool get isSelected => _isSelected;
   String get value => _value;
+  int get id => _id;
 
-  Reazzon(this._value) {
+  Reazzon(
+    this._id,
+    this._value
+  ) {
     _isSelected = false;
   }
 
-  void setSelection() {
-    if (isSelected)
-      _isSelected = false;
-    else {
-      _isSelected = true;
-    }
+  Reazzon.selected(Reazzon reazzon){
+    _id = reazzon.id;
+    _value = reazzon.value;
+    _isSelected = true;
   }
 
-  static List<Reazzon> allReazzons() {
-    return new List<Reazzon>()
-      ..addAll([
-        new Reazzon("#Divorce"),
-        new Reazzon("#Perfectionist"),
-        new Reazzon("#Breakups"),
-        new Reazzon("#Loneliness"),
-        new Reazzon("#Grief"),
-        new Reazzon("#WorkStress"),
-        new Reazzon("#FinancialStress"),
-        new Reazzon("#KidsCustody"),
-        new Reazzon("#Bullying"),
-        new Reazzon("#Insomnia"),
-        new Reazzon("#MoodSwings"),
-        new Reazzon("#Preasure\nToSucceed"),
-        new Reazzon("#Anxiety"),
-        new Reazzon("#Breakups"),
-        new Reazzon("#Cheating"),
-        new Reazzon("#SelfEsteem"),
-        new Reazzon("#BodyImage"),
-        new Reazzon("#Exercise\nMotivation")
-      ]);
+  Reazzon.fromJson(Map<String, dynamic> json)
+    : _id = json['id'],
+      _value = json['value'],
+      _isSelected = true;
+
+  Map<String, dynamic> toJson(){
+    return {
+      "id": _id,
+      "value": _value
+    };
   }
 }

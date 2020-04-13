@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:reazzon/src/blocs/bloc_provider.dart';
 import 'package:reazzon/src/domain/validators.dart';
 import 'package:reazzon/src/models/reazzon.dart';
 import 'package:reazzon/src/settings/setting_repository.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:bloc/bloc.dart';
 
 class SettingUserModel {
   String email;
@@ -32,7 +32,7 @@ class SettingUserModel {
   }
 }
 
-class SettingsBloc extends BlocBase with Validators {
+class SettingsBloc extends Bloc with Validators {
   SettingRepository settingRepository;
 
   // -- user --
@@ -43,19 +43,19 @@ class SettingsBloc extends BlocBase with Validators {
   // -- first name --
   final _firstNameController = BehaviorSubject<String>();
   Stream<String> get outFirstName =>
-      _firstNameController.stream.transform(validateFirstName);
+      _firstNameController.stream;
   Function(String) get inFirstName => _firstNameController.sink.add;
 
   // -- last name --
   final _lastNameController = BehaviorSubject<String>();
   Stream<String> get outLastName =>
-      _lastNameController.stream.transform(validateLastName);
+      _lastNameController.stream;
   Function(String) get inLastName => _lastNameController.sink.add;
 
   // -- user name --
   final _userNameController = BehaviorSubject<String>();
   Stream<String> get outUserName =>
-      _userNameController.stream.transform(validateUserName);
+      _userNameController.stream;
   Function(String) get inUserName => _userNameController.sink.add;
 
   // -- email --
@@ -103,7 +103,7 @@ class SettingsBloc extends BlocBase with Validators {
       _availableReazzonsController.sink.add;
 
   SettingsBloc(this.settingRepository) {
-    _availableReazzonsController.add(Reazzon.allReazzons());
+    //_availableReazzonsController.add(Reazzon.allReazzons());
 
     _availableReazzonsController.stream.listen((onData) {
       if (onData.where((reazzon) => reazzon.isSelected == true).length >= 3) {
@@ -117,12 +117,12 @@ class SettingsBloc extends BlocBase with Validators {
   }
 
   initializeReazzon(List<Reazzon> reazzons) {
-    List<Reazzon> _list = Reazzon.allReazzons();
+    List<Reazzon> _list = null; //Reazzon.allReazzons();
 
     reazzons.forEach((reazzon) {
       for (int i = 0; i < _list.length; i++) {
         if (reazzon.value.compareTo(_list[i].value) == 0) {
-          _list[i].setSelection();
+          //_list[i].setSelection();
         }
       }
     });
@@ -186,5 +186,15 @@ class SettingsBloc extends BlocBase with Validators {
 
   void removeToken() async {
     settingRepository.removePushToken();
+  }
+
+  @override
+  // TODO: implement initialState
+  get initialState => null;
+
+  @override
+  Stream mapEventToState(event) {
+    // TODO: implement mapEventToState
+    return null;
   }
 }

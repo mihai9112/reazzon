@@ -2,12 +2,11 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:reazzon/src/blocs/bloc_provider.dart';
-import 'package:reazzon/src/blocs/login_bloc.dart';
 import 'package:reazzon/src/helpers/spinner.dart';
+import 'package:reazzon/src/login/login_bloc.dart';
 import 'package:reazzon/src/models/reazzon.dart';
-import 'package:reazzon/src/pages/home_page.dart';
 import 'package:reazzon/src/settings/setting_bloc.dart';
 import 'package:reazzon/src/settings/setting_repository.dart';
 
@@ -33,8 +32,8 @@ class _SettingPageState extends State<SettingPage> {
 
   @override
   void initState() {
-    settingBloc =
-        SettingsBloc(FireBaseSettingRepository(this.widget.loggedUserId));
+    settingBloc = BlocProvider.of<SettingsBloc>(context);
+        // TODO: SettingsBloc(FireBaseSettingRepository(this.widget.loggedUserId));
 
     super.initState();
   }
@@ -68,235 +67,232 @@ class _SettingPageState extends State<SettingPage> {
         title: Text("Setting", style: TextStyle(color: Colors.blueAccent)),
         centerTitle: true,
       ),
-      body: BlocProvider<SettingsBloc>(
-        bloc: settingBloc,
-        child: StreamBuilder<SettingUserModel>(
-          stream: settingBloc.currentUser,
-          builder: (context, userSnapshot) {
-            if (userSnapshot.hasData && userSnapshot.data != null) {
-              SettingUserModel user = userSnapshot.data;
+      body: StreamBuilder<SettingUserModel>(
+        stream: settingBloc.currentUser,
+        builder: (context, userSnapshot) {
+          if (userSnapshot.hasData && userSnapshot.data != null) {
+            SettingUserModel user = userSnapshot.data;
 
-              return ListView(
-                children: <Widget>[
-                  // top section
-                  Material(
-                    elevation: 8,
-                    shadowColor: Colors.blueAccent,
-                    child: Container(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 36, horizontal: 16),
-                      color: Colors.blueAccent,
-                      child: Row(
-                        children: <Widget>[
-                          Stack(
-                            children: <Widget>[
-                              Container(
-                                height: 104,
-                                width: 102,
+            return ListView(
+              children: <Widget>[
+                // top section
+                Material(
+                  elevation: 8,
+                  shadowColor: Colors.blueAccent,
+                  child: Container(
+                    padding:
+                        EdgeInsets.symmetric(vertical: 36, horizontal: 16),
+                    color: Colors.blueAccent,
+                    child: Row(
+                      children: <Widget>[
+                        Stack(
+                          children: <Widget>[
+                            Container(
+                              height: 104,
+                              width: 102,
+                            ),
+                            Container(
+                              height: 100,
+                              width: 100,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: Color(0XFFDDDDDD), width: 4),
+                                borderRadius: BorderRadius.circular(96),
+                                color: Colors.blue,
                               ),
-                              Container(
-                                height: 100,
-                                width: 100,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: Color(0XFFDDDDDD), width: 4),
-                                  borderRadius: BorderRadius.circular(96),
-                                  color: Colors.blue,
-                                ),
-                              ),
-                              Positioned(
-                                top: 4,
-                                left: 4,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(96),
-                                  child: Container(
-                                    color: Colors.grey,
-                                    child: Image.network(
-                                      user.imageURL,
-                                      height: 92,
-                                      width: 92,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                bottom: 0,
-                                right: 0,
+                            ),
+                            Positioned(
+                              top: 4,
+                              left: 4,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(96),
                                 child: Container(
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(16),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          blurRadius: 2,
-                                          offset: Offset(0.5, 1.5),
-                                          spreadRadius: 2,
-                                          color: Colors.black12,
-                                        )
-                                      ]),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      showModalBottomSheet(
-                                          context: context,
-                                          backgroundColor: Colors.transparent,
-                                          builder: (context) {
-                                            return Container(
-                                              padding: EdgeInsets.all(16),
-                                              decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius: BorderRadius.only(
-                                                    topLeft:
-                                                        Radius.circular(16),
-                                                    topRight:
-                                                        Radius.circular(16)),
-                                              ),
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: <Widget>[
-                                                  Container(
-                                                    width: 80,
-                                                    height: 7,
-                                                    decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  child: Image.network(
+                                    user.imageURL,
+                                    height: 92,
+                                    width: 92,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 0,
+                              right: 0,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(16),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        blurRadius: 2,
+                                        offset: Offset(0.5, 1.5),
+                                        spreadRadius: 2,
+                                        color: Colors.black12,
+                                      )
+                                    ]),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    showModalBottomSheet(
+                                        context: context,
+                                        backgroundColor: Colors.transparent,
+                                        builder: (context) {
+                                          return Container(
+                                            padding: EdgeInsets.all(16),
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius: BorderRadius.only(
+                                                  topLeft:
+                                                      Radius.circular(16),
+                                                  topRight:
+                                                      Radius.circular(16)),
+                                            ),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: <Widget>[
+                                                Container(
+                                                  width: 80,
+                                                  height: 7,
+                                                  decoration: BoxDecoration(
+                                                      color:
+                                                          Color(0XFFeeedee),
+                                                      borderRadius:
+                                                          BorderRadius
+                                                              .circular(5)),
+                                                ),
+                                                SizedBox(height: 20),
+                                                Container(
+                                                  width: double.infinity,
+                                                  child: OutlineButton(
+                                                    padding:
+                                                        EdgeInsets.all(16),
+                                                    borderSide: BorderSide(
                                                         color:
-                                                            Color(0XFFeeedee),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(5)),
+                                                            Colors.black45),
+                                                    child:
+                                                        Text('Take a photo'),
+                                                    onPressed: () {
+                                                      getImage(
+                                                          ImageSource.camera);
+                                                    },
                                                   ),
-                                                  SizedBox(height: 20),
-                                                  Container(
-                                                    width: double.infinity,
-                                                    child: OutlineButton(
-                                                      padding:
-                                                          EdgeInsets.all(16),
-                                                      borderSide: BorderSide(
-                                                          color:
-                                                              Colors.black45),
-                                                      child:
-                                                          Text('Take a photo'),
-                                                      onPressed: () {
-                                                        getImage(
-                                                            ImageSource.camera);
-                                                      },
-                                                    ),
+                                                ),
+                                                SizedBox(height: 16),
+                                                Container(
+                                                  width: double.infinity,
+                                                  child: OutlineButton(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.black45),
+                                                    padding:
+                                                        EdgeInsets.all(16),
+                                                    child: Text(
+                                                        'Choose from gallery'),
+                                                    onPressed: () {
+                                                      getImage(ImageSource
+                                                          .gallery);
+                                                    },
                                                   ),
-                                                  SizedBox(height: 16),
-                                                  Container(
-                                                    width: double.infinity,
-                                                    child: OutlineButton(
-                                                      borderSide: BorderSide(
-                                                          color:
-                                                              Colors.black45),
-                                                      padding:
-                                                          EdgeInsets.all(16),
-                                                      child: Text(
-                                                          'Choose from gallery'),
-                                                      onPressed: () {
-                                                        getImage(ImageSource
-                                                            .gallery);
-                                                      },
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 8),
-                                                ],
-                                              ),
-                                            );
-                                          });
-                                    },
-                                    behavior: HitTestBehavior.translucent,
-                                    child: Padding(
-                                      padding: EdgeInsets.all(8),
-                                      child: Icon(
-                                        Icons.photo_camera,
-                                        size: 16,
-                                      ),
+                                                ),
+                                                SizedBox(height: 8),
+                                              ],
+                                            ),
+                                          );
+                                        });
+                                  },
+                                  behavior: HitTestBehavior.translucent,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(8),
+                                    child: Icon(
+                                      Icons.photo_camera,
+                                      size: 16,
                                     ),
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
-                          SizedBox(width: 12),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                user.firstName + ' ' + user.lastName,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(width: 12),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              user.firstName + ' ' + user.lastName,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                fontSize: 20,
                               ),
-                              Text(
-                                user.userName,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.white70,
-                                  fontSize: 14,
-                                ),
+                            ),
+                            Text(
+                              user.userName,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                color: Colors.white70,
+                                fontSize: 14,
                               ),
-                            ],
-                          ),
-                        ],
-                      ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                  SizedBox(height: 18),
-                  _itemBuilder(userSnapshot.data.email, EMAIL),
-                  _itemPasswordBuilder(),
-                  SizedBox(height: 16),
-                  _itemBuilder(user.firstName, FIRST_NAME),
-                  _itemBuilder(user.lastName, LAST_NAME),
-                  _itemBuilder(user.userName, USER_NAME),
-                  SizedBox(height: 16),
-                  _reazzonsBuilder(user.reazzons),
-                  SizedBox(height: 16),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: InkWell(
-                      onTap: () {
-                        _signOut();
-                      },
-                      child: Material(
-                        elevation: 2,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 12.0, horizontal: 16),
-                          child: Text(
-                            'Sign Out',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blue,
-                            ),
+                ),
+                SizedBox(height: 18),
+                _itemBuilder(userSnapshot.data.email, EMAIL),
+                _itemPasswordBuilder(),
+                SizedBox(height: 16),
+                _itemBuilder(user.firstName, FIRST_NAME),
+                _itemBuilder(user.lastName, LAST_NAME),
+                _itemBuilder(user.userName, USER_NAME),
+                SizedBox(height: 16),
+                _reazzonsBuilder(user.reazzons),
+                SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: InkWell(
+                    onTap: () {
+                      _signOut();
+                    },
+                    child: Material(
+                      elevation: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 12.0, horizontal: 16),
+                        child: Text(
+                          'Sign Out',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue,
                           ),
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(height: 16),
-                ],
-              );
-            } else {
-              return Container(child: Center(child: Spinner()));
-            }
-          },
-        ),
-      ),
+                ),
+                SizedBox(height: 16),
+              ],
+            );
+          } else {
+            return Container(child: Center(child: Spinner()));
+          }
+        },
+      )
     );
   }
 
   _signOut() async {
     settingBloc.removeToken();
-    this.widget.loginBloc.signOut().then((_) {
-      var homeRoute =
-          MaterialPageRoute(builder: (BuildContext context) => HomePage());
-      Navigator.of(context)
-          .pushAndRemoveUntil(homeRoute, ModalRoute.withName('/'));
-    }).catchError((onError) {
-      print(onError);
-    });
+    // this.widget.loginBloc.signOut().then((_) {
+    //   var homeRoute =
+    //       MaterialPageRoute(builder: (BuildContext context) => HomePage());
+    //   Navigator.of(context)
+    //       .pushAndRemoveUntil(homeRoute, ModalRoute.withName('/'));
+    // }).catchError((onError) {
+    //   print(onError);
+    // });
   }
 
   Widget _reazzonsBuilder(List<String> reazzons) {
@@ -350,7 +346,7 @@ class _SettingPageState extends State<SettingPage> {
                                   settingBloc.outAvailableReazzons,
                               settingBloc: settingBloc,
                               initialData:
-                                  reazzons.map((r) => Reazzon(r)).toList(),
+                                  reazzons.map((r) => Reazzon(null, null)).toList(),
                             ),
                           ));
                 },
@@ -397,16 +393,13 @@ class _SettingPageState extends State<SettingPage> {
       case EMAIL:
         key = 'EMAIL';
 
-        _child = BlocProvider<SettingsBloc>(
-          bloc: settingBloc,
-          child: _ModalBuilderVerification(
-            child: _ModalBuilder(
-              initialData: value,
-              onSubmit: settingBloc.changeEmail,
-              input: settingBloc.inEmail,
-              output: settingBloc.outEmail,
-            ),
-          ),
+        _child = _ModalBuilderVerification(
+          child: _ModalBuilder(
+            initialData: value,
+            onSubmit: settingBloc.changeEmail,
+            input: settingBloc.inEmail,
+            output: settingBloc.outEmail,
+          )
         );
         break;
     }
@@ -480,9 +473,7 @@ class _SettingPageState extends State<SettingPage> {
                     context: context,
                     builder: (context) => _dialogBuilder(
                       title: 'PASSWORD',
-                      child: BlocProvider<SettingsBloc>(
-                        bloc: settingBloc,
-                        child: _ModalBuilderVerification(
+                      child: _ModalBuilderVerification(
                           hintText: 'Current password',
                           child: _PasswordModalBuilder(
                             input: settingBloc.inPassword,
@@ -492,8 +483,7 @@ class _SettingPageState extends State<SettingPage> {
                             onSubmit: settingBloc.changePassword,
                           ),
                         ),
-                      ),
-                    ),
+                      )
                   );
                 },
               ),
@@ -993,11 +983,11 @@ class __ReazzonModalBuilderState extends State<_ReazzonModalBuilder> {
                               ),
                             ),
                             onTap: () {
-                              if (this.widget.settingBloc.canAddReazzon &&
-                                  !snapshot.data[index].isSelected)
-                                snapshot.data[index].setSelection();
-                              else if (snapshot.data[index].isSelected)
-                                snapshot.data[index].setSelection();
+                              // if (this.widget.settingBloc.canAddReazzon &&
+                              //     !snapshot.data[index].isSelected)
+                              //   snapshot.data[index].setSelection();
+                              // else if (snapshot.data[index].isSelected)
+                              //   snapshot.data[index].setSelection();
 
                               this.widget.inAvailableReazzons(snapshot.data);
                             },

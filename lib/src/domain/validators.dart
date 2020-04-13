@@ -21,32 +21,12 @@ class Validators {
     }
   );
 
-  final validateUserName = StreamTransformer<String, String>.fromHandlers(
+  final validateUsername = StreamTransformer<String, String>.fromHandlers(
     handleData: (userName, sink) {
       if(userName.length > 0) {
         sink.add(userName);
       } else {
         sink.addError('Username must have at least 1 character');
-      }
-    }
-  );
-
-  final validateFirstName = StreamTransformer<String, String>.fromHandlers(
-    handleData: (firstName, sink) {
-      if(firstName.length > 0) {
-        sink.add(firstName);
-      } else {
-        sink.addError('First name must have at least 1 character');
-      }
-    }
-  );
-
-  final validateLastName = StreamTransformer<String, String>.fromHandlers(
-    handleData: (lastName, sink) {
-      if(lastName.length > 0) {
-        sink.add(lastName);
-      } else {
-        sink.addError('Last name must have at least 1 character');
       }
     }
   );

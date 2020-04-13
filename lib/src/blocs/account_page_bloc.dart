@@ -1,12 +1,13 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:reazzon/src/blocs/bloc_provider.dart';
 
-class AccountPageBloc extends BlocBase {
+class AccountPageBloc extends Bloc {
   void registerNotification(String currentUserId) {
     final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
@@ -67,5 +68,12 @@ class AccountPageBloc extends BlocBase {
   }
 
   @override
-  void dispose() {}
+  // TODO: implement initialState
+  get initialState => null;
+
+  @override
+  Stream mapEventToState(event) {
+    // TODO: implement mapEventToState
+    return null;
+  }
 }

@@ -1,9 +1,9 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:reazzon/src/blocs/login_bloc.dart';
-import 'package:reazzon/src/helpers/fieldFocus.dart';
-import 'package:reazzon/src/helpers/spinner.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:reazzon/src/helpers/field_focus.dart';
+import 'package:reazzon/src/login/login_bloc.dart';
+import 'package:reazzon/src/login/login_event.dart';
+import 'package:reazzon/src/login/login_state.dart';
 
 class ForgottenPasswordPage extends StatefulWidget {
   @override
@@ -12,12 +12,11 @@ class ForgottenPasswordPage extends StatefulWidget {
   
 class _ForgottenPasswordPageState extends State<ForgottenPasswordPage> {
   LoginBloc _loginBloc;
-  Future<bool> _forgottenPasswordSuccessful;
 
   @override
   void initState(){
     super.initState();
-    _loginBloc = new LoginBloc();
+    _loginBloc = BlocProvider.of<LoginBloc>(context);
   }
 
   @override
@@ -28,7 +27,7 @@ class _ForgottenPasswordPageState extends State<ForgottenPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
-    FocusNode _focusEmail = new FocusNode();
+    FocusNode _focusEmail =  FocusNode();
 
     return Scaffold(
       appBar: AppBar(
@@ -39,134 +38,104 @@ class _ForgottenPasswordPageState extends State<ForgottenPasswordPage> {
         elevation: 0.0,
         title: Text("Forgotten password", style: TextStyle(color: Colors.blueAccent)),
       ),
-      body: new SingleChildScrollView(
+      body:  SingleChildScrollView(
         child: Container(
-          height: MediaQuery.of(context).size.height - 100.0,
           decoration: BoxDecoration(
             color: Colors.white
           ),
-          child: Column(
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.all(55.0),
-                child: Center(
-                  child: Icon(
-                    Icons.developer_board,
-                    color: Colors.blueAccent,
-                    size: 50.0,
+          child: BlocListener<LoginBloc, LoginState>(
+            listener: (context, state){
+              if(state is ForgotPasswordSucceeded){
+                Scaffold.of(context)
+                    .showSnackBar(SnackBar(
+                      key: Key("snack_bar_forgot_password_succeeded"),
+                      content: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [Text('Email sent successfully. \n Please follow instructions contained in the reset email.'), Icon(Icons.check_box)],
+                      ),
+                      backgroundColor: Colors.greenAccent
+                    ));
+              }
+
+              if(state is ForgotPasswordFailed){
+                Scaffold.of(context)
+                    .showSnackBar(SnackBar(
+                      key: Key("snack_bar_forgot_password_failure"),
+                      content: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [Text('Forgot password failed'), Icon(Icons.error)],
+                      ),
+                      backgroundColor: Colors.redAccent
+                    ));
+              }
+            },
+            child: Column(
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.all(55.0),
+                  child: Center(
+                    child: Icon(
+                      Icons.developer_board,
+                      color: Colors.blueAccent,
+                      size: 50.0,
+                    ),
                   ),
                 ),
-              ),
-              Container(
-                padding: EdgeInsets.only(left: 30.0, right: 30.0),
-                child: Center(
-                  child: StreamBuilder(
-                    stream: _loginBloc.outMessages,
-                    builder: (context, snapshot){
-                      return snapshot.hasData ? 
-                        Text(snapshot.data, style: TextStyle(color: Colors.red), textAlign: TextAlign.center, softWrap: true) : 
-                        Container();
-                    },
-                  )
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(left: 30.0, right: 30.0),
-                child: Center(
-                  child: StreamBuilder(
-                    stream: _loginBloc.outSuccessForgottenMessages,
-                    builder: (context, snapshot){
-                      return snapshot.hasData ? 
-                        Text(snapshot.data, style: TextStyle(color: Colors.green), textAlign: TextAlign.center, softWrap: true) : 
-                        Container();
-                    },
-                  )
-                ),
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      EnsureVisibleWhenFocused(
-                        focusNode: _focusEmail,
-                        child: Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 40.0),
-                            child: Text(
-                              "EMAIL",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blueAccent,
-                                fontSize: 15.0,
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Row(children: <Widget>[
+                        EnsureVisibleWhenFocused(
+                          focusNode: _focusEmail,
+                          child: Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 40.0),
+                              child: Text(
+                                "EMAIL",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.blueAccent,
+                                  fontSize: 15.0,
+                                ),
                               ),
                             ),
                           ),
                         ),
+                      ],
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 5.0),
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Expanded(child: emailField(_loginBloc))
+                        ],
                       ),
-                    ],
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 5.0),
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Expanded(child: emailField(_loginBloc))
-                      ],
                     ),
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    margin: const EdgeInsets.only(left: 30.0, right: 30.0, top: 20.0),
-                    alignment: Alignment.center,
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: buildButton(_loginBloc),
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              )
-            ],
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.only(left: 30.0, right: 30.0, top: 20.0),
+                      alignment: Alignment.center,
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: submitButton(_loginBloc),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),
-    );
-  }
-
-  Widget buildButton(LoginBloc loginBloc) {
-    return new FutureBuilder(
-      future: _forgottenPasswordSuccessful,
-      builder: (context, snapshot){
-        if(!snapshot.hasData){
-          if(snapshot.connectionState != ConnectionState.none)
-            return Spinner();
-          
-          return submitButton(loginBloc);
-        }
-        
-        if(snapshot.hasData){
-          if(snapshot.data){
-            return submitButton(loginBloc);
-          }
-
-          if(!snapshot.data){
-            if(snapshot.connectionState == ConnectionState.done)
-              return submitButton(loginBloc);
-
-            return Spinner();
-          }
-        }
-
-        return submitButton(loginBloc);
-      },
     );
   }
 
@@ -180,12 +149,8 @@ class _ForgottenPasswordPageState extends State<ForgottenPasswordPage> {
           ),
           color: Colors.blueAccent,
           elevation: 4.0,
-          onPressed: snapshot.hasData ? () {
-            setState(() {
-              _forgottenPasswordSuccessful = _loginBloc.forgottenPassword();
-            });
-          } 
-          : null,
+          onPressed: () => snapshot.data ? null : loginBloc
+            .add(InitializedForgottenPassword()),
           child: Container(
             padding: const EdgeInsets.symmetric(
               vertical: 20.0,
@@ -218,7 +183,7 @@ class _ForgottenPasswordPageState extends State<ForgottenPasswordPage> {
       builder: (context, snapshot) {
         return TextField(
           onChanged: bloc.changeEmail,
-          keyboardType:  TextInputType.emailAddress,
+          keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
             hintText: 'you@example.com',
             errorText: snapshot.error,

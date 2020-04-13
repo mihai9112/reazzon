@@ -1,15 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reazzon/src/blocs/account_page_bloc.dart';
-import 'package:reazzon/src/blocs/bloc_provider.dart';
-import 'package:reazzon/src/blocs/login_bloc.dart';
 import 'package:reazzon/src/chat/chat_bloc/chat_bloc.dart';
 import 'package:reazzon/src/chat/chat_page.dart';
-import 'package:reazzon/src/chat/repository/chat_repository.dart';
+import 'package:reazzon/src/login/login_bloc.dart';
 import 'package:reazzon/src/notifications/notification_bloc.dart';
 import 'package:reazzon/src/notifications/notification_page.dart';
-import 'package:reazzon/src/notifications/notification_repository.dart';
 import 'package:reazzon/src/pages/account_home_page.dart';
 import 'package:reazzon/src/settings/setting_page.dart';
 
@@ -67,15 +65,16 @@ class _AccountPageState extends State<AccountPage> {
   void initState() {
     _currentIndex = DEFAULT_INDEX;
 
-    _accountPageBloc = AccountPageBloc();
+    _accountPageBloc = BlocProvider.of<AccountPageBloc>(context);
     _accountPageBloc.registerNotification(this.widget.loggedUserId);
 
-    _loginBloc = new LoginBloc();
+    _loginBloc = BlocProvider.of<LoginBloc>(context);
 
-    _notificationBloc = NotificationBloc(
-        FirebaseNotificationRepository(this.widget.loggedUserId));
+    _notificationBloc = BlocProvider.of<NotificationBloc>(context);
+        //TODO: FirebaseNotificationRepository(this.widget.loggedUserId));
 
-    _chatBloc = ChatBloc(chatRepository: FireBaseChatRepository());
+    _chatBloc = BlocProvider.of<ChatBloc>(context);
+        //TODO: (chatRepository: FireBaseChatRepository()
 
     _selectedWidget = _widgets()[DEFAULT_INDEX];
 
@@ -83,21 +82,13 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   @override
-  void dispose() {
-    _loginBloc?.dispose();
-    _accountPageBloc?.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () => Future.value(false),
       child: Scaffold(
-        body: BlocProvider<AccountPageBloc>(
-          bloc: _accountPageBloc,
-          child: _selectedWidget,
-        ),
+        //TODO body: BlocProvider<AccountPageBloc>(
+        //   child: _selectedWidget,
+        // ),
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.shifting,
           unselectedItemColor: Colors.grey,

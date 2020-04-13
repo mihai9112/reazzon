@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:reazzon/src/blocs/bloc_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reazzon/src/blocs/filter_bloc.dart';
-import 'package:reazzon/src/models/reazzon.dart';
 
 class FilterDialog extends StatefulWidget {
   @override
@@ -15,8 +14,8 @@ class FilterDialogState extends State<FilterDialog> {
   void initState() {
     filterBloc = FilterBloc();
 
-    Reazzon.allReazzons().forEach(
-        (r) => filterBloc.filterEntities.add(FilterEntity(r.value, false)));
+    // Reazzon.allReazzons().forEach(
+    //     (r) => filterBloc.filterEntities.add(FilterEntity(r.value, false)));
 
     super.initState();
   }
@@ -35,7 +34,7 @@ class FilterDialogState extends State<FilterDialog> {
         actions: <Widget>[
           FlatButton(
             child: Text('SAVE',
-                style: theme.textTheme.body1.copyWith(color: Colors.white)),
+                style: theme.textTheme.bodyText1.copyWith(color: Colors.white)),
             onPressed: () {
               List<String> _list = [];
               filterBloc.filterEntities
@@ -49,19 +48,16 @@ class FilterDialogState extends State<FilterDialog> {
           ),
         ],
       ),
-      body: BlocProvider<FilterBloc>(
-        bloc: this.filterBloc,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 16),
-          child: Card(
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              padding: const EdgeInsets.all(8.0),
-              child: Item(),
-            ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 16),
+        child: Card(
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            padding: const EdgeInsets.all(8.0),
+            child: Item(),
           ),
         ),
-      ),
+      )
     );
   }
 }
@@ -78,8 +74,8 @@ class _ItemState extends State<Item> {
   void initState() {
     filterBloc = BlocProvider.of<FilterBloc>(context);
 
-    Reazzon.allReazzons().forEach(
-        (r) => filterBloc.filterEntities.add(FilterEntity(r.value, false)));
+    // Reazzon.allReazzons().forEach(
+    //     (r) => filterBloc.filterEntities.add(FilterEntity(r.value, false)));
 
     super.initState();
   }
