@@ -102,4 +102,23 @@ void main() async {
     //Assert
     expect(snackBarLoadingFinder, findsOneWidget);
   });
+
+  testWidgets('Navigate to Conversations page on login success and profile is completed', (WidgetTester tester)  async {
+    //Arrange
+    var expectedStates = [
+      LoginInitial(), 
+      LoginLoading(),
+      LoginSucceeded()
+    ];
+
+    whenListen(_loginBloc, Stream.fromIterable(expectedStates));
+    
+    //Act
+    await tester.pumpWidget(makeTestableWidget());
+    await tester.pumpAndSettle();
+
+    //Assert
+    verify(mockNavigatorObserver.didPush(any, any));
+    expect(find.text("Conversations"), findsOneWidget);
+  });
 }

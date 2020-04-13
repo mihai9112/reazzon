@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:reazzon/src/features/conversations/presentation/pages/conversations_page.dart';
 import 'package:reazzon/src/helpers/field_focus.dart';
 import 'package:flutter/widgets.dart';
 import 'package:reazzon/src/helpers/spinner.dart';
@@ -44,6 +45,11 @@ class _LoginPageState extends State<LoginPage> {
       listener: (context, state){
         if(state is ProfileToBeUpdated){
           final route = MaterialPageRoute(builder: (_) => SignupContinuePage());
+          Navigator.of(context).push(route);
+        }
+
+        if(state is LoginSucceeded){
+          final route = MaterialPageRoute(builder: (_) => ConversationsPage());
           Navigator.of(context).push(route);
         }
       },
@@ -308,8 +314,8 @@ class _LoginPageState extends State<LoginPage> {
           ),
           color: Colors.blueAccent,
           elevation: 4.0,
-          onPressed: () => snapshot.data ? null : loginBloc
-            .add(InitializedCredentialsSignIn()),
+          onPressed: snapshot.hasData ? () => loginBloc
+            .add(InitializedCredentialsSignIn()) : null,
           child: Container(
             padding:
                 const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
