@@ -39,7 +39,7 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
         
         if(state is SignupSucceeded){
           final route = MaterialPageRoute(builder: (_) => ConversationsPage());
-          Navigator.of(context).push(route);
+          Navigator.of(context).pushAndRemoveUntil(route, (_) => false);
         }
       },
       child: Scaffold(

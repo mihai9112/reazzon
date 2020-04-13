@@ -50,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
 
         if(state is LoginSucceeded){
           final route = MaterialPageRoute(builder: (_) => ConversationsPage());
-          Navigator.of(context).push(route);
+          Navigator.of(context).pushAndRemoveUntil(route, (_) => false);
         }
       },
       child: Scaffold(

@@ -7,7 +7,8 @@ class ConversationsPage extends StatelessWidget
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Conversations")
+        title: Text("Conversations"),
+        centerTitle: true
       ),
       body: PageView(
         physics: NeverScrollableScrollPhysics(),
@@ -28,11 +29,7 @@ class ConversationsPage extends StatelessWidget
             Expanded(
               child: IconButton(
                 icon: Icon(Icons.home),
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(
-                    builder: (context) => ConversationsPage(),
-                  ));
-                },
+                onPressed: () => false,
               )
             ),
             Expanded(
